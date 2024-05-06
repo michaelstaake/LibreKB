@@ -1,2 +1,2 @@
-# librekb
+# LibreKB
 Free, Open Source, Self Hosted, PHP/MySQL, Knowledge Base
