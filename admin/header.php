@@ -18,8 +18,8 @@
     </head>
     <body>
         <?php
-            if (file_exists('../install2.php') || file_exists('../upgrade2.php')) {
-                echo '<br /><div class="container"><div class="alert alert-danger" role="alert">Please delete install.php and/or upgrade.php from the server.</div></div>';
+            if (file_exists('../install.php') || file_exists('../upgrade.php')) {
+                echo '<br /><div class="container"><div class="alert alert-danger" role="alert">install.php and/or update.php file detected. Please delete those files before using LibreKB.</div></div>';
                 exit;
             }
         ?>
