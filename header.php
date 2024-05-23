@@ -19,7 +19,15 @@
         <nav>
             <div class="container nav-container">
                 <div class="logo">
-                    <a href="index.php"><?php echo($siteName); ?></a>
+                    <?php
+                        $setting = new Setting();
+                        $siteLogo = $setting->getSettingValue('site_logo');
+                        if (!$siteLogo == '') {
+                            echo '<a href="index.php"><img class="kb-logo" src="'.$siteLogo.'" alt="'.$siteName.' Logo"/></a>';
+                        } else {
+                            echo '<a href="index.php">'.$siteName.'</a>';
+                        }
+                    ?>
                 </div>
                 <ul>
                     <li><a href="index.php"><i class="bi bi-house-door"></i> Knowledge Base</a></li>

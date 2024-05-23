@@ -113,7 +113,7 @@
                 </div>
             </div>
             <div class="settings-section">
-                <button type="submit" class="btn btn-light">Save</button>
+                <button type="submit" class="btn btn-dark">Save</button>
             </div>           
         </form>
     </main>

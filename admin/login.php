@@ -52,8 +52,8 @@
                     <br />
 
                     <?php
-                        if (file_exists('../install2.php')) {
-                            echo '<div class="alert alert-danger" role="alert">Delete install.php to continue.</div>';
+                        if (file_exists('../install.php') || file_exists('../update.php')) {
+                            echo '<div class="alert alert-danger" role="alert">install.php and/or update.php file detected. Please delete those files before using LibreKB.</div>';
                             exit;
                         }
                     ?>

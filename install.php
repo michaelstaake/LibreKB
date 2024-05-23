@@ -1,6 +1,6 @@
 <?php
 
-$version = "0.0.1";
+$version = "1.0.0";
 
 require_once('config.php');
 $pageTitle = 'LibreKB Installer';

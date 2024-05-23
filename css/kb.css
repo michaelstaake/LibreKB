@@ -27,6 +27,13 @@ header h1 {
     font-size: 1.6em;
 }
 
+.kb-logo {
+    max-height: 100px;
+    padding-bottom: 15px;
+}
+
+
+
 /* Header */
 
 .nav-container {
