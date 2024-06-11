@@ -41,6 +41,13 @@
     <header>
         <h1>Settings</h1>
     </header>
+    <?php
+
+        if ($user_group !== 'admin') {
+            echo '<div class="alert alert-danger" role="alert">You do not have permission to access this page.</div>';
+            exit;
+        }  
+    ?>
     <main>
         <form action="settings.php" method="POST">
             <div class="settings-section">

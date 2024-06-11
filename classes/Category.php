@@ -3,7 +3,7 @@
 class Category extends Database {
 
     public function getAllCategories() {
-        $query = "SELECT * FROM categories ORDER BY `order` ASC";
+        $query = "SELECT * FROM categories ORDER BY `order`+0 ASC";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute();
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -11,7 +11,7 @@ class Category extends Database {
     }
 
     public function getAllCategoriesEnabled() {
-        $query = "SELECT * FROM categories WHERE `status` = 'enabled' ORDER BY `order` ASC";
+        $query = "SELECT * FROM categories WHERE `status` = 'enabled' ORDER BY `order`+0 ASC";
         $stmt = $this->connect()->prepare($query);
         $stmt->execute();
         $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);

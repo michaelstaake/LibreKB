@@ -23,6 +23,16 @@
                 exit;
             }
         ?>
+        <div class="sub-header">
+            <div class="container">
+                <?php
+                    $user = new User();
+                    $user_id = $_SESSION['user_id'];
+                    $user_email = $user->getUserData($user_id, 'email');
+                ?>    
+                <p>Welcome back, <a href="profile.php"><i class="bi bi-person-circle"></i><?php echo $user_email; ?></a></p>
+            </div>
+        </div>
         <nav>
             <div class="container nav-container">
                 <div class="logo">
@@ -30,9 +40,18 @@
                 </div>
                 <ul>
                     <li><a href="index.php"><i class="bi bi-house-door"></i> Dashboard</a></li>
-                    <!--<li><a href="users.php" ><i class="bi bi-people"></i> Users</a></li>-->
-                    <li><a href="settings.php" ><i class="bi bi-gear"></i> Settings</a></li>
+                    <?php
+                        $user = new User();
+                        $user_id = $_SESSION['user_id'];
+                        $user_group = $user->getUserData($user_id, 'group');
+
+                        if ($user_group == 'admin') {
+                            echo '<li><a href="users.php" ><i class="bi bi-people"></i> Users</a></li>';
+                            echo '<li><a href="settings.php" ><i class="bi bi-gear"></i> Settings</a></li>';
+                        }
+                    ?>
                     <li><a href="logout.php" ><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                    
                 </ul>
             </div>
         </nav>

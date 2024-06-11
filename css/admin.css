@@ -14,6 +14,32 @@ body {
 
 /* Header */
 
+.sub-header {
+    background: #000000;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.sub-header .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sub-header p {
+    margin: 0;
+    padding: 0;
+    color: #FFFFFF;
+}
+
+.sub-header a {
+    color: #FFFFFF;
+}
+
+.sub-header i {
+    margin-right: 5px;
+
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;
@@ -69,7 +95,16 @@ nav li a:hover {
     color: #FFFFFF;
 }
 
-@media all and (max-width: 800px) {
+@media all and (max-width: 1000px) {
+
+    .sub-header {
+        text-align: center;
+    }
+
+    .sub-header p {
+        margin-left: auto;
+        margin-right: auto;
+    }
     .nav-container {
         display: block;
         padding-bottom: 15px;
@@ -222,6 +257,50 @@ footer a, footer a:visited, footer a:active, footer a:focus {
 }
 
 .article-item p {
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* Users Page */
+
+.user-delete {
+    color: #FF0000;
+}
+
+.this-user {
+    margin-bottom: 20px;
+}
+
+.user-item {
+    border-radius: 0.375em;
+    border: 1px solid #E2E2E2;
+    background: #FFFFFF;
+    margin-bottom: 15px;
+}
+
+.user-item:hover {
+    background: #E2E2E2;
+}
+
+.user-item a {
+    text-decoration: none;
+    color: #212529;
+}
+
+.user-item h6 {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.user-item p {
     margin: 0;
     padding-top: 0;
     padding-bottom: 10px;

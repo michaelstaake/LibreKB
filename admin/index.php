@@ -9,10 +9,11 @@
     require_once('../config.php');
 
     if (isset($_GET['action']) && $_GET['action'] === 'categoryManage') {
-        /* Category - Manage a Category */ 
+        /* Category - Manage Category */ 
         if (isset($_GET['c'])) {
+            $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
             $category = new Category();
-            $categoryData = $category->getCategory($_GET['c']);
+            $categoryData = $category->getCategory($get);
             if (!$categoryData) {
                 header('Location: index.php?msg=error');
                 exit;
@@ -26,7 +27,7 @@
                     $status = $_POST['status'];
         
                     $category = new Category();
-                    $category->id = $_GET['c'];
+                    $category->id = $get;
                     $category->name = $name;
                     $category->slug = $slug;
                     $category->description = $description;
@@ -52,17 +53,18 @@
             exit;
         }
     } else if (isset($_GET['action']) && $_GET['action'] === 'categoryDelete') {
-        /* Category - Delete a Category */ 
+        /* Category - Delete Category */ 
         if (isset($_GET['c'])) {
+            $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
             $category = new Category();
-            $categoryData = $category->getCategory($_GET['c']);
+            $categoryData = $category->getCategory($get);
             if (!$categoryData) {
                 header('Location: index.php?msg=error');
                 exit;
             } else {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $category = new Category();
-                    $category->id = $_GET['c'];
+                    $category->id = $get;
                     $categoryDeleted = $category->deleteCategory();
 
                     if ($categoryDeleted) {
@@ -82,10 +84,11 @@
             exit;
         }
     } else if (isset($_GET['action']) && $_GET['action'] === 'categoryView') {
-        /* Category - View Single Category */ 
+        /* Category - View Category */ 
         if (isset($_GET['c'])) {
+            $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
             $category = new Category();
-            $categoryData = $category->getCategory($_GET['c']);
+            $categoryData = $category->getCategory($get);
             if (!$categoryData) {
                 header('Location: index.php?msg=error');
                 exit;
@@ -114,7 +117,7 @@
                                             <a href="index.php?action=articleManage&a=' . $article['id'] . '">
                                                 <div class="article-content">
                                                     <h6><i class="bi bi-file-earmark"></i>  ' . $article['title'] . '</h6>
-                                                    <p>Status: <code>' . $article['status'] . '</code> Created: <code>' . $article['created'] . '</code> Updated: <code>' . $article['updated'] . '</code></p>
+                                                    <p>Order: <code>' . $article['order'] . '</code> Status: <code>' . $article['status'] . '</code> Created: <code>' . $article['created'] . '</code> Updated: <code>' . $article['updated'] . '</code></p>
                                                 </div>
                                             </a>
                                         </div>
@@ -201,17 +204,18 @@
             require_once('footer.php');
         }
     } else if (isset($_GET['action']) && $_GET['action'] === 'articleDelete') {
-        /* Article - Delete Single Article */
+        /* Article - Delete Article */
         if (isset($_GET['a'])) {
+            $get = htmlspecialchars($_GET['a'], ENT_QUOTES, 'UTF-8');
             $article = new Article();
-            $articleData = $article->getArticle($_GET['a']);
+            $articleData = $article->getArticle($get);
             if (!$articleData) {
                 header('Location: index.php?msg=error');
                 exit;
             } else {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $article = new Article();
-                    $article->id = $_GET['a'];
+                    $article->id = $get;
                     $articleDeleted = $article->deleteArticle();
 
                     if ($articleDeleted) {
@@ -231,11 +235,12 @@
             exit;
         }
     } else if (isset($_GET['action']) && $_GET['action'] === 'articleManage') {
-        /* Article - Manage Single Article */
+        /* Article - Manage Article */
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'];
             $content = $_POST['content'];
             $status = $_POST['status'];
+            $order = $_POST['order'];
             $category = $_POST['category'];
             $article_id = $_POST['article_id'];
 
@@ -243,6 +248,7 @@
             $article->title = $title;
             $article->content = $content;
             $article->status = $status;
+            $article->order = $order;
             $article->category = $category;
             $article->id = $article_id;
             $articleUpdated = $article->updateArticle();
@@ -256,8 +262,9 @@
             }
         } else {
             if (isset($_GET['a'])) {
+                $get = htmlspecialchars($_GET['a'], ENT_QUOTES, 'UTF-8');
                 $article = new Article();
-                $articleData = $article->getArticle($_GET['a']);
+                $articleData = $article->getArticle($get);
                 if (!$articleData) {
                     header('Location: index.php?msg=error');
                     exit;
@@ -313,11 +320,16 @@
                                         ?>
                                         </select>
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="order" class="form-label">Order</label>
+                                        <input type="number" class="form-control" id="order" name="order" required value="<?php echo $articleData['order']; ?>">
+                                    </div>
                                     <input type="text" class="form-control" id="article_id" name="article_id" value="<?php echo $articleData['id']; ?>" hidden>
                                     <button type="submit" class="btn btn-dark">Submit</button>
                                 </form>
                                 <div class="article-delete">
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#deleteArticle">Delete Article</a>
+                                </div>
                                 <!-- Delete Article Modal -->
                                 <div class="modal fade" id="deleteArticle" tabindex="-1" aria-labelledby="deleteArticleLabel" aria-hidden="true">
                                     <div class="modal-dialog">
@@ -381,8 +393,9 @@
             }
         } else {
             if (isset($_GET['c'])) {
+                $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
                 $category = new Category();
-                $categoryData = $category->getCategory($_GET['c']);
+                $categoryData = $category->getCategory($get);
                 if (!$categoryData) {
                     header('Location: index.php?msg=error');
                     exit;
@@ -414,6 +427,10 @@
                                         <option value="disabled">Disabled</option>
                                     </select>
                                 </div>
+                                <div class="mb-3">
+                                        <label for="order" class="form-label">Order</label>
+                                        <input type="number" class="form-control" id="order" name="order" value="0" required>
+                                    </div>
                                 <input type="text" class="form-control" id="category" name="category" value="<?php echo $categoryData['id']; ?>" hidden>
                                 <button type="submit" class="btn btn-dark">Submit</button>
                             </form>

@@ -12,9 +12,9 @@
         if ($login) {
             session_start();
             $userObject = new User();
-            $userStatus = $userObject->getUserData($email, 'status');
+            $userStatus = $userObject->getUserDataByEmail($email, 'status');
             if ($userStatus == 'enabled') {
-                $userID = $userObject->getUserData($email, 'id');
+                $userID = $userObject->getUserDataByEmail($email, 'id');
                 $_SESSION['user_id'] = $userID;
                 header('Location: index.php');
                 exit;
@@ -60,14 +60,17 @@
                     
                     <?php
                         if (isset($_GET['msg']) && $_GET['msg'] == 'loginfailed') {
-                            echo '<div class="alert alert-danger" role="alert">Login failed</div>';
+                            echo '<div class="alert alert-danger" role="alert">Login failed. <a href="reset.php">Reset Password</a></div>';
+                        }
+                        if (isset($_GET['msg']) && $_GET['msg'] == 'resetdone') {
+                            echo '<div class="alert alert-success" role="alert">Your password has been updated. You may now log in with your new password.</div>';
                         }
                     ?>
                     
                     <form action="login.php" method="POST">
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email" required autofocus>
                         </div>
                         <br />
                         <div class="form-group">

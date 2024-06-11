@@ -24,8 +24,9 @@
         if (isset($_GET['page']) && $_GET['page'] === 'category') {
             /* Display Category */
             if (isset($_GET['c'])) {
+                $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
                 $category = new Category();
-                $categoryData = $category->getCategoryBySlug($_GET['c']);
+                $categoryData = $category->getCategoryBySlug($get);
                 if (!$categoryData) {
                     header('Location: index.php?msg=error');
                     exit;
@@ -75,8 +76,9 @@
         } else if (isset($_GET['page']) && $_GET['page'] === 'article') {
             /* Display Article */
             if (isset($_GET['a'])) {
+                $get = htmlspecialchars($_GET['a'], ENT_QUOTES, 'UTF-8');
                 $article = new Article();
-                $articleData = $article->getArticleBySlug($_GET['a']);
+                $articleData = $article->getArticleBySlug($get);
                 if (!$articleData) {
                     header('Location: index.php?msg=error');
                     exit;

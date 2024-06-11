@@ -2,25 +2,23 @@
 
 
 
-class Database {
+require 'vendor/phpmailer/src/Exception.php';
+
+require 'vendor/phpmailer/src/PHPMailer.php';
+
+require 'vendor/phpmailer/src/SMTP.php';
 
 
 
-    private $db_host;
+class Config {
 
-    private $db_user;
-
-    private $db_pass;
-
-    private $db_name;
+    public function __construct() {
 
 
 
-    public function connect() {
+        /* Database Configuration */
 
-        /* Put your database info here */
-
-        $this->db_host = 'X';
+        $this->db_host = 'localhost';
 
         $this->db_user = 'X';
 
@@ -28,27 +26,39 @@ class Database {
 
         $this->db_name = 'X';
 
-        try {
 
-            $dsn = "mysql:host={$this->db_host};dbname={$this->db_name}";
 
-            $pdo = new PDO($dsn, $this->db_user, $this->db_pass);
+        /* System Configuration */
 
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->$systemURL = 'https://X/'; //example https://kb.example.com/ or https://example.com/kb/
 
-            return $pdo;
 
-        } catch (PDOException $e) {
 
-            die("Connection failed: " . $e->getMessage());
+        /* Email Configuration */
 
-        }
+        $this->mailHost       = 'X';                     //Set the SMTP server to send through
+
+        $this->mailSMTPAuth   = true;                    //Enable SMTP authentication
+
+        $this->mailUsername   = 'X';                     //SMTP username
+
+        $this->mailPassword   = 'X';                     //SMTP password
+
+        $this->mailSMTPSecure = 'tls';                   //Enable implicit TLS encryption
+
+        $this->mailPort       = 587;                     //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        $this->mailFrom = 'noreply@X';
 
     }
 
 }
 
 
+
+require_once('classes/Database.php');
+
+require_once('classes/Email.php');
 
 require_once('classes/Article.php');
 

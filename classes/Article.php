@@ -19,7 +19,7 @@ class Article extends Database {
     }
 
     public function getArticlesByCategoryId($categoryId) {
-        $query = "SELECT * FROM articles WHERE category = :categoryId";
+        $query = "SELECT * FROM articles WHERE category = :categoryId ORDER BY `order`+0 ASC";
         $statement = $this->connect()->prepare($query);
         $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
         $statement->execute();
@@ -27,7 +27,7 @@ class Article extends Database {
     }
 
     public function getArticlesEnabledByCategoryId($categoryId) {
-        $query = "SELECT * FROM articles WHERE category = :categoryId AND `status` = 'enabled'";
+        $query = "SELECT * FROM articles WHERE category = :categoryId AND `status` = 'enabled' ORDER BY `order`+0 ASC";
         $statement = $this->connect()->prepare($query);
         $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
         $statement->execute();
@@ -66,7 +66,7 @@ class Article extends Database {
         $slug = strtolower(str_replace(' ', '-', $title));
         $category = $this->category;
         $content = $this->content;
-        $order = "0";
+        $order = $this->order;
         $status = $this->status;
         $featured = "0";
         $created = date('Y-m-d H:i:s');
@@ -99,10 +99,11 @@ class Article extends Database {
         $slug = strtolower(str_replace(' ', '-', $title));
         $category = $this->category;
         $content = $this->content;
+        $order = $this->order;
         $status = $this->status;
         $updated = date('Y-m-d H:i:s');
 
-        $query = "UPDATE articles SET title = :title, slug = :slug, category = :category, content = :content, status = :status, updated = :updated WHERE id = :id";
+        $query = "UPDATE articles SET title = :title, slug = :slug, category = :category, content = :content, `order` = :order, status = :status, updated = :updated WHERE id = :id";
 
         try {
             $stmt = $this->connect()->prepare($query);
@@ -111,6 +112,7 @@ class Article extends Database {
             $stmt->bindParam(':slug', $slug);
             $stmt->bindParam(':category', $category);
             $stmt->bindParam(':content', $content);
+            $stmt->bindParam(':order', $order);
             $stmt->bindParam(':status', $status);
             $stmt->bindParam(':updated', $updated);
             $stmt->execute();
