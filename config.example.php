@@ -31,6 +31,7 @@ class Config {
         /* System Configuration */
 
         $this->$systemURL = 'https://X/'; //example https://kb.example.com/ or https://example.com/kb/
+        $this->updateCheck = 'yes'; //change this to no if you wish to disable the update check. 
 
 
 
