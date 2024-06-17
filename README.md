@@ -1,9 +1,10 @@
 # LibreKB
-LibreKB is a Knowledge Base web app. Free and open source, it's a PHP/MYSQL web app that's easy to self host on any web server or hosting account.
+
+LibreKB is a Knowledge Base web app. Free and open source, it's easy to self host on any web server or hosting account.
 
 Check out the official website at [LibreKB.com](https://librekb.com/) for more information.
 
-### Features:
+### Features
 
 - 100% free and open source.
 - Runs on pretty much any server or hosting account.
@@ -13,6 +14,14 @@ Check out the official website at [LibreKB.com](https://librekb.com/) for more i
 - Easily edit articles with TinyMCE.
 - Password resets via email.
 - Responsive design based on Bootstrap.
+
+### Tech Stack
+
+- PHP
+- MySQL
+- HTML
+- CSS
+- JavaScript
 
 ### Need Help?
 
