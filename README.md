@@ -17,4 +17,5 @@ Check out the official website at [LibreKB.com](https://librekb.com/) for more i
 ### Need Help?
 
 Docs: [docs.LibreKB.com](https://docs.librekb.com/)
+
 Forum: [GitHub Discussions for LibreKB](https://github.com/michaelstaake/LibreKB/discussions)
