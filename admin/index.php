@@ -6,7 +6,32 @@
     }
     
     require_once('../config.php');
-    if (isset($_GET['action']) && $_GET['action'] === 'categoryManage') {
+    if (isset($_GET['action']) && $_GET['action'] === 'updateCheck') {
+        /* Update Check */
+        $config = new Config();
+        $isUpdate = $config->updateCheck;
+        if ($isUpdate == 'yes') {
+            $setting = new Setting();
+            $currentVersion = $setting->getSettingValue('version');
+            $currentVersion = 'test';
+            $latestJson = file_get_contents('https://librekb.com/latest.php');
+            $latestData = json_decode($latestJson, true);
+            if ($latestData && isset($latestData['version'])) {
+                $latestVersion = $latestData['version'];
+                if ($currentVersion != $latestVersion) {
+                    header('Location: index.php?msg=update');
+                    exit;
+                } else {
+                    header('Location: index.php');
+                    exit;
+                }
+            }
+        } else {
+            header('Location: index.php');
+            exit;
+        }
+        
+    } else if (isset($_GET['action']) && $_GET['action'] === 'categoryManage') {
         /* Category - Manage Category */ 
         if (isset($_GET['c'])) {
             $get = htmlspecialchars($_GET['c'], ENT_QUOTES, 'UTF-8');
@@ -441,6 +466,10 @@
                     if (isset($_GET['msg']) && $_GET['msg'] === 'success') {
                         echo '<div class="alert alert-success" role="alert">Action performed succesfully.</div>';
                     }
+                    if (isset($_GET['msg']) && $_GET['msg'] === 'update') {
+                        echo '<div class="alert alert-primary" role="alert">An update to LibreKB is available. Consider updating for the latest features and security enhancements. Get the latest version at <a href="https://librekb.com/" target="_blank">LibreKB.com</a>. If you wish to disable update checks, set updateCheck to no in the config file.</div>';
+                    }
+                    
                 ?>
                 <header>
                     <h1><?php echo $pageTitle; ?></h1>
@@ -539,7 +568,7 @@
             </div>
             
             
-        <?php 
+        <?php
         require_once('footer.php');
     }
 ?>

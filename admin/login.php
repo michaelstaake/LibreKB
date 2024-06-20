@@ -16,7 +16,7 @@
             if ($userStatus == 'enabled') {
                 $userID = $userObject->getUserDataByEmail($email, 'id');
                 $_SESSION['user_id'] = $userID;
-                header('Location: index.php');
+                header('Location: index.php?action=updateCheck');
                 exit;
             } else {
                 header('Location: login.php?msg=loginfailed');

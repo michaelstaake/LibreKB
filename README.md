@@ -1,6 +1,6 @@
 # LibreKB
 
-LibreKB: Knowledge Base Web App, Free, Open Source, Self Hosted, PHP/MySQL.
+LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 
 Check out the official website at [LibreKB.com](https://librekb.com/) for more information.
 
