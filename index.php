@@ -106,26 +106,6 @@
                 header('Location: index.php?msg=error');
                 exit;
             }
-        } else if (isset($_GET['page']) && $_GET['page'] === 'search') {
-            /* Search Page */
-            $pageTitle = 'Search';
-            require_once('header.php');
-            ?>
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.php">Knowledge Base</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Search</li>
-                    </ol>
-                    <header>
-                        <h1><?php echo $pageTitle; ?></h1>
-                    </header>
-                    <main>
-                        <p>Coming soon</p>
-                    </main>
-                </div>
-                
-            <?php
-            require_once('footer.php');
         } else {
             /* Home Page */
             $pageTitle = 'Categories';

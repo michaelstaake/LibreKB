@@ -31,7 +31,7 @@
                 </div>
                 <ul>
                     <li><a href="index.php"><i class="bi bi-house-door"></i> Knowledge Base</a></li>
-                    <!--<li><a href="index.php?page=search" ><i class="bi bi-search"></i> Search</a></li>-->
+                    <li><a href="search.php"><i class="bi bi-search"></i> Search</a></li>
                 </ul>
             </div>
         </nav>
