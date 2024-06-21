@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo($pageTitle); ?></title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="../css/login.css" rel="stylesheet" type="text/css">
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="css/login.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="container">
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ?>
                     <h1>LibreKB Update</h1>
                     <p>Welcome to LibreKB. This will update version <?php echo $oldVersion; ?> to <?php echo $version; ?></p>
-                    <p>Before you begin, please make sure you have uploaded the latest files, over-writing any previous versions. Be sure to retain your database details from your old config.php and put it in the new config.php.</p>
+                    <p>Before you begin, please make sure you have uploaded the latest files, over-writing any previous versions. Be sure to retain your database details from your old config.php, put it into the new config.example.php, and renamed it to config.php.</p>
                     <p>For more information, to report bugs, or to get the latest version, go to <a href="https://librekb.com/" target="_blank">librekb.com</a>.</p>
                     <br />
                     <form action="update.php" method="POST">
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <br />
         </div>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
 ?>

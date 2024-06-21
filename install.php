@@ -132,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo($pageTitle); ?></title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="../css/login.css" rel="stylesheet" type="text/css">
+        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="css/login.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="container">
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <br />
         </div>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
 ?>
