@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="../css/admin.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript" src="../vendor/tinymce/tinymce.min.js"></script>
         <script type="text/javascript">
            tinymce.init({
                 selector: '.tinymce',
