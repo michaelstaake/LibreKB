@@ -13,7 +13,6 @@
         if ($isUpdate == 'yes') {
             $setting = new Setting();
             $currentVersion = $setting->getSettingValue('version');
-            $currentVersion = 'test';
             $latestJson = file_get_contents('https://librekb.com/latest.php');
             $latestData = json_decode($latestJson, true);
             if ($latestData && isset($latestData['version'])) {
