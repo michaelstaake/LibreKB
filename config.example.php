@@ -23,6 +23,7 @@ class Config {
     }
 }
 require_once('classes/Database.php');
+require_once('classes/Search.php');
 require_once('classes/Email.php');
 require_once('classes/Article.php');
 require_once('classes/Category.php');

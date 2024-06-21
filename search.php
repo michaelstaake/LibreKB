@@ -19,20 +19,42 @@
         exit;
     } else {
         if (isset($_GET['query']) && $_GET['query'] != '') {
+            /* Search Results Page */
+            $query = htmlspecialchars($_GET['query'], ENT_QUOTES, 'UTF-8');
+            $search = new Search();
+            $search->query = $query;
+            $results = $search->search();
             $pageTitle = 'Search Results';
             require_once('header.php');
             ?>
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.php">Knowledge Base</a></li>
-                        <li class="breadcrumb-item"><a href="index.php?page=search">Search</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo $_GET['query']; ?></li>
+                        <li class="breadcrumb-item"><a href="search.php">Search</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo $query; ?></li>
                     </ol>
                     <header>
-                        <h1><?php echo $pageTitle; ?></h1>
+                        <h1>Search results for "<?php echo $query; ?>"</h1>
                     </header>
                     <main>
-                        <p>Coming soon</p>
+                        
+                        <?php
+                            if (!$results) {
+                                echo '<p><i>No results found. <a href="index.php">Return to home page</a> or <a href="search.php">start new search</a>?</p>';
+                            } else {
+                                foreach($results as $result) {
+                                    echo '
+                                    <div class="article-item">
+                                        <a href="index.php?page=article&a=' . $result['slug'] . '">
+                                            <div>
+                                                <h6><i class="bi bi-file-earmark"></i>  ' . $result['title'] . '</h6>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    ';
+                                }
+                            }
+                        ?>
                     </main>
                 </div>
                 
@@ -52,7 +74,14 @@
                         <h1><?php echo $pageTitle; ?></h1>
                     </header>
                     <main>
-                        <p>Coming soon</p>
+                        <p>Search for relevant articles in the knowledge base.</p>
+                        <form action="search.php" method="GET">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="query" placeholder="Search" style="max-width:400px;">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
                     </main>
                 </div>
                 
