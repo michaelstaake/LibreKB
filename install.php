@@ -1,5 +1,5 @@
 <?php
-$version = "1.2.0";
+$version = "1.2.2";
 require_once('config.php');
 $pageTitle = 'LibreKB Installer';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
