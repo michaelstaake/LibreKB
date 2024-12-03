@@ -26,6 +26,14 @@ class Category extends Database {
         return $categories;
     }
 
+    public function getAllCategoriesEnabledTopLevel() {
+        $query = "SELECT * FROM categories WHERE `status` = 'enabled' AND `parent` IS NULL ORDER BY `order`+0 ASC";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $categories;
+    }
+
     public function getNumberOfCategoriesWithThisParent($categoryId) {
         $query = "SELECT COUNT(*) FROM categories WHERE parent = :categoryId";
         $statement = $this->connect()->prepare($query);
@@ -71,6 +79,9 @@ class Category extends Database {
 
     public function createCategory() {
         $parent = $this->parent;
+        if ($parent == 0) {
+            $parent = NULL;
+        }
         $name = $this->name;
         $slug = strtolower(str_replace(' ', '-', $name));
         $description = $this->description;
