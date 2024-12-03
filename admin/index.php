@@ -41,6 +41,7 @@
                 exit;
             } else {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $parent = $_POST['parent'];
                     $name = $_POST['name'];
                     $slug = $_POST['slug'];
                     $description = $_POST['description'];
@@ -50,6 +51,7 @@
         
                     $category = new Category();
                     $category->id = $get;
+                    $category->parent = $parent;
                     $category->name = $name;
                     $category->slug = $slug;
                     $category->description = $description;
@@ -157,6 +159,7 @@
     } else if (isset($_GET['action']) && $_GET['action'] === 'categoryCreate') {
         /* Category - Create Category */
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $parent = $_POST['parent'];
             $name = $_POST['name'];
             $slug = $_POST['slug'];
             $description = $_POST['description'];
@@ -164,6 +167,7 @@
             $order = $_POST['order'];
             $status = $_POST['status'];
             $category = new Category();
+            $category->parent = $parent;
             $category->name = $name;
             $category->slug = $slug;
             $category->description = $description;
@@ -189,6 +193,19 @@
                     </header>
                     <main>
                         <form action="index.php?action=categoryCreate" method="POST">
+                            <div class="mb-3">
+                                <label for="parent" class="form-label">Parent Category</label>
+                                <select class="form-select" id="parent" name="parent">
+                                    <option value="0">None, this will be a top level category</option>
+                                    <?php
+                                        $category = new Category();
+                                        $categories = $category->getAllCategoriesTopLevel();
+                                        foreach ($categories as $cat) {
+                                            echo '<option value="' . $cat['id'] . '">' . $cat['name'] . '</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
@@ -483,6 +500,8 @@
                         foreach($categories as $category) {
                             $article = new Article();
                             $numArticlesInCategory = $article->getNumberOfArticlesByCategoryId($category['id']);
+                            $category2 = new Category();
+                            $numCategoriesInCategory = $category2->getNumberOfCategoriesWithThisParent($category['id']);
                             echo '
                             <div class="category-item">
                                 <a href="index.php?action=categoryView&c=' . $category['id'] . '">
@@ -492,13 +511,13 @@
                                         </div>
                                         <div class="category-content">
                                             <h6>' . $category['name'] . ' <span class="num-articles">(' . $numArticlesInCategory . ')</span></h6>
-                                            <p>Order: <code>' . $category['order'] . '</code> Status: <code>' . $category['status'] . '</code> </p>
+                                            <p>Parent: <code>' . ($category['parent'] ? $category['parent'] : 'N/A') . '</code> Order: <code>' . $category['order'] . '</code> Status: <code>' . $category['status'] . '</code> </p>
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="category-manage">
-                                ' . $category['name'] . ': <a href="index.php?action=articleCreate&c=' . $category['id'] . '">Create Article</a> &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#editCategory' . $category['id'] . '">Edit</a>'.(($numArticlesInCategory=='0')?' &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCategory' . $category['id'] . '">Delete</a>':"").'
+                                ' . $category['name'] . ': <a href="index.php?action=articleCreate&c=' . $category['id'] . '">Create Article</a> &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#editCategory' . $category['id'] . '">Edit</a>'.(($numArticlesInCategory=='0' && $numCategoriesInCategory=='0')?' &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCategory' . $category['id'] . '">Delete</a>':"").'
                             </div>
                             <!-- Edit Category Modal -->
                             <div class="modal fade" id="editCategory' . $category['id'] . '" tabindex="-1" aria-labelledby="editCategory' . $category['id'] . 'Label" aria-hidden="true">
@@ -510,6 +529,10 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="parent" class="form-label">Parent Category</label>
+                                                    <input type="text" class="form-control" id="parent" name="parent" value="' . $category['parent'] . '">
+                                                </div>
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
                                                     <input type="text" class="form-control" id="name" name="name" value="' . $category['name'] . '" required>

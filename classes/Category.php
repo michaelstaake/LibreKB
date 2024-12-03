@@ -18,6 +18,31 @@ class Category extends Database {
         return $categories;
     }
 
+    public function getAllCategoriesTopLevel() {
+        $query = "SELECT * FROM categories WHERE `parent` IS NULL ORDER BY `order`+0 ASC";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $categories;
+    }
+
+    public function getNumberOfCategoriesWithThisParent($categoryId) {
+        $query = "SELECT COUNT(*) FROM categories WHERE parent = :categoryId";
+        $statement = $this->connect()->prepare($query);
+        $statement->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
+    public function getAllCategoriesWithParent($parent_id) {
+        $query = "SELECT * FROM categories WHERE `parent` = :parent_id ORDER BY `order`+0 ASC";
+        $stmt = $this->connect()->prepare($query);
+        $stmt->bindParam(':parent_id', $parent_id);
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $categories;
+    }
+
     public function getCategory($id) {
         $query = "SELECT * FROM categories WHERE id = :id";
         $stmt = $this->connect()->prepare($query);
@@ -45,6 +70,7 @@ class Category extends Database {
     }
 
     public function createCategory() {
+        $parent = $this->parent;
         $name = $this->name;
         $slug = strtolower(str_replace(' ', '-', $name));
         $description = $this->description;
@@ -54,10 +80,11 @@ class Category extends Database {
         $created = date('Y-m-d H:i:s');
         $updated = $created;
 
-        $query = "INSERT INTO categories (`name`, `slug`, `description`, `icon`, `order`, `status`, `created`, `updated`) VALUES (:name, :slug, :description, :icon, :order, :status, :created, :updated)";
+        $query = "INSERT INTO categories (`parent`, `name`, `slug`, `description`, `icon`, `order`, `status`, `created`, `updated`) VALUES (:parent, :name, :slug, :description, :icon, :order, :status, :created, :updated)";
 
         try {
             $stmt = $this->connect()->prepare($query);
+            $stmt->bindParam(':parent', $parent);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':slug', $slug);
             $stmt->bindParam(':description', $description);
@@ -75,6 +102,10 @@ class Category extends Database {
 
     public function updateCategory() {
         $id = $this->id;
+        $parent = $this->parent;
+        if ($parent == 0) {
+            $parent = NULL;
+        }
         $name = $this->name;
         $slug = strtolower(str_replace(' ', '-', $name));
         $description = $this->description;
@@ -83,11 +114,12 @@ class Category extends Database {
         $status = $this->status;
         $updated = date('Y-m-d H:i:s');
 
-        $query = "UPDATE categories SET `name` = :name, `slug` = :slug, `description` = :description, `icon` = :icon, `order` = :order, `status` = :status, `updated` = :updated WHERE `id` = :id";
+        $query = "UPDATE categories SET `parent` = :parent, `name` = :name, `slug` = :slug, `description` = :description, `icon` = :icon, `order` = :order, `status` = :status, `updated` = :updated WHERE `id` = :id";
 
         try {
             $stmt = $this->connect()->prepare($query);
             $stmt->bindParam(':id', $id);
+            $stmt->bindParam(':parent', $parent);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':slug', $slug);
             $stmt->bindParam(':description', $description);
