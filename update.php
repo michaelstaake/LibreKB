@@ -1,6 +1,6 @@
 <?php
-$version = "1.2.2";
-$oldVersion = "1.2.1";
+$version = "1.3.0";
+$oldVersion = "1.2.2";
 require_once('config.php');
 $pageTitle = 'LibreKB Updater';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $settings = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($settings['value'] == $oldVersion) {
+            // This is only for 1.2.2 to 1.3.0 to add parent column to categories table
+            $category = new Category($conn);
+            $category->upgradeDBto130();
+            // continue with the update
             $updateSettingsQuery = "UPDATE settings SET value = :version WHERE name = 'version'";
             $stmt = $conn->prepare($updateSettingsQuery);
             $stmt->bindValue(':version', $version);

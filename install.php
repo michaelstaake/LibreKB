@@ -1,5 +1,5 @@
 <?php
-$version = "1.2.2";
+$version = "1.3.0";
 require_once('config.php');
 $pageTitle = 'LibreKB Installer';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         CREATE TABLE categories (
             `id` INT(6) AUTO_INCREMENT PRIMARY KEY,
+            `parent` INT(6),
             `name` VARCHAR(255) NOT NULL,
             `slug` VARCHAR(255) NOT NULL,
             `description` LONGTEXT,

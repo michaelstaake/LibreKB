@@ -13,7 +13,7 @@
         if ($isUpdate == 'yes') {
             $setting = new Setting();
             $currentVersion = $setting->getSettingValue('version');
-            $latestJson = file_get_contents('https://librekb.com/latest.php');
+            $latestJson = file_get_contents('https://librekb.com/latest.php?version=' . $currentVersion);
             $latestData = json_decode($latestJson, true);
             if ($latestData && isset($latestData['version'])) {
                 $latestVersion = $latestData['version'];
@@ -41,6 +41,7 @@
                 exit;
             } else {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $parent = $_POST['parent'];
                     $name = $_POST['name'];
                     $slug = $_POST['slug'];
                     $description = $_POST['description'];
@@ -50,6 +51,7 @@
         
                     $category = new Category();
                     $category->id = $get;
+                    $category->parent = $parent;
                     $category->name = $name;
                     $category->slug = $slug;
                     $category->description = $description;
@@ -157,6 +159,7 @@
     } else if (isset($_GET['action']) && $_GET['action'] === 'categoryCreate') {
         /* Category - Create Category */
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $parent = $_POST['parent'];
             $name = $_POST['name'];
             $slug = $_POST['slug'];
             $description = $_POST['description'];
@@ -164,6 +167,7 @@
             $order = $_POST['order'];
             $status = $_POST['status'];
             $category = new Category();
+            $category->parent = $parent;
             $category->name = $name;
             $category->slug = $slug;
             $category->description = $description;
@@ -189,6 +193,19 @@
                     </header>
                     <main>
                         <form action="index.php?action=categoryCreate" method="POST">
+                            <div class="mb-3">
+                                <label for="parent" class="form-label">Parent Category</label>
+                                <select class="form-select" id="parent" name="parent">
+                                    <option value="0">None, this will be a top level category</option>
+                                    <?php
+                                        $category = new Category();
+                                        $categories = $category->getAllCategoriesTopLevel();
+                                        foreach ($categories as $cat) {
+                                            echo '<option value="' . $cat['id'] . '">' . $cat['name'] . '</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
@@ -476,13 +493,15 @@
                 <br />
                 <?php
                     $category = new Category();
-                    $categories = $category->getAllCategories();
+                    $categories = $category->getAllCategoriesTopLevel();
                     if (!$categories) {
                         echo '<p><i>No categories present.</i></p>';
                     } else {
                         foreach($categories as $category) {
                             $article = new Article();
                             $numArticlesInCategory = $article->getNumberOfArticlesByCategoryId($category['id']);
+                            $category2 = new Category();
+                            $numCategoriesInCategory = $category2->getNumberOfCategoriesWithThisParent($category['id']);
                             echo '
                             <div class="category-item">
                                 <a href="index.php?action=categoryView&c=' . $category['id'] . '">
@@ -498,7 +517,7 @@
                                 </a>
                             </div>
                             <div class="category-manage">
-                                ' . $category['name'] . ': <a href="index.php?action=articleCreate&c=' . $category['id'] . '">Create Article</a> &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#editCategory' . $category['id'] . '">Edit</a>'.(($numArticlesInCategory=='0')?' &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCategory' . $category['id'] . '">Delete</a>':"").'
+                                ' . $category['name'] . ': <a href="index.php?action=articleCreate&c=' . $category['id'] . '">Create Article</a> &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#editCategory' . $category['id'] . '">Edit</a>'.(($numArticlesInCategory=='0' && $numCategoriesInCategory=='0')?' &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCategory' . $category['id'] . '">Delete</a>':"").'
                             </div>
                             <!-- Edit Category Modal -->
                             <div class="modal fade" id="editCategory' . $category['id'] . '" tabindex="-1" aria-labelledby="editCategory' . $category['id'] . 'Label" aria-hidden="true">
@@ -510,6 +529,19 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="parent" class="form-label">Parent Category</label>';
+                                                    $categoryTL = new Category();
+                                                    $categoriesTL = $categoryTL->getAllCategoriesTopLevel();
+                                                    echo '<select class="form-select" id="parent" name="parent">
+                                                        <option value="0">None, this will be a top level category</option>';
+                                                        foreach ($categoriesTL as $cat) {
+                                                            if ($cat['id'] != $category['id']) {
+                                                                echo '<option value="' . $cat['id'] . '" '.(($category['parent']==$cat['id'])?'selected="selected"':"").'>' . $cat['name'] . '</option>';
+                                                            }
+                                                        }
+                                                    echo '</select>
+                                                </div>
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
                                                     <input type="text" class="form-control" id="name" name="name" value="' . $category['name'] . '" required>
@@ -559,6 +591,103 @@
                                 </div>
                             </div>
                             ';
+                            $categorySub = new Category();
+                            $categoriesSub = $categorySub->getAllCategoriesWithParent($category['id']);
+                            foreach($categoriesSub as $categorySub) {
+                                $article = new Article();
+                                $numArticlesInCategorySub = $article->getNumberOfArticlesByCategoryId($categorySub['id']);
+                                $category2 = new Category();
+                                $numCategoriesInCategorySub = $category2->getNumberOfCategoriesWithThisParent($categorySub['id']);
+                                echo '
+                                <div class="category-item subcategory">
+                                    <a href="index.php?action=categoryView&c=' . $categorySub['id'] . '">
+                                        <div class="category-inner">
+                                            <div class="category-icon">
+                                                <i class="bi bi-' . $categorySub['icon'] . '"></i>
+                                            </div>
+                                            <div class="category-content">
+                                                <h6>' . $categorySub['name'] . ' <span class="num-articles">(' . $numArticlesInCategorySub . ')</span></h6>
+                                                <p>Order: <code>' . $categorySub['order'] . '</code> Status: <code>' . $categorySub['status'] . '</code> </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="category-manage subcategory">
+                                    ' . $categorySub['name'] . ': <a href="index.php?action=articleCreate&c=' . $categorySub['id'] . '">Create Article</a> &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#editCategory' . $categorySub['id'] . '">Edit</a>'.(($numArticlesInCategorySub=='0' && $numCategoriesInCategorySub=='0')?' &middot; <a href="#" data-bs-toggle="modal" data-bs-target="#deleteCategory' . $categorySub['id'] . '">Delete</a>':"").'
+                                </div>
+                                <!-- Edit Category Modal -->
+                                <div class="modal fade" id="editCategory' . $categorySub['id'] . '" tabindex="-1" aria-labelledby="editCategory' . $categorySub['id'] . 'Label" aria-hidden="true">
+                                    <form action="index.php?action=categoryManage&c=' . $categorySub['id'] . '" method="POST">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="editCategory' . $categorySub['id'] . 'Label">' . $categorySub['name'] . '</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label for="parent" class="form-label">Parent Category</label>';
+                                                        $categoryTL = new Category();
+                                                        $categoriesTL = $categoryTL->getAllCategoriesTopLevel();
+                                                        echo '<select class="form-select" id="parent" name="parent">
+                                                            <option value="0">None, this will be a top level category</option>';
+                                                            foreach ($categoriesTL as $cat) {
+                                                                if ($cat['id'] != $categorySub['id']) {
+                                                                    echo '<option value="' . $cat['id'] . '" '.(($categorySub['parent']==$cat['id'])?'selected="selected"':"").'>' . $cat['name'] . '</option>';
+                                                                }
+                                                            }
+                                                        echo '</select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="name" class="form-label">Name</label>
+                                                        <input type="text" class="form-control" id="name" name="name" value="' . $categorySub['name'] . '" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="description" class="form-label">Description</label>
+                                                        <textarea class="form-control" id="description" name="description" rows="3">' . $categorySub['description'] . '</textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="order" class="form-label">Order</label>
+                                                        <input type="number" class="form-control" id="order" name="order"  value="' . $categorySub['order'] . '" >
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="status" class="form-label">Status</label>
+                                                        <select class="form-select" id="status" name="status">
+                                                            <option value="enabled" '.(($categorySub['status']=='enabled')?'selected="selected"':"").'>Enabled</option>
+                                                            <option value="disabled" '.(($categorySub['status']=='disabled')?'selected="selected"':"").'>Disabled</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!-- Delete Category Modal -->
+                                <div class="modal fade" id="deleteCategory' . $categorySub['id'] . '" tabindex="-1" aria-labelledby="deleteCategory' . $categorySub['id'] . 'Label" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="deleteCategory' . $categorySub['id'] . 'Label">Delete ' . $categorySub['name'] . '</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Are you sure you want to delete this category?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <form action="index.php?action=categoryDelete&c=' . $categorySub['id'] . '" method="POST">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                ';
+                            }
                         }
                     }
                     

@@ -20,3 +20,7 @@ Check out the official website at [LibreKB.com](https://librekb.com/) for more i
 Docs: [docs.LibreKB.com](https://docs.librekb.com/)
 
 Forum: [GitHub Discussions for LibreKB](https://github.com/michaelstaake/LibreKB/discussions)
+
+### Update Checks and Your Privacy
+
+If you have updateCheck set to 'yes' in the config file, which is the default setting, your LibreKB install will reach out to my servers every time you log in to your LibreKB admin area. The update checker is hosted on my server and may log the IP address of your server, the version of LibreKB you're currently running, and the timestamp of when the update check was requested. No other data is submitted or collected. I do not intend for this data to be shared or sold, but I reserve the right to use this data however I determine is best, including but not limited to posting anonymized stats on usage. If you do not wish to use this feature, simply set updateCheck to no in the config file, and no data will ever be sent to my servers.

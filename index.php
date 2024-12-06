@@ -34,6 +34,13 @@
                     <div class="container">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.php">Knowledge Base</a></li>
+                            <?php
+                                if ($categoryData['parent'] != NULL) {
+                                    $categoryInner = new Category();
+                                    $parentCategory = $categoryInner->getCategory($categoryData['parent']);
+                                    echo '<li class="breadcrumb-item"><a href="index.php?page=category&c=' . $parentCategory['slug'] . '">' . $parentCategory['name'] . '</a></li>';
+                                }
+                            ?>
                             <li class="breadcrumb-item active" aria-current="page"><?php echo($pageTitle); ?></li>
                         </ol>
                         <header>
@@ -42,10 +49,33 @@
                         </header>
                         <main>
                             <?php
+                                $categorySub = new Category();
+                                $subCategories = $categorySub->getAllCategoriesWithParent($categoryData['id']);
+                                if (!$subCategories) {
+                                    $hasSubCategories = false;
+                                } else {
+                                    $hasSubCategories = true;
+                                    foreach($subCategories as $subCategory) {
+                                        echo '
+                                        <div class="article-item">
+                                            <a href="index.php?page=category&c=' . $subCategory['slug'] . '">
+                                                <div>
+                                                    <h6><i class="bi bi-' . $subCategory['icon'] . '"></i>  ' . $subCategory['name'] . '</h6>
+                                                    <p>' . $subCategory['description'] . '</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        ';
+                                    }
+                                }
+                            ?>
+                            <?php
                                 $article = new Article();
                                 $articles = $article->getArticlesEnabledByCategoryId($categoryData['id']);
                                 if (!$articles) {
-                                    echo '<p><i>No articles in this category.</i></p>';
+                                    if (!$hasSubCategories) {
+                                        echo '<p><i>No content in this category.</i></p>';
+                                    }
                                 } else {
                                     foreach($articles as $article) {
                                         echo '
@@ -89,6 +119,13 @@
                                 $category = new Category();
                                 $categoryData = $category->getCategory($articleData['category']);
                             ?>
+                            <?php
+                                if ($categoryData['parent'] != NULL) {
+                                    $categoryInner = new Category();
+                                    $parentCategory = $categoryInner->getCategory($categoryData['parent']);
+                                    echo '<li class="breadcrumb-item"><a href="index.php?page=category&c=' . $parentCategory['slug'] . '">' . $parentCategory['name'] . '</a></li>';
+                                }
+                            ?>
                             <li class="breadcrumb-item"><a href="index.php?page=category&c=<?php echo($categoryData['slug']); ?>"><?php echo($categoryData['name']); ?></a></li>
                             <li class="breadcrumb-item active" aria-current="page"><?php echo($pageTitle); ?></li>
                         </ol>
@@ -122,7 +159,7 @@
                 </ol>
                 <?php
                     $category = new Category();
-                    $categories = $category->getAllCategoriesEnabled();
+                    $categories = $category->getAllCategoriesEnabledTopLevel();
                     if (!$categories) {
                         echo '<p><i>No categories present.</i></p>';
                     } else {
