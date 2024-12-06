@@ -179,6 +179,10 @@ footer a, footer a:visited, footer a:active, footer a:focus {
     background: #FFFFFF;
 }
 
+.subcategory {
+    margin-left: 20px;
+}
+
 .category-manage {
     margin-top: 5px;
     margin-bottom: 15px;
