@@ -61,6 +61,7 @@
                                             <a href="index.php?page=category&c=' . $subCategory['slug'] . '">
                                                 <div>
                                                     <h6><i class="bi bi-' . $subCategory['icon'] . '"></i>  ' . $subCategory['name'] . '</h6>
+                                                    <p>' . $subCategory['description'] . '</p>
                                                 </div>
                                             </a>
                                         </div>
