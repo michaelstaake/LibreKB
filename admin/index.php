@@ -530,17 +530,26 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="mb-3">
-                                                    <label for="parent" class="form-label">Parent Category</label>';
-                                                    $categoryTL = new Category();
-                                                    $categoriesTL = $categoryTL->getAllCategoriesTopLevel();
-                                                    echo '<select class="form-select" id="parent" name="parent">
-                                                        <option value="0">None, this will be a top level category</option>';
-                                                        foreach ($categoriesTL as $cat) {
-                                                            if ($cat['id'] != $category['id']) {
-                                                                echo '<option value="' . $cat['id'] . '" '.(($category['parent']==$cat['id'])?'selected="selected"':"").'>' . $cat['name'] . '</option>';
+                                                    ';
+                                                    if ($numCategoriesInCategory=='0') {
+                                                        $categoryTL = new Category();
+                                                        $categoriesTL = $categoryTL->getAllCategoriesTopLevel();
+                                                        echo '<label for="parent" class="form-label">Parent Category</label>
+                                                        <select class="form-select" id="parent" name="parent">
+                                                            <option value="0">None, this will be a top level category</option>';
+                                                            foreach ($categoriesTL as $cat) {
+                                                                if ($cat['id'] != $category['id']) {
+                                                                    echo '<option value="' . $cat['id'] . '" '.(($category['parent']==$cat['id'])?'selected="selected"':"").'>' . $cat['name'] . '</option>';
+                                                                }
                                                             }
-                                                        }
-                                                    echo '</select>
+                                                        echo '</select>';
+                                                    } else {
+                                                        echo '<label for="parent" class="form-label">Parent Category</label>
+                                                        <select class="form-select" id="parent" name="parent">
+                                                            <option value="0">None, this will be a top level category.</option>';
+                                                        echo '</select>';
+                                                    }
+                                                    echo '
                                                 </div>
                                                 <div class="mb-3">
                                                     <label for="name" class="form-label">Name</label>
