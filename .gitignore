@@ -1,2 +1,5 @@
 #ignore config file
 config.php
+
+.env
+
