@@ -161,9 +161,9 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $parent = $_POST['parent'];
             $name = $_POST['name'];
-            $slug = $_POST['slug'];
+            $slug = isset($_POST['slug']) ? $_POST['slug'] : '';
             $description = $_POST['description'];
-            $icon = $_POST['icon'];
+            $icon = isset($_POST['icon']) ? $_POST['icon'] : '';
             $order = $_POST['order'];
             $status = $_POST['status'];
             $category = new Category();
@@ -391,12 +391,12 @@
         /* Article - Create Article */
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $title = $_POST['title'];
-            $slug = $_POST['slug'];
+            $slug = isset($_POST['slug']) ? $_POST['slug'] : '';
             $category = $_POST['category'];
             $content = $_POST['content'];
             $order = $_POST['order'];
             $status = $_POST['status'];
-            $featured = $_POST['featured'];
+            $featured = isset($_POST['featured']) ? $_POST['featured'] : '';
             $article = new Article();
             $article->title = $title;
             $article->slug = $slug;
