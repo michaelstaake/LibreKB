@@ -55,7 +55,8 @@ class Article extends Database {
     public function createArticle() {
         $number = mt_rand(100000, 999999);
         $title = $this->title;
-        $slug = strtolower(str_replace(' ', '-', $title));
+        $slug = strtolower(preg_replace('/[^a-zA-Z0-9 ]/', '', $title));
+        $slug = str_replace(' ', '-', $slug);
         $category = $this->category;
         $content = $this->content;
         $order = $this->order;
@@ -85,7 +86,8 @@ class Article extends Database {
     public function updateArticle() {
         $id = $this->id;
         $title = $this->title;
-        $slug = strtolower(str_replace(' ', '-', $title));
+        $slug = strtolower(preg_replace('/[^a-zA-Z0-9 ]/', '', $title));
+        $slug = str_replace(' ', '-', $slug);
         $category = $this->category;
         $content = $this->content;
         $order = $this->order;

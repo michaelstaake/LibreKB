@@ -1,6 +1,6 @@
 <?php
-$version = "1.3.0";
-$oldVersion = "1.2.2";
+$version = "1.3.1";
+$oldVersion = "1.3.1";
 require_once('config.php');
 $pageTitle = 'LibreKB Updater';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

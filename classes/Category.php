@@ -83,7 +83,8 @@ class Category extends Database {
             $parent = NULL;
         }
         $name = $this->name;
-        $slug = strtolower(str_replace(' ', '-', $name));
+        $slug = strtolower(preg_replace('/[^a-zA-Z0-9 ]/', '', $name));
+        $slug = str_replace(' ', '-', $slug);
         $description = $this->description;
         $icon = "folder";
         $order = $this->order;
@@ -118,7 +119,8 @@ class Category extends Database {
             $parent = NULL;
         }
         $name = $this->name;
-        $slug = strtolower(str_replace(' ', '-', $name));
+        $slug = strtolower(preg_replace('/[^a-zA-Z0-9 ]/', '', $name));
+        $slug = str_replace(' ', '-', $slug);
         $description = $this->description;
         $icon = "folder";
         $order = $this->order;

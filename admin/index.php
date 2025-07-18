@@ -317,7 +317,7 @@
                             <form action="index.php?action=articleManage&a=<?php echo $articleData['id']; ?>" method="POST">
                                     <div class="mb-3">
                                         <label for="title" class="form-label">Title</label>
-                                        <input type="text" class="form-control" id="title" name="title" required value="<?php echo $articleData['title']; ?>">
+                                        <input type="text" class="form-control" id="title" name="title" required value="<?php echo htmlspecialchars($articleData['title'], ENT_QUOTES, 'UTF-8'); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label for="content" class="form-label">Content</label>
