@@ -76,8 +76,17 @@
         
         <?php if (empty($categories)): ?>
             <div class="alert alert-info" role="alert">
-                <h5><i class="bi bi-info-circle"></i> No content found</h5>
-                <p class="mb-0">Start by creating your first category, then add articles to organize your knowledge base.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5><i class="bi bi-info-circle"></i> No content found</h5>
+                        <p class="mb-0">Start by creating your first category, then add articles to organize your knowledge base.</p>
+                    </div>
+                    <?php if ($user['group'] === 'admin' || $user['group'] === 'manager'): ?>
+                    <a href="/admin/categories/create" class="btn btn-primary">
+                        <i class="bi bi-folder-plus"></i> Create Category
+                    </a>
+                    <?php endif; ?>
+                </div>
             </div>
         <?php else: ?>
             <div class="card">
