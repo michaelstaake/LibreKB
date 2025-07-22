@@ -184,7 +184,7 @@ class ArticleController extends Controller
     public function update($id)
     {
         $title = $this->rawInput('title');
-        $slug = $this->generateSlug($title);
+        $slug = $this->generateSlug($title, $id);
         $content = $this->rawInput('content');
         $category = $this->input('category');
         $status = $this->input('status');
@@ -227,7 +227,7 @@ class ArticleController extends Controller
         }
     }
     
-    private function generateSlug($title)
+    private function generateSlug($title, $excludeId = null)
     {
         // First, convert HTML entities back to characters
         $title = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
@@ -243,9 +243,19 @@ class ArticleController extends Controller
         // Check if slug exists
         $counter = 1;
         $originalSlug = $slug;
-        while ($this->articleModel->getBySlug($slug)) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+        
+        if ($excludeId) {
+            // When editing, exclude the current article from the check
+            while ($this->articleModel->getBySlugExcludingId($slug, $excludeId)) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+        } else {
+            // When creating, check all articles
+            while ($this->articleModel->getBySlug($slug)) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
         }
         
         return $slug;

@@ -9,6 +9,12 @@ class Article extends Model
         return $this->findBy('slug', $slug);
     }
     
+    public function getBySlugExcludingId($slug, $excludeId)
+    {
+        $sql = "SELECT * FROM {$this->table} WHERE slug = :slug AND id != :excludeId";
+        return $this->fetchOne($sql, ['slug' => $slug, 'excludeId' => $excludeId]);
+    }
+    
     public function getEnabledBySlug($slug)
     {
         $sql = "SELECT * FROM {$this->table} WHERE slug = :slug AND status = 'enabled'";
