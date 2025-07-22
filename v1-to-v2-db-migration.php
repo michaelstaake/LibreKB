@@ -148,6 +148,31 @@ try {
         }
     }
     
+    // Check if log table exists
+    echo "<p class='info'>Checking log table...</p>\n";
+    $stmt = $pdo->query("SHOW TABLES LIKE 'log'");
+    if ($stmt->rowCount() == 0) {
+        echo "<p class='warning'>⚠ Log table does not exist, skipping user_ip column addition...</p>\n";
+    } else {
+        echo "<p class='success'>✓ Log table found</p>\n";
+        
+        // Check if user_ip column already exists
+        echo "<p class='info'>Checking for user_ip column in log table...</p>\n";
+        $stmt = $pdo->query("SHOW COLUMNS FROM log LIKE 'user_ip'");
+        if ($stmt->rowCount() > 0) {
+            echo "<p class='warning'>⚠ user_ip column already exists in log table, skipping...</p>\n";
+        } else {
+            // Add user_ip column to log table
+            echo "<p class='info'>Adding user_ip column to log table...</p>\n";
+            $stmt = $pdo->query("ALTER TABLE log ADD COLUMN user_ip VARCHAR(255) NOT NULL DEFAULT ''");
+            if ($stmt) {
+                echo "<p class='success'>✓ user_ip column added to log table</p>\n";
+            } else {
+                throw new Exception("Failed to add user_ip column to log table");
+            }
+        }
+    }
+    
     echo "<div style='background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; margin: 20px 0; border-radius: 5px;'>\n";
     echo "<h2>Migration Complete!</h2>\n";
     echo "<p><strong>The database migration from LibreKB v1 to v2 has been completed successfully.</strong></p>\n";
