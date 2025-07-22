@@ -29,7 +29,7 @@
                         <?php 
                         // Ensure $missingTables is defined and is an array
                         if (!isset($missingTables) || !is_array($missingTables)) {
-                            $missingTables = ['users', 'settings', 'articles', 'categories', 'logs'];
+                            $missingTables = ['users', 'settings', 'articles', 'categories', 'log'];
                         }
                         foreach ($missingTables as $table): 
                         ?>

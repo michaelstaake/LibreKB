@@ -19,7 +19,7 @@ class Database extends Config {
     }
     
     public function checkRequiredTables() {
-        $requiredTables = ['users', 'settings', 'articles', 'categories', 'logs'];
+        $requiredTables = ['users', 'settings', 'articles', 'categories', 'log'];
         $missingTables = [];
         
         try {
