@@ -29,7 +29,7 @@
                         <?php 
                         // Ensure $missingTables is defined and is an array
                         if (!isset($missingTables) || !is_array($missingTables)) {
-                            $missingTables = ['users', 'settings', 'articles', 'categories'];
+                            $missingTables = ['users', 'settings', 'articles', 'categories', 'logs'];
                         }
                         foreach ($missingTables as $table): 
                         ?>
@@ -51,30 +51,6 @@
                         Run Installer
                     </a>
                 </div>
-                
-                <details class="technical-details">
-                    <summary>
-                        <i class="bi bi-gear me-2"></i>
-                        Technical Details
-                    </summary>
-                    <div class="technical-content">
-                        <p><strong>What happened?</strong></p>
-                        <p>LibreKB attempted to access the database but couldn't find the required tables. This usually happens when:</p>
-                        <ul>
-                            <li>LibreKB hasn't been installed yet</li>
-                            <li>The database configuration is incorrect</li>
-                            <li>The database tables were accidentally deleted</li>
-                        </ul>
-                        
-                        <p class="mt-3"><strong>Required Tables:</strong></p>
-                        <ul>
-                            <li><code>users</code> - User accounts and authentication</li>
-                            <li><code>settings</code> - Application configuration</li>
-                            <li><code>articles</code> - Knowledge base articles</li>
-                            <li><code>categories</code> - Article organization</li>
-                        </ul>
-                    </div>
-                </details>
             </div>
         </div>
         
