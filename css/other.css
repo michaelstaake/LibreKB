@@ -1,0 +1,656 @@
+/* Other CSS - For login, password reset, 404, database error, and install pages */
+
+/* Common Auth and Error Page Styles */
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Auth Container (Login, Password Reset, Password New) */
+.auth-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    padding: 2.5rem;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.auth-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Login page - blue icon */
+.login-page .auth-icon {
+    background-color: #3b82f6;
+}
+
+/* Password reset page - orange icon */
+.password-reset-page .auth-icon {
+    background-color: #f59e0b;
+}
+
+/* Password new page - green icon */
+.password-new-page .auth-icon {
+    background-color: #10b981;
+}
+
+.auth-title {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Login page focus */
+.login-page .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Password reset page focus */
+.password-reset-page .form-control:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Password new page focus */
+.password-new-page .form-control:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-warning {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+    color: white;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+    border-color: #d97706;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: #10b981;
+    border-color: #10b981;
+    color: white;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: #059669;
+    border-color: #059669;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    border-color: #6b7280;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+    border-color: #4b5563;
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: white;
+}
+
+.auth-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.auth-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+    padding: 0.875rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.password-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Error Pages (404, Database Error) */
+.error-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.error-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.error-icon i {
+    color: white;
+    font-size: 2rem;
+}
+
+/* 404 page - red icon */
+.error-404 .error-container {
+    max-width: 500px;
+    text-align: center;
+}
+
+.error-404 .error-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #ef4444;
+}
+
+.error-404 .error-icon i {
+    font-size: 1.5rem;
+}
+
+/* 403 error page - orange/red icon for forbidden access */
+.error-403 .error-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #f97316;
+}
+
+.error-403 .error-icon i {
+    font-size: 1.5rem;
+}
+
+/* Database error page - dark red icon */
+.error-database .error-icon {
+    background-color: #dc2626;
+}
+
+.error-title {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.error-subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.error-description {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.error-code {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ef4444;
+    margin-bottom: 1rem;
+    line-height: 1;
+}
+
+.error-details {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.error-details h5 {
+    color: #dc2626;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.missing-tables {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+}
+
+.missing-tables li {
+    color: #7f1d1d;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.875rem;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.missing-tables li:before {
+    content: "×";
+    color: #dc2626;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.text-muted {
+    font-size: 0.875rem;
+}
+
+.solution-box {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.solution-box h5 {
+    color: #16a34a;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.solution-text {
+    color: #166534;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.technical-details {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.technical-details summary {
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.technical-details summary:hover {
+    color: #1f2937;
+}
+
+.technical-content {
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-top: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+/* Install Page */
+.install-page body {
+    padding: 1rem;
+}
+
+.install-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+    padding: 2.5rem;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.install-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.install-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #8b5cf6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.install-icon i {
+    color: white;
+    font-size: 1.5rem;
+}
+
+.install-title {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.install-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.version-badge {
+    display: inline-block;
+    background-color: #f3f4f6;
+    color: #374151;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.install-page .form-control:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.install-page .btn-primary {
+    background-color: #8b5cf6;
+    border-color: #8b5cf6;
+}
+
+.install-page .btn-primary:hover {
+    background-color: #7c3aed;
+    border-color: #7c3aed;
+}
+
+.alert-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.info-text {
+    color: #6b7280;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.external-link {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.external-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.section-title {
+    color: #1f2937;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Install Page Specific Styles */
+
+.compatibility-check {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.compatibility-item {
+    margin-bottom: 0.5rem;
+}
+
+.compatibility-item:last-child {
+    margin-bottom: 0;
+}
+
+.compatibility-label {
+    color: #374151;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.compatibility-value {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+}
+
+.compatibility-requirement {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    padding-left: 1.5rem;
+}
+
+.text-success {
+    color: #16a34a !important;
+}
+
+.text-danger {
+    color: #dc2626 !important;
+}
+
+.text-warning {
+    color: #ca8a04 !important;
+}
+
+.btn-outline-danger {
+    color: #dc2626;
+    border-color: #dc2626;
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+    color: #fff;
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 576px) {
+    .auth-container, .install-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .error-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+    
+    .auth-icon, .install-icon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .error-icon {
+        width: 64px;
+        height: 64px;
+    }
+    
+    .error-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .auth-title, .install-title {
+        font-size: 1.25rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-code {
+        font-size: 3rem;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-warning, .btn-success {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .error-404 .btn-primary, .error-404 .btn-secondary {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+}
