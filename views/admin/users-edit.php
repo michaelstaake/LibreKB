@@ -63,8 +63,8 @@
                         <div class="alert alert-info">
                             <h6>User Groups</h6>
                             <ul class="mb-0">
-                                <li><strong>Admin:</strong> Full access to all features</li>
-                                <li><strong>Manager:</strong> Limited access (if implemented)</li>
+                                <li><strong>Admin:</strong> Full access to everything</li>
+                                <li><strong>Manager:</strong> Can access admin panel but can only manage articles and categories</li>
                                 <li><strong>Client:</strong> Can only view front end, not admin.</li>
                             </ul>
                         </div>
