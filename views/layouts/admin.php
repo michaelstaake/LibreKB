@@ -36,8 +36,6 @@
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
                                     <li><a class="dropdown-item" href="/admin/users"><i class="bi bi-people"></i> Manage Users</a></li>
                                     <li><a class="dropdown-item" href="/admin/settings"><i class="bi bi-sliders"></i> Site Settings</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/admin/logs"><i class="bi bi-clock-history"></i> Activity Log</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>

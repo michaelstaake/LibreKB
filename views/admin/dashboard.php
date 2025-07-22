@@ -42,7 +42,6 @@
                             <div class="d-grid gap-2">
                                 <a href="/admin/users" class="btn btn-outline-success btn-sm">Manage Users</a>
                                 <a href="/admin/settings" class="btn btn-outline-primary btn-sm">Site Settings</a>
-                                <a href="/admin/logs" class="btn btn-outline-secondary btn-sm">Activity Log</a>
                             </div>
                         </div>
                     </div>
