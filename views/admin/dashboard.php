@@ -40,7 +40,7 @@
                                 <i class="bi bi-gear text-success"></i> Administration
                             </h5>
                             <div class="d-grid gap-2">
-                                <a href="/admin/users" class="btn btn-outline-success btn-sm">Manage Users</a>
+                                <a href="/admin/users" class="btn btn-outline-primary btn-sm">Manage Users</a>
                                 <a href="/admin/settings" class="btn btn-outline-primary btn-sm">Site Settings</a>
                             </div>
                         </div>
