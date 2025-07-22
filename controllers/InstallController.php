@@ -48,6 +48,10 @@ class InstallController extends Controller
     
     public function index()
     {
+        // Check if system is already installed
+        if (!$this->checkInstallable()) {
+            return $this->show404();
+        }
         
         if ($this->isPost()) {
             return $this->install();
@@ -68,6 +72,11 @@ class InstallController extends Controller
     
     public function install()
     {
+        // Check if system is already installed
+        if (!$this->checkInstallable()) {
+            return $this->show404();
+        }
+        
         $email = $this->input('email');
         $password = $this->input('password');
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -94,7 +103,7 @@ class InstallController extends Controller
             $this->createAdminUser($conn, $email, $hashedPassword);
             
             $this->setMessage('Installation completed successfully.');
-            return $this->redirect('/install');
+            return $this->redirect('/admin');
             
         } catch (Exception $e) {
             $this->setError('Installation failed: ' . $e->getMessage());
