@@ -140,3 +140,28 @@ footer p {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+/* Search Styles */
+
+.search-result-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef !important;
+}
+
+.search-result-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    border-color: #dee2e6 !important;
+}
+
+.search-result-card a {
+    color: inherit;
+}
+
+.search-result-card a:hover {
+    color: inherit;
+}
+
+.input-group-lg .form-control {
+    font-size: 1.1rem;
+}
