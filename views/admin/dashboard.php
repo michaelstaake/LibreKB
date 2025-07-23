@@ -109,6 +109,29 @@
                         return ($a['order'] + 0) - ($b['order'] + 0);
                     });
                     
+                    // Helper function to check if parent category is disabled
+                    function isParentDisabled($category, $categories) {
+                        if (!$category['parent']) {
+                            return false; // No parent, so not affected
+                        }
+                        
+                        $parent = array_filter($categories, function($cat) use ($category) {
+                            return $cat['id'] == $category['parent'];
+                        });
+                        
+                        if (empty($parent)) {
+                            return false; // Parent not found
+                        }
+                        
+                        $parent = reset($parent);
+                        if ($parent['status'] !== 'enabled') {
+                            return true; // Direct parent is disabled
+                        }
+                        
+                        // Check if any ancestor is disabled
+                        return isParentDisabled($parent, $categories);
+                    }
+                    
                     function displayContentStructure($category, $categories, $articles, $user, $level = 0) {
                         $indent = str_repeat('    ', $level);
                         $levelClass = $level === 0 ? 'border-start border-primary border-3' : 'border-start border-secondary';
@@ -130,6 +153,11 @@
                         echo htmlspecialchars($category['name']);
                         echo '</a>';
                         echo '</h' . ($level + 5) . '>';
+                        
+                        // Show warning icon if parent category is disabled
+                        if (isParentDisabled($category, $categories)) {
+                            echo '<i class="bi bi-exclamation-triangle text-warning me-2" title="Parent category is disabled - this content is not accessible to public users"></i>';
+                        }
                         
                         // Category status
                         if ($category['status'] !== 'enabled') {
@@ -176,6 +204,18 @@
                                 echo '<a href="/admin/articles/' . $article['id'] . '" class="text-decoration-none">';
                                 echo htmlspecialchars($article['title']);
                                 echo '</a>';
+                                
+                                // Show warning icon if article's category hierarchy is disabled
+                                $articleCategory = array_filter($categories, function($cat) use ($article) {
+                                    return $cat['id'] == $article['category'];
+                                });
+                                if (!empty($articleCategory)) {
+                                    $articleCategory = reset($articleCategory);
+                                    if ($articleCategory['status'] !== 'enabled' || isParentDisabled($articleCategory, $categories)) {
+                                        echo '<i class="bi bi-exclamation-triangle text-warning ms-2" title="Category or parent category is disabled - this article is not accessible to public users"></i>';
+                                    }
+                                }
+                                
                                 if ($article['status'] !== 'enabled') {
                                     echo '<span class="badge bg-danger ms-2 badge-sm">';
                                     echo ucfirst($article['status']);
