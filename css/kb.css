@@ -222,7 +222,7 @@ footer p {
 }
 
 .article-content {
-    line-height: 1.7;
+    line-height: 1.2;
     font-size: 1rem;
 }
 
@@ -258,6 +258,10 @@ footer p {
 
 .article-content li {
     margin-bottom: 0.5rem;
+}
+
+.article-content li:first-child {
+    margin-top: 0.5rem;
 }
 
 .article-content blockquote {
