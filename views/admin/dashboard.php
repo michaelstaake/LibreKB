@@ -8,10 +8,10 @@
     </header>
     
     <main>
-        <div class="row mb-4">
+        <div class="row">
             <?php if ($user['group'] === 'admin'): ?>
                 <!-- Admin view: 3 columns -->
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">
@@ -22,7 +22,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">
@@ -48,7 +48,7 @@
                 </div>
             <?php else: ?>
                 <!-- Manager view: 2 columns -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <h5 class="card-title">

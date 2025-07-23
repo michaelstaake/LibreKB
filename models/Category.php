@@ -30,7 +30,17 @@ class Category extends Model
     public function getEnabledTopLevel()
     {
         $sql = "SELECT * FROM {$this->table} WHERE status = 'enabled' AND parent IS NULL ORDER BY `order`+0 ASC";
-        return $this->fetchAll($sql);
+        $categories = $this->fetchAll($sql);
+        
+        // Filter out categories where hierarchy is not fully enabled
+        $enabledCategories = [];
+        foreach ($categories as $category) {
+            if ($this->isCategoryHierarchyEnabled($category['id'])) {
+                $enabledCategories[] = $category;
+            }
+        }
+        
+        return $enabledCategories;
     }
     
     public function getWithParent($parentId)
@@ -42,7 +52,17 @@ class Category extends Model
     public function getEnabledWithParent($parentId)
     {
         $sql = "SELECT * FROM {$this->table} WHERE parent = :parentId AND status = 'enabled' ORDER BY `order`+0 ASC";
-        return $this->fetchAll($sql, ['parentId' => $parentId]);
+        $categories = $this->fetchAll($sql, ['parentId' => $parentId]);
+        
+        // Filter out categories where hierarchy is not fully enabled
+        $enabledCategories = [];
+        foreach ($categories as $category) {
+            if ($this->isCategoryHierarchyEnabled($category['id'])) {
+                $enabledCategories[] = $category;
+            }
+        }
+        
+        return $enabledCategories;
     }
     
     public function countWithParent($parentId)
@@ -119,6 +139,41 @@ class Category extends Model
         $result = $this->fetchOne($sql, $subcategoryIds);
         
         return $result ? (int)$result['count'] : 0;
+    }
+    
+    /**
+     * Check if a category and its entire parent hierarchy is enabled
+     */
+    public function isCategoryHierarchyEnabled($categoryId)
+    {
+        $category = $this->find($categoryId);
+        if (!$category || $category['status'] !== 'enabled') {
+            return false;
+        }
+        
+        // Check parent hierarchy recursively
+        if ($category['parent']) {
+            return $this->isCategoryHierarchyEnabled($category['parent']);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Get all disabled category IDs (including those with disabled parents)
+     */
+    public function getAllDisabledCategoryIds()
+    {
+        $allCategories = $this->all();
+        $disabledIds = [];
+        
+        foreach ($allCategories as $category) {
+            if (!$this->isCategoryHierarchyEnabled($category['id'])) {
+                $disabledIds[] = $category['id'];
+            }
+        }
+        
+        return $disabledIds;
     }
     
     public function upgradeDBto130()

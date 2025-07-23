@@ -30,6 +30,11 @@ class CategoryController extends Controller
             return $this->show404();
         }
         
+        // Check if category hierarchy is enabled (includes parent check)
+        if (!$this->categoryModel->isCategoryHierarchyEnabled($category['id'])) {
+            return $this->show404();
+        }
+        
         // Get site settings
         $siteName = $this->settingModel->getValue('site_name') ?: 'Knowledge Base';
         

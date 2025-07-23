@@ -35,6 +35,14 @@ class ArticleController extends Controller
         
         // Get category
         $category = $this->categoryModel->find($article['category']);
+        if (!$category) {
+            return $this->show404();
+        }
+        
+        // Check if category hierarchy is enabled
+        if (!$this->categoryModel->isCategoryHierarchyEnabled($category['id'])) {
+            return $this->show404();
+        }
         
         // Get parent category if exists
         $parentCategory = null;
