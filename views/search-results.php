@@ -48,7 +48,7 @@
                                     <div class="card-body p-4">
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">
-                                                <div class="bg-warning bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <div class="bg-dark bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                                     <i class="bi bi-folder text-white fs-5"></i>
                                                 </div>
                                             </div>
@@ -57,7 +57,7 @@
                                                     <?php echo htmlspecialchars($result['title']); ?>
                                                 </h6>
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-warning text-dark me-2">Category</span>
+                                                    <span class="badge bg-dark me-2">Category</span>
                                                     <small class="text-muted">Browse articles in this category</small>
                                                 </div>
                                             </div>
@@ -72,7 +72,7 @@
                                     <div class="card-body p-4">
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">
-                                                <div class="bg-info bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                                <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
                                                     <i class="bi bi-file-earmark-text text-white fs-5"></i>
                                                 </div>
                                             </div>
@@ -81,7 +81,7 @@
                                                     <?php echo htmlspecialchars($result['title']); ?>
                                                 </h6>
                                                 <div class="d-flex align-items-center">
-                                                    <span class="badge bg-info text-white me-2">Article</span>
+                                                    <span class="badge bg-primary text-white me-2">Article</span>
                                                     <?php if ($result['category_name']): ?>
                                                         <small class="text-muted">
                                                             in <strong><?php echo htmlspecialchars($result['category_name']); ?></strong>

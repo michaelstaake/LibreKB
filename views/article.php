@@ -8,11 +8,20 @@
         <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($article['title']); ?></li>
     </ol>
     
-    <header>
-        <h1><?php echo htmlspecialchars($article['title']); ?></h1>
-    </header>
-    
-    <main>
-        <?php echo $article['content']; ?>
-    </main>
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <div class="card shadow-sm border-0 article-card">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h1 class="mb-2"><?php echo htmlspecialchars($article['title']); ?></h1>
+                </div>
+                
+                <div class="card-body pt-3">
+                    <div class="article-content">
+                        <?php echo $article['content']; ?>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
