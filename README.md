@@ -23,8 +23,4 @@ Forum: [GitHub Discussions for LibreKB](https://github.com/michaelstaake/LibreKB
 
 ### Update Checks and Your Privacy
 
-If you have updateCheck set to 'yes' in the config file, which is the default setting, your LibreKB install will reach out to my servers every time you log in to your LibreKB admin area. The update checker is hosted on my server and may log the IP address of your server, the version of LibreKB you're currently running, and the timestamp of when the update check was requested. No other data is submitted or collected. I do not intend for this data to be shared or sold, but I reserve the right to use this data however I determine is best, including but not limited to posting anonymized stats on usage. If you do not wish to use this feature, simply set updateCheck to no in the config file, and no data will ever be sent to my servers.
-
-### Docker Setup
-
-For instructions on running this project with Docker, check out [DOCKER.md](DOCKER.md).
+If you have updateCheck set to 'yes' in the config file, which is the default (and recommended) setting, your LibreKB install will reach out to librekb.com to check if an update is available. Your server's IP address and current version are reported to librekb.com. No other data is submitted. If you do not wish for this to happen, set updateCheck to 'no' in the config file. If you decide to disable updateCheck, please check for updates on a routine basis, as updates may contain important security improvements or bug fixes.
