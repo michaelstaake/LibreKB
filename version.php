@@ -5,7 +5,7 @@ class Version {
 
     public function __construct() {
         $this->version = '2.0.1';
-        $this->channel = 'beta';
+        $this->channel = 'release';
     }
 }
 ?>
