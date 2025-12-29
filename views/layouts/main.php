@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo htmlspecialchars($pageTitle); ?> - <?php echo htmlspecialchars($siteName); ?></title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="/css/kb.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/css/kb.css" rel="stylesheet" type="text/css">
         <?php
             $siteColor = $this->getSetting('site_color');
             $navbarColor = !empty($siteColor) ? $siteColor : '#1B1F22';
@@ -21,7 +21,7 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="<?php echo $basePath ?: '/'; ?>">
                     <?php
                         $siteLogo = $this->getSetting('site_logo');
                         if (!empty($siteLogo)) {
@@ -39,10 +39,10 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Knowledge Base</a>
+                            <a class="nav-link" href="<?php echo $basePath ?: '/'; ?>"><i class="bi bi-house-door"></i> Knowledge Base</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/search"><i class="bi bi-search"></i> Search</a>
+                            <a class="nav-link" href="<?php echo $basePath; ?>/search"><i class="bi bi-search"></i> Search</a>
                         </li>
                         <?php 
                         // Show navigation based on login status and user role
@@ -56,20 +56,20 @@
                                 echo '<i class="bi bi-person-circle"></i> My Account';
                                 echo '</a>';
                                 echo '<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">';
-                                echo '<li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle"></i> Profile</a></li>';
+                                echo '<li><a class="dropdown-item" href="'.$basePath.'/profile"><i class="bi bi-person-circle"></i> Profile</a></li>';
                                 
                                 // Admin link for admin and manager users
                                 if ($currentUser['group'] === 'admin' || $currentUser['group'] === 'manager') {
-                                    echo '<li><a class="dropdown-item" href="/admin"><i class="bi bi-gear"></i> Admin</a></li>';
+                                    echo '<li><a class="dropdown-item" href="'.$basePath.'/admin"><i class="bi bi-gear"></i> Admin</a></li>';
                                 }
                                 echo '<li><hr class="dropdown-divider"></li>';
-                                echo '<li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>';
+                                echo '<li><a class="dropdown-item" href="'.$basePath.'/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>';
                                 echo '</ul>';
                                 echo '</li>';
                             }
                         } else {
                             echo '<li class="nav-item">';
-                            echo '<a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right"></i> Login</a>';
+                            echo '<a class="nav-link" href="'.$basePath.'/login"><i class="bi bi-box-arrow-in-right"></i> Login</a>';
                             echo '</li>';
                         }
                         ?>
@@ -100,6 +100,6 @@
                 </p>
             </div>
         </footer>
-        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="<?php echo $basePath; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

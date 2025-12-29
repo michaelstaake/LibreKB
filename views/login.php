@@ -4,9 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo htmlspecialchars($pageTitle); ?></title>
-        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-        <link href="/css/other.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/css/other.css" rel="stylesheet" type="text/css">
     </head>
     <body class="login-page">
         <div class="container">
@@ -33,7 +33,7 @@
                     </div>
                 <?php endif; ?>
                 
-                <form action="/login" method="POST" novalidate>
+                <form action="<?php echo $basePath; ?>/login" method="POST" novalidate>
                     <div class="mb-3">
                         <label for="email" class="form-label">
                             <i class="bi bi-envelope me-2"></i>Email Address
@@ -56,17 +56,17 @@
                 </form>
                 
                 <div class="text-center">
-                    <a href="/password/reset" class="auth-link">
+                    <a href="<?php echo $basePath; ?>/password/reset" class="auth-link">
                         <i class="bi bi-key me-1"></i>Forgot your password?
                     </a>
                     <br>
-                    <a href="/" class="auth-link mt-2 d-inline-block">
+                    <a href="<?php echo $basePath; ?>/" class="auth-link mt-2 d-inline-block">
                         <i class="bi bi-house me-1"></i>Back to <?php echo htmlspecialchars($siteName ?? 'Knowledge Base'); ?>
                     </a>
                 </div>
             </div>
         </div>
         
-        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="<?php echo $basePath; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

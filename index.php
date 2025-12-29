@@ -7,10 +7,6 @@
 // Start session
 session_start();
 
-// Error reporting for development
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Define constants
 define('ROOT_PATH', __DIR__);
 define('CORE_PATH', ROOT_PATH . '/core');
@@ -40,8 +36,30 @@ require_once 'config.php';
 
 // Check if we're accessing the install page or test pages - if so, skip database checks
 $requestUri = $_SERVER['REQUEST_URI'];
-$isInstallPage = (strpos($requestUri, '/install') === 0);
-$isTestPage = (strpos($requestUri, '/test-') === 0);
+
+// Detect base path for subfolder installations
+$basePath = '';
+if (class_exists('Config') && method_exists('Config', 'get')) {
+    $systemURL = Config::get('systemURL');
+    if ($systemURL) {
+        $basePath = rtrim(parse_url($systemURL, PHP_URL_PATH), '/');
+    }
+} else {
+    // Fallback: detect from script name
+    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+    if ($scriptDir !== '/' && $scriptDir !== '.') {
+        $basePath = $scriptDir;
+    }
+}
+
+// Strip base path from request URI for proper route matching
+$routePath = $requestUri;
+if ($basePath && strpos($requestUri, $basePath) === 0) {
+    $routePath = substr($requestUri, strlen($basePath));
+}
+
+$isInstallPage = (strpos($routePath, '/install') === 0);
+$isTestPage = (strpos($routePath, '/test-') === 0);
 
 // Check database tables exist (unless we're on install page or test pages)
 if (!$isInstallPage && !$isTestPage) {

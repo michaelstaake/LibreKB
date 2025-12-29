@@ -1,8 +1,8 @@
 <div class="container">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Knowledge Base</a></li>
+        <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/">Knowledge Base</a></li>
         <?php if ($parentCategory): ?>
-            <li class="breadcrumb-item"><a href="/category/<?php echo htmlspecialchars($parentCategory['slug']); ?>"><?php echo htmlspecialchars($parentCategory['name']); ?></a></li>
+            <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($parentCategory['slug']); ?>"><?php echo htmlspecialchars($parentCategory['name']); ?></a></li>
         <?php endif; ?>
         <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($category['name']); ?></li>
     </ol>
@@ -24,7 +24,7 @@
                     <?php foreach ($subCategories as $subCategory): ?>
                         <div class="col-12 col-md-6 col-lg-4 mb-3">
                             <div class="card h-100 shadow-sm border-0 category-result-card">
-                                <a href="/category/<?php echo htmlspecialchars($subCategory['slug']); ?>" class="text-decoration-none">
+                                <a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($subCategory['slug']); ?>" class="text-decoration-none">
                                     <div class="card-body p-3">
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">
@@ -73,10 +73,10 @@
                     <h4 class="text-muted mb-3">No articles found</h4>
                     <p class="text-muted mb-4">This category doesn't contain any articles yet.</p>
                     <div class="d-flex justify-content-center gap-2">
-                        <a href="/" class="btn btn-outline-primary">
+                        <a href="<?php echo $basePath; ?>/" class="btn btn-outline-primary">
                             <i class="bi bi-arrow-left me-2"></i>Back to categories
                         </a>
-                        <a href="/search" class="btn btn-primary">
+                        <a href="<?php echo $basePath; ?>/search" class="btn btn-primary">
                             <i class="bi bi-search me-2"></i>Search articles
                         </a>
                     </div>
@@ -93,7 +93,7 @@
                     <?php foreach ($articles as $article): ?>
                         <div class="col-12 mb-3">
                             <div class="card shadow-sm border-0 search-result-card">
-                                <a href="/article/<?php echo htmlspecialchars($article['slug']); ?>" class="text-decoration-none">
+                                <a href="<?php echo $basePath; ?>/article/<?php echo htmlspecialchars($article['slug']); ?>" class="text-decoration-none">
                                     <div class="card-body p-4">
                                         <div class="d-flex align-items-start">
                                             <div class="me-3">

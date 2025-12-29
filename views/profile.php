@@ -11,7 +11,7 @@
                         
                         <p class="text-muted">Welcome back, <?php echo htmlspecialchars($user['name'] ?? $user['email']); ?>!</p>
                         <p class="text-muted"><?php echo ucfirst($user['group']); ?></p>
-                        <form action="/profile" method="POST">
+                        <form action="<?php echo $basePath; ?>/profile" method="POST">
                             <?php if (in_array($user['group'], ['admin', 'manager'])): ?>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
@@ -25,7 +25,7 @@
                             <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-primary">Update Profile</button>
-                                <a href="/" class="btn btn-secondary">Back to Knowledge Base</a>
+                                <a href="<?php echo $basePath; ?>/" class="btn btn-secondary">Back to Knowledge Base</a>
                             </div>
                         </form>
                     </div>

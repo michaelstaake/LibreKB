@@ -5,6 +5,26 @@ class Router
     private $routes = [];
     private $middleware = [];
     private $currentGroup = '';
+    private static $basePath = null;
+    
+    private function getBasePath()
+    {
+        if (self::$basePath === null) {
+            try {
+                $config = new Config();
+                $systemURL = rtrim($config->systemURL, '/');
+                
+                // Parse the URL to get the path component
+                $parsedUrl = parse_url($systemURL);
+                self::$basePath = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+            } catch (Exception $e) {
+                // If config fails, assume root path
+                self::$basePath = '';
+            }
+        }
+        
+        return self::$basePath;
+    }
     
     public function get($path, $handler)
     {
@@ -46,7 +66,15 @@ class Router
     public function dispatch()
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri = rawurldecode(strtok($_SERVER['REQUEST_URI'], '?'));
+        
+        // Get base path from config
+        $basePath = $this->getBasePath();
+        
+        // Remove base path from URI if present
+        if (!empty($basePath) && strpos($uri, $basePath) === 0) {
+            $uri = substr($uri, strlen($basePath));
+        }
         
         // Remove trailing slash and clean URI
         $uri = rtrim($uri, '/');
@@ -144,7 +172,9 @@ class Router
     private function checkAuthentication()
     {
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            $basePath = $this->getBasePath();
+            $loginUrl = $basePath . '/login';
+            header('Location: ' . $loginUrl);
             exit;
         }
         return true;
@@ -154,7 +184,9 @@ class Router
     {
         // First check if user is authenticated
         if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+            $basePath = $this->getBasePath();
+            $loginUrl = $basePath . '/login';
+            header('Location: ' . $loginUrl);
             exit;
         }
         

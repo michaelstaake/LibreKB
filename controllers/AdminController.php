@@ -54,7 +54,7 @@ class AdminController extends Controller
             
             // Redirect based on user group
             if ($user['group'] === 'admin' || $user['group'] === 'manager') {
-                return $this->redirect('/admin?action=updateCheck');
+                return $this->redirect('/admin');
             } else {
                 // Client users and other groups go to the frontend
                 return $this->redirect('/');
@@ -79,18 +79,6 @@ class AdminController extends Controller
     
     public function dashboard()
     {
-        $current = new Version();
-        if ($current->channel === 'release') {
-            $updateStatus = $this->checkForUpdates();
-            if (strpos($updateStatus, 'update check complete - update yes') !== false) {
-                $this->setError('A new version of LibreKB is available. Go to librekb.com to learn more and get the update.');
-            } elseif (strpos($updateStatus, 'update check config invalid') !== false) {
-                $this->setError('Update checks config invalid must be yes or no.');
-            } else {
-                $this->setError('Update check failed.');
-            }
-        }        
-        
         $user = $this->getUser();
         
         // Get all categories and articles for the dashboard
@@ -195,35 +183,5 @@ class AdminController extends Controller
         
         return $this->layout('admin', 'admin/logs', $data);
     }
-    
-    private function checkForUpdates()
-    {
-        $config = new Config();
-        if ($config->updateCheck === 'yes') {
-            try {
-                $current = new Version();
-                $latestJson = file_get_contents('https://librekb.com/latest.php?version=' . $current->version);
-                if ($latestJson === false) {
-                    return 'update check failed';
-                }
-                $latestData = json_decode($latestJson, true);
-                if ($latestData && isset($latestData['version'])) {
-                    $latestVersion = $latestData['version'];
-                    if ($current->version != $latestVersion) {
-                        return 'update check complete - update yes';
-                    } else {
-                        return 'update check complete - update no';
-                    }
-                } else {
-                    return 'update check failed';
-                }
-            } catch (Exception $e) {
-                return 'update check failed';
-            }
-        } else if ($config->updateCheck === 'no') {
-            return 'update check disabled';
-        } else {
-            return 'update check config invalid';
-        }
-    }
+
 }

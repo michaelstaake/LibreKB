@@ -1,12 +1,32 @@
+<?php
+// Detect base path from config if available
+$basePath = '';
+if (class_exists('Config') && method_exists('Config', 'get')) {
+    $systemURL = Config::get('systemURL');
+    if ($systemURL) {
+        $basePath = rtrim(parse_url($systemURL, PHP_URL_PATH), '/');
+    }
+} else {
+    // Fallback: try to detect from request URI
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    
+    // Get the directory path of the script
+    $scriptDir = dirname($scriptName);
+    if ($scriptDir !== '/' && $scriptDir !== '.') {
+        $basePath = $scriptDir;
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Database Setup Required - LibreKB</title>
-        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-        <link href="/css/other.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/css/other.css" rel="stylesheet" type="text/css">
     </head>
     <body class="error-database">
         <div class="container">
@@ -46,7 +66,7 @@
                     <p class="solution-text">
                         Run the LibreKB installer to automatically create all required database tables and set up your knowledge base.
                     </p>
-                    <a href="/install" class="btn btn-success">
+                    <a href="<?php echo $basePath; ?>/install" class="btn btn-success">
                         <i class="bi bi-play-circle me-2"></i>
                         Run Installer
                     </a>
@@ -54,6 +74,6 @@
             </div>
         </div>
         
-        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="<?php echo $basePath; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

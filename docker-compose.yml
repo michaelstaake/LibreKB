@@ -1,0 +1,26 @@
+services:
+  app:
+    build: .
+    container_name: librekb-app
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: librekb-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS:-rootsecret}
+      - MYSQL_DATABASE=${DB_NAME:-librekb}
+      - MYSQL_USER=${DB_USER:-librekb}
+      - MYSQL_PASSWORD=${DB_PASS:-secret}
+    volumes:
+      - librekb-db-data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  librekb-db-data:

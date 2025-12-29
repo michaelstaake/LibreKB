@@ -11,7 +11,7 @@
             </div>
             <h3 class="text-muted mb-3">No categories available</h3>
             <p class="text-muted mb-4">There are currently no categories to browse.</p>
-            <a href="/search" class="btn btn-primary">
+            <a href="<?php echo $basePath; ?>/search" class="btn btn-primary">
                 <i class="bi bi-search me-2"></i>Search instead
             </a>
         </div>
@@ -25,7 +25,7 @@
             <?php foreach ($categories as $category): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm border-0 category-result-card">
-                        <a href="/category/<?php echo htmlspecialchars($category['slug']); ?>" class="text-decoration-none">
+                        <a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($category['slug']); ?>" class="text-decoration-none">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-start">
                                     <div class="me-3">

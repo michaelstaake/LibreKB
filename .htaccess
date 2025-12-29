@@ -1,8 +1,12 @@
 RewriteEngine On
 
-# Force HTTPS
-RewriteCond %{HTTPS} !=on
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# If running in a subfolder, uncomment and update the following line:
+# RewriteBase /your-subfolder/
+
+# Force HTTPS (recommended when using on web servers)
+# RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Handle static files
 RewriteCond %{REQUEST_FILENAME} !-f

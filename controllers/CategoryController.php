@@ -153,7 +153,9 @@ class CategoryController extends Controller
             'icon' => $icon,
             'parent' => $parent,
             'status' => $status,
-            'order' => $order
+            'order' => $order,
+            'created' => date('Y-m-d H:i:s'),
+            'updated' => date('Y-m-d H:i:s')
         ];
         
         if ($this->categoryModel->create($categoryData)) {
@@ -213,7 +215,8 @@ class CategoryController extends Controller
             'icon' => $icon,
             'parent' => $parent,
             'status' => $status,
-            'order' => $order
+            'order' => $order,
+            'updated' => date('Y-m-d H:i:s')
         ];
         
         if ($this->categoryModel->update($id, $updateData)) {

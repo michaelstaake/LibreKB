@@ -7,7 +7,7 @@
             </div>
             <hr>
         </header>
-        <form action="/admin/categories/<?php echo $category['id']; ?>" method="POST">
+        <form action="<?php echo $basePath; ?>/admin/categories/<?php echo $category['id']; ?>" method="POST">
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -63,8 +63,8 @@
                     
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Update Category</button>
-                        <a href="/admin" class="btn btn-secondary">Cancel</a>
-                        <a href="/category/<?php echo htmlspecialchars($category['slug']); ?>" 
+                        <a href="<?php echo $basePath; ?>/admin" class="btn btn-secondary">Cancel</a>
+                        <a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($category['slug']); ?>" 
                            class="btn btn-outline-info" target="_blank">View</a>
                     </div>
                 </div>

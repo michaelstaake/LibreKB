@@ -1,6 +1,6 @@
 <div class="container">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Knowledge Base</a></li>
+        <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/">Knowledge Base</a></li>
         <li class="breadcrumb-item active" aria-current="page">Search</li>
     </ol>
     
@@ -15,7 +15,7 @@
             </header>
             
             <main>
-                <form action="/search" method="POST">
+                <form action="<?php echo $basePath; ?>/search" method="POST">
                     <div class="card shadow-sm">
                         <div class="card-body p-4">
                             <div class="input-group input-group-lg">
@@ -47,7 +47,7 @@
                     <small class="text-muted">
                         <i class="bi bi-lightbulb me-1"></i>
                         <strong>Tip:</strong> Try searching for keywords, topics, or browse by 
-                        <a href="/" class="text-decoration-none">categories</a>
+                        <a href="<?php echo $basePath; ?>/" class="text-decoration-none">categories</a>
                     </small>
                 </div>
             </main>

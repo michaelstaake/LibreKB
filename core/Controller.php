@@ -3,10 +3,43 @@
 class Controller
 {
     protected $data = [];
+    private static $basePath = null;
+    
+    protected function getBasePath()
+    {
+        if (self::$basePath === null) {
+            $config = new Config();
+            $systemURL = rtrim($config->systemURL, '/');
+            
+            // Parse the URL to get the path component
+            $parsedUrl = parse_url($systemURL);
+            self::$basePath = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+        }
+        
+        return self::$basePath;
+    }
+    
+    protected function url($path = '/')
+    {
+        $basePath = $this->getBasePath();
+        $path = ltrim($path, '/');
+        
+        if (empty($path)) {
+            return $basePath ?: '/';
+        }
+        
+        return $basePath . '/' . $path;
+    }
     
     protected function view($template, $data = [])
     {
         $this->data = array_merge($this->data, $data);
+        
+        // Add URL helper and base path to view data
+        $this->data['basePath'] = $this->getBasePath();
+        $this->data['url'] = function($path = '/') {
+            return $this->url($path);
+        };
         
         // Extract data to variables
         extract($this->data);
@@ -23,6 +56,12 @@ class Controller
     protected function layout($layout, $contentView, $data = [])
     {
         $this->data = array_merge($this->data, $data);
+        
+        // Add URL helper and base path to view data
+        $this->data['basePath'] = $this->getBasePath();
+        $this->data['url'] = function($path = '/') {
+            return $this->url($path);
+        };
         
         // Automatically add user data for admin layout
         if ($layout === 'admin' && !isset($this->data['user'])) {
@@ -62,6 +101,11 @@ class Controller
     
     protected function redirect($url, $status = 302)
     {
+        // If URL doesn't start with http/https, make it relative to base path
+        if (!preg_match('/^https?:\/\//', $url)) {
+            $url = $this->url($url);
+        }
+        
         http_response_code($status);
         header('Location: ' . $url);
         exit;

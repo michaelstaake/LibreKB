@@ -5,14 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo htmlspecialchars($pageTitle); ?> - LibreKB</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="/css/admin.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="<?php echo $basePath; ?>/css/admin.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand" href="/admin">
+                <a class="navbar-brand" href="<?php echo $basePath; ?>/admin">
                     LibreKB
                 </a>
                 
@@ -23,10 +23,10 @@
                 <div class="collapse navbar-collapse" id="adminNavbar">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                            <a class="nav-link" href="<?php echo $basePath; ?>/admin"><i class="bi bi-speedometer2"></i> Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/articles/create"><i class="bi bi-file-earmark-plus"></i> Create Article</a>
+                            <a class="nav-link" href="<?php echo $basePath; ?>/admin/articles/create"><i class="bi bi-file-earmark-plus"></i> Create Article</a>
                         </li>
                         <?php if ($user && $user['group'] === 'admin'): ?>
                             <li class="nav-item dropdown">
@@ -34,8 +34,8 @@
                                     <i class="bi bi-gear"></i> Administration
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" href="/admin/users"><i class="bi bi-people"></i> Manage Users</a></li>
-                                    <li><a class="dropdown-item" href="/admin/settings"><i class="bi bi-sliders"></i> Site Settings</a></li>
+                                    <li><a class="dropdown-item" href="<?php echo $basePath; ?>/admin/users"><i class="bi bi-people"></i> Manage Users</a></li>
+                                    <li><a class="dropdown-item" href="<?php echo $basePath; ?>/admin/settings"><i class="bi bi-sliders"></i> Site Settings</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>
@@ -47,9 +47,9 @@
                                 <i class="bi bi-person-circle"></i> My Account
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
-                                <li><a class="dropdown-item" href="/profile"><i class="bi bi-person-circle"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>/profile"><i class="bi bi-person-circle"></i> Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -66,7 +66,7 @@
         <?php
             $maintenanceMode = $this->getSetting('maintenance_mode');
             if ($maintenanceMode === 'enabled') {
-                echo '<div class="container"><div class="alert alert-warning" role="alert">Maintenance mode is enabled, and the front end of your knowledge base has been disabled. Go to <a href="/admin/settings">Settings</a> to manage this.</div></div>';
+                echo '<div class="container"><div class="alert alert-warning" role="alert">Maintenance mode is enabled, and the front end of your knowledge base has been disabled. Go to <a href="' . $basePath . '/admin/settings">Settings</a> to manage this.</div></div>';
             }
         ?>
         
@@ -87,7 +87,7 @@
         <footer>
             <div class="container footer-container">
                 <p>
-                    <a href="/" target="_blank">Go to Front End</a> &middot; 
+                    <a href="<?php echo $basePath; ?>/" target="_blank">Go to Front End</a> &middot; 
                     Powered by <a href="https://librekb.com/" target="_blank">LibreKB</a> 
                     <?php
                         $current = new Version();
@@ -99,6 +99,6 @@
                 </p>
             </div>
         </footer>
-        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="<?php echo $basePath; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

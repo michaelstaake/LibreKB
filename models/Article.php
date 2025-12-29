@@ -66,6 +66,13 @@ class Article extends Model
         return ($result['max_order'] ?? 0) + 1;
     }
     
+    public function getNextNumber()
+    {
+        $sql = "SELECT MAX(number) as max_number FROM {$this->table}";
+        $result = $this->fetchOne($sql);
+        return ($result['max_number'] ?? 0) + 1;
+    }
+    
     public function countAll()
     {
         return $this->count();

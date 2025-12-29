@@ -140,13 +140,16 @@ class ArticleController extends Controller
         $order = (!empty($orderInput) && is_numeric($orderInput)) ? (int)$orderInput : $this->articleModel->getNextOrder($category);
         
         $articleData = [
+            'number' => $this->articleModel->getNextNumber(),
             'title' => $title,
             'slug' => $slug,
             'content' => $content,
             'category' => $category,
             'status' => $status,
             'order' => $order,
-            'created' => date('Y-m-d H:i:s')
+            'featured' => 0,
+            'created' => date('Y-m-d H:i:s'),
+            'updated' => date('Y-m-d H:i:s')
         ];
         
         if ($this->articleModel->create($articleData)) {
@@ -204,7 +207,8 @@ class ArticleController extends Controller
             'content' => $content,
             'category' => $category,
             'status' => $status,
-            'order' => $order
+            'order' => $order,
+            'updated' => date('Y-m-d H:i:s')
         ];
         
         if ($this->articleModel->update($id, $updateData)) {

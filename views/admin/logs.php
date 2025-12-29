@@ -70,7 +70,7 @@
                                     <ul class="pagination justify-content-center">
                                         <?php if ($currentPage > 1): ?>
                                             <li class="page-item">
-                                                <a class="page-link" href="/admin/logs?page=<?php echo $currentPage - 1; ?>">Previous</a>
+                                                <a class="page-link" href="<?php echo $basePath; ?>/admin/logs?page=<?php echo $currentPage - 1; ?>">Previous</a>
                                             </li>
                                         <?php endif; ?>
                                         
@@ -81,13 +81,13 @@
                                         for ($i = $startPage; $i <= $endPage; $i++):
                                         ?>
                                             <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
-                                                <a class="page-link" href="/admin/logs?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                                <a class="page-link" href="<?php echo $basePath; ?>/admin/logs?page=<?php echo $i; ?>"><?php echo $i; ?></a>
                                             </li>
                                         <?php endfor; ?>
                                         
                                         <?php if ($currentPage < $totalPages): ?>
                                             <li class="page-item">
-                                                <a class="page-link" href="/admin/logs?page=<?php echo $currentPage + 1; ?>">Next</a>
+                                                <a class="page-link" href="<?php echo $basePath; ?>/admin/logs?page=<?php echo $currentPage + 1; ?>">Next</a>
                                             </li>
                                         <?php endif; ?>
                                     </ul>

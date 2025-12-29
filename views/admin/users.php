@@ -3,7 +3,7 @@
     <header class="d-flex justify-content-between align-items-center">
         <h1>Users</h1>
         <?php if ($user['group'] === 'admin'): ?>
-            <a href="/admin/users/create" class="btn btn-primary">Create User</a>
+            <a href="<?php echo $basePath; ?>/admin/users/create" class="btn btn-primary">Create User</a>
         <?php endif; ?>
     </header>
     
@@ -42,8 +42,8 @@
                                 </td>
                                 <td><?php echo date('Y-m-d H:i', strtotime($userItem['created'])); ?></td>
                                 <td>
-                                    <a href="/admin/users/<?php echo $userItem['id']; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <a href="/admin/users/<?php echo $userItem['id']; ?>/delete" 
+                                    <a href="<?php echo $basePath; ?>/admin/users/<?php echo $userItem['id']; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="<?php echo $basePath; ?>/admin/users/<?php echo $userItem['id']; ?>/delete" 
                                        class="btn btn-sm btn-outline-danger" 
                                        onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
                                 </td>

@@ -12,7 +12,7 @@ class Config {
     
     // System Configuration
     public $systemURL;
-    public $updateCheck;
+    public $bypassRequirements;
     
     // Email Configuration
     public $mailHost;
@@ -25,14 +25,23 @@ class Config {
     
     public function __construct() {
         /* Database Configuration */
-        $this->db_host = 'localhost';
-        $this->db_user = 'X';
-        $this->db_pass = 'X';
-        $this->db_name = 'X';
-
-        /* System Configuration */
-        $this->systemURL = 'https://X.X.X/'; //example https://kb.example.com/ or https://example.com/kb/
-        $this->updateCheck = 'yes'; //Acceptable values are yes or no. Recommended value is yes
+        if (file_exists('/.dockerenv')) {
+            // Docker Environment Defaults
+            $this->db_host = 'librekb-db';
+            $this->db_user = 'librekb';
+            $this->db_pass = 'secret';
+            $this->db_name = 'librekb';
+            $this->systemURL = 'http://localhost:8080/';
+            $this->bypassRequirements = true;
+        } else {
+            // Standard Environment
+            $this->db_host = 'localhost';
+            $this->db_user = 'X';
+            $this->db_pass = 'X';
+            $this->db_name = 'X';
+            $this->systemURL = 'https://X.X.X/'; //example https://kb.example.com/ or https://example.com/kb/
+            $this->bypassRequirements = false;
+        }
 
         /* Email Configuration */
         $this->mailHost       = 'X';                     //Set the SMTP server to send through

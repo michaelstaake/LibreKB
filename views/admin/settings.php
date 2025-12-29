@@ -7,7 +7,7 @@
         <div class="alert alert-danger" role="alert">You do not have permission to access this page.</div>
     <?php else: ?>
         <main>
-            <form action="/admin/settings" method="POST">
+            <form action="<?php echo $basePath; ?>/admin/settings" method="POST">
                 <div class="settings-section">
                     <h5>Branding and Customization</h5>
                     <div class="row">
