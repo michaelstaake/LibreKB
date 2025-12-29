@@ -123,9 +123,29 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     // Get database connection status from controller
                     $dbConnection = isset($dbConnection) ? $dbConnection : ['success' => false, 'message' => 'Database connection not checked', 'error' => 'Unknown error'];
                     
+                    // Check if requirements bypass is enabled
+                    $bypassRequirements = false;
+                    if (class_exists('Config') && method_exists('Config', 'get')) {
+                        $bypassRequirements = Config::get('bypassRequirements');
+                    } elseif (class_exists('Config')) {
+                        $config = new Config();
+                        $bypassRequirements = isset($config->bypassRequirements) ? $config->bypassRequirements : false;
+                    }
+
                     $isFullyCompatible = $isPhpCompatible && $isWebServerCompatible && $areExtensionsCompatible && $dbConnection['success'];
+                    
+                    if ($bypassRequirements) {
+                        $isFullyCompatible = true;
+                    }
                     ?>
                     
+                    <?php if ($bypassRequirements): ?>
+                    <div class="alert alert-warning mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>Requirements Bypass Enabled:</strong> System checks are being ignored.
+                    </div>
+                    <?php endif; ?>
+
                     <div class="compatibility-item">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="compatibility-label">
@@ -224,7 +244,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     </div>
                 </div>
                 
-                <?php if (!$isPhpCompatible || !$areExtensionsCompatible || !$isWebServerCompatible || !$dbConnection['success']): ?>
+                <?php if (!$isFullyCompatible): ?>
                 <div class="alert alert-danger" role="alert">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
@@ -235,7 +255,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                 </div>
                 <?php endif; ?>
                 
-                <form action="<?php echo $basePath; ?>/install" method="POST" <?php echo (!$isPhpCompatible || !$isWebServerCompatible || !$areExtensionsCompatible || !$dbConnection['success']) ? 'style="display: none;"' : ''; ?>>
+                <form action="<?php echo $basePath; ?>/install" method="POST" <?php echo (!$isFullyCompatible) ? 'style="display: none;"' : ''; ?>>
                     <h3 class="section-title">
                         <i class="bi bi-person-plus me-2"></i>Create Admin User
                     </h3>

@@ -7,8 +7,16 @@
             </div>
             <hr>
         </header>
-        <form action="<?php echo $basePath; ?>/admin/articles/create" method="POST">
-            <div class="row">
+        <?php if (empty($categories)): ?>
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">No Categories Found</h4>
+                <p>You need to create a category before you can create an article.</p>
+                <hr>
+                <a href="<?php echo $basePath; ?>/admin/categories/create" class="btn btn-primary">Create Category</a>
+            </div>
+        <?php else: ?>
+            <form action="<?php echo $basePath; ?>/admin/articles/create" method="POST">
+                <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
@@ -64,9 +72,11 @@
                 </div>
             </div>
         </form>
+        <?php endif; ?>
     </main>
 </div>
 
+<?php if (!empty($categories)): ?>
 <script src="<?php echo $basePath; ?>/vendor/tinymce/tinymce.min.js"></script>
 <script>
 tinymce.init({
@@ -93,3 +103,4 @@ document.querySelector('form').addEventListener('submit', function(e) {
     tinymce.triggerSave();
 });
 </script>
+<?php endif; ?>

@@ -7,7 +7,7 @@ Check out the official website at [LibreKB.com](https://librekb.com/) for more i
 ### Features
 
 - 100% free and open source.
-- Runs on pretty much any server or hosting account.
+- Runs on pretty much any server, hosting account, or using Docker.
 - Installs in minutes.
 - Easy to customize branding to match your project or business.
 - Manage users with predefined user groups.

@@ -66,7 +66,7 @@ class Router
     public function dispatch()
     {
         $method = $_SERVER['REQUEST_METHOD'];
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $uri = rawurldecode(strtok($_SERVER['REQUEST_URI'], '?'));
         
         // Get base path from config
         $basePath = $this->getBasePath();
