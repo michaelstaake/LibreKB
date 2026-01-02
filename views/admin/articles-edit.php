@@ -75,14 +75,15 @@
 <script src="<?php echo $basePath; ?>/vendor/tinymce/tinymce.min.js"></script>
 <script>
 tinymce.init({
+    license_key: 'gpl',
     selector: '#content',
-    plugins: 'lists link code table emoticons searchreplace wordcount', 
-    toolbar: 'undo redo | bold italic underline | blocks | fontsize | bullist numlist | link table | code | searchreplace | wordcount',
-    height: 400,
-    menubar: false,
+    plugins: 'lists link code table emoticons searchreplace wordcount preview', 
+    toolbar: 'undo redo | bold italic underline | blocks | fontsize | bullist numlist | link table | preview | code | searchreplace | wordcount',
+    height: 600,
+    menubar: true,
     branding: false,
     content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; }',
     block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
-    fontsize_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 28pt 36pt 48pt 72pt',
+    font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 28pt 36pt 48pt 72pt',
 });
 </script>
