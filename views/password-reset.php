@@ -34,6 +34,7 @@
                 <?php endif; ?>
                 
                 <form action="<?php echo $basePath; ?>/password/reset" method="POST" novalidate>
+                    <?php echo Csrf::field(); ?>
                     <div class="mb-3">
                         <label for="email" class="form-label">
                             <i class="bi bi-envelope me-2"></i>Email Address

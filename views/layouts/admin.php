@@ -49,7 +49,12 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
                                 <li><a class="dropdown-item" href="<?php echo $basePath; ?>/profile"><i class="bi bi-person-circle"></i> Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<?php echo $basePath; ?>/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                                <li>
+                                    <form method="POST" action="<?php echo $basePath; ?>/logout" class="m-0">
+                                        <?php echo Csrf::field(); ?>
+                                        <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     </ul>

@@ -27,6 +27,7 @@
                 <?php endif; ?>
                 
                 <form action="<?php echo $basePath; ?>/password/new" method="POST" novalidate>
+                    <?php echo Csrf::field(); ?>
                     <div class="mb-3">
                         <label for="password1" class="form-label">
                             <i class="bi bi-lock me-2"></i>New Password

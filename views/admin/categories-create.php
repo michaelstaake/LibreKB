@@ -8,6 +8,7 @@
             <hr>
         </header>
         <form action="<?php echo $basePath; ?>/admin/categories/create" method="POST">
+            <?php echo Csrf::field(); ?>
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">

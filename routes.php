@@ -6,7 +6,7 @@
 // Authentication routes (moved outside admin)
 $router->get('/login', 'AdminController@login');
 $router->post('/login', 'AdminController@authenticate');
-$router->get('/logout', 'AdminController@logout');
+$router->post('/logout', 'AdminController@logout');
 
 // Password reset routes (MVC-integrated)
 $router->get('/password/reset', 'PasswordController@reset');
@@ -44,15 +44,15 @@ $router->group('/admin', function($router) {
             $router->post('/categories/create', 'CategoryController@store');
             $router->get('/categories/{id}', 'CategoryController@adminShow');
             $router->post('/categories/{id}', 'CategoryController@update');
-            $router->get('/categories/{id}/delete', 'CategoryController@delete');
+            $router->post('/categories/{id}/delete', 'CategoryController@delete');
             
             // Article management (create/edit only, no list view)
             $router->get('/articles/create', 'ArticleController@create');
             $router->post('/articles/create', 'ArticleController@store');
             $router->get('/articles/{id}', 'ArticleController@adminShow');
             $router->post('/articles/{id}', 'ArticleController@update');
-            $router->get('/articles/{id}/delete', 'ArticleController@delete');
-            $router->get('/articles/{id}/attachments/{attachmentId}/delete', 'ArticleController@deleteAttachment');
+            $router->post('/articles/{id}/delete', 'ArticleController@delete');
+            $router->post('/articles/{id}/attachments/{attachmentId}/delete', 'ArticleController@deleteAttachment');
         });
         
         // Admin-only routes
@@ -69,7 +69,7 @@ $router->group('/admin', function($router) {
             $router->post('/users/create', 'UserController@store');
             $router->get('/users/{id}', 'UserController@show');
             $router->post('/users/{id}', 'UserController@update');
-            $router->get('/users/{id}/delete', 'UserController@delete');
+            $router->post('/users/{id}/delete', 'UserController@delete');
             $router->get('/users/{id}/password', 'UserController@changePassword');
             $router->post('/users/{id}/password', 'UserController@updatePassword');
         });

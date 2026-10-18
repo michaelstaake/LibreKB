@@ -5,3 +5,7 @@ config.php
 storage/uploads/attachments/*
 !storage/uploads/attachments/.htaccess
 !storage/uploads/attachments/.gitkeep
+
+# HTML Purifier definition cache
+storage/cache/htmlpurifier/*
+!storage/cache/htmlpurifier/.gitkeep

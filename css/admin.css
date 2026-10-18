@@ -285,6 +285,17 @@ footer a, footer a:visited, footer a:active, footer a:focus {
 
 /* Dashboard Specific Styles */
 
+.btn-group > form.d-inline {
+    display: inline-flex;
+}
+
+button.dropdown-item {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+}
+
 .badge-sm {
     font-size: 0.7em;
 }

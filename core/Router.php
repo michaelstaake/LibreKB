@@ -87,6 +87,13 @@ class Router
         
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && $this->matchRoute($route['path'], $uri, $params)) {
+                if ($method === 'POST' && !$this->csrfExempt($uri) && !$this->oversizedArticleBody($route['handler'])) {
+                    if (!Csrf::validate()) {
+                        $this->rejectCsrf();
+                        return;
+                    }
+                }
+
                 // Check middleware
                 foreach ($route['middleware'] as $middleware) {
                     if (!$this->runMiddleware($middleware)) {
@@ -131,6 +138,40 @@ class Router
         }
         
         return $uri;
+    }
+
+    /**
+     * Search only reads. Legacy /search?query= links are rewritten into POST
+     * and have no token, so they stay exempt.
+     */
+    private function csrfExempt($uri)
+    {
+        return $uri === '/search';
+    }
+
+    /**
+     * PHP empties $_POST when the body exceeds post_max_size, so the token
+     * cannot be present. Article save already turns that into an error and
+     * does not write. Other POSTs still require a token.
+     */
+    private function oversizedArticleBody($handler)
+    {
+        $length = isset($_SERVER['CONTENT_LENGTH']) ? (int)$_SERVER['CONTENT_LENGTH'] : 0;
+        if ($length <= 0 || !empty($_POST) || !empty($_FILES)) {
+            return false;
+        }
+        return $handler === 'ArticleController@store' || $handler === 'ArticleController@update';
+    }
+
+    private function rejectCsrf()
+    {
+        http_response_code(403);
+        header('Content-Type: text/html; charset=UTF-8');
+        echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Request rejected</title></head><body>';
+        echo '<h1>Request rejected</h1>';
+        echo '<p>The form expired or the security token was missing. Go back, reload the page, and try again.</p>';
+        echo '</body></html>';
+        exit;
     }
     
     private function matchRoute($routePath, $uri, &$params = [])

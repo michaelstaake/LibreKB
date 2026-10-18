@@ -16,6 +16,7 @@
             </div>
         <?php else: ?>
             <form action="<?php echo $basePath; ?>/admin/articles/create" method="POST" enctype="multipart/form-data">
+                <?php echo Csrf::field(); ?>
                 <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">

@@ -7,6 +7,7 @@
             <hr>
         </header>
         <form action="<?php echo $basePath; ?>/admin/articles/<?php echo $article['id']; ?>" method="POST" enctype="multipart/form-data">
+            <?php echo Csrf::field(); ?>
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -17,7 +18,7 @@
                     
                     <div class="mb-3">
                         <label for="content" class="form-label">Content</label>
-                        <textarea class="form-control" id="content" name="content" rows="15" required><?php echo htmlspecialchars($article['content']); ?></textarea>
+                        <textarea class="form-control" id="content" name="content" rows="15" required><?php echo htmlspecialchars(HtmlSanitizer::clean($article['content'])); ?></textarea>
                     </div>
 
                     <?php if (!empty($attachments)): ?>
@@ -33,9 +34,7 @@
                                         </span>
                                         <span class="d-flex gap-2">
                                             <a href="<?php echo $basePath; ?>/attachment/<?php echo (int)$attachment['id']; ?>" class="btn btn-outline-secondary btn-sm">Download</a>
-                                            <a href="<?php echo $basePath; ?>/admin/articles/<?php echo (int)$article['id']; ?>/attachments/<?php echo (int)$attachment['id']; ?>/delete"
-                                               class="btn btn-outline-danger btn-sm"
-                                               onclick="return confirm('Remove this attachment?')">Remove</a>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" form="attachment-delete-<?php echo (int)$attachment['id']; ?>">Remove</button>
                                         </span>
                                     </li>
                                 <?php endforeach; ?>
@@ -89,6 +88,13 @@
                 </div>
             </div>
         </form>
+        <?php if (!empty($attachments)): ?>
+            <?php foreach ($attachments as $attachment): ?>
+                <form method="POST" id="attachment-delete-<?php echo (int)$attachment['id']; ?>" action="<?php echo $basePath; ?>/admin/articles/<?php echo (int)$article['id']; ?>/attachments/<?php echo (int)$attachment['id']; ?>/delete" onsubmit="return confirm('Remove this attachment?')">
+                    <?php echo Csrf::field(); ?>
+                </form>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </main>
 </div>
 

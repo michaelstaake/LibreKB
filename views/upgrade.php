@@ -78,6 +78,7 @@ if ($basePath === '') {
                         Categories, articles, users, settings, and logs stay as they are. Nothing is deleted or rewritten.
                     </div>
                     <form action="<?php echo $basePath; ?>/upgrade" method="POST">
+                        <?php echo Csrf::field(); ?>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-arrow-up-circle me-2"></i>Upgrade Database

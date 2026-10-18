@@ -181,9 +181,11 @@
                             echo '<a href="' . $baseUrl . '/admin/categories/' . $category['id'] . '" class="btn btn-outline-primary btn-sm" title="Edit Category">';
                             echo '<i class="bi bi-pencil"></i>';
                             echo '</a>';
-                            echo '<a href="' . $baseUrl . '/admin/categories/' . $category['id'] . '/delete" ';
-                            echo 'class="btn btn-outline-danger btn-sm" title="Delete Category" ';
-                            echo 'onclick="return confirm(\'Delete this category? It can only be deleted when it has no articles and no subcategories.\')"><i class="bi bi-trash"></i></a>';
+                            echo '<form method="POST" action="' . $baseUrl . '/admin/categories/' . (int)$category['id'] . '/delete" class="d-inline" ';
+                            echo 'onsubmit="return confirm(\'Delete this category? It can only be deleted when it has no articles and no subcategories.\')">';
+                            echo Csrf::field();
+                            echo '<button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Category"><i class="bi bi-trash"></i></button>';
+                            echo '</form>';
                             echo '</div>';
                         }
                         echo '</div>';
@@ -231,9 +233,11 @@
                                     echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '" class="btn btn-outline-primary btn-sm">';
                                     echo '<i class="bi bi-pencil"></i>';
                                     echo '</a>';
-                                    echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '/delete" ';
-                                    echo 'class="btn btn-outline-danger btn-sm" ';
-                                    echo 'onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash"></i></a>';
+                                    echo '<form method="POST" action="' . $baseUrl . '/admin/articles/' . (int)$article['id'] . '/delete" class="d-inline" ';
+                                    echo 'onsubmit="return confirm(\'Are you sure?\')">';
+                                    echo Csrf::field();
+                                    echo '<button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Article"><i class="bi bi-trash"></i></button>';
+                                    echo '</form>';
                                     echo '</div>';
                                 }
                                 echo '</div>';
@@ -299,9 +303,11 @@
                                 echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '" class="btn btn-outline-primary btn-sm" title="Edit Article">';
                                 echo '<i class="bi bi-pencil"></i>';
                                 echo '</a>';
-                                echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '/delete" ';
-                                echo 'class="btn btn-outline-danger btn-sm" title="Delete Article" ';
-                                echo 'onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash"></i></a>';
+                                echo '<form method="POST" action="' . $baseUrl . '/admin/articles/' . (int)$article['id'] . '/delete" class="d-inline" ';
+                                echo 'onsubmit="return confirm(\'Are you sure?\')">';
+                                echo Csrf::field();
+                                echo '<button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Article"><i class="bi bi-trash"></i></button>';
+                                echo '</form>';
                                 echo '</div>';
                             }
                             echo '</div>';

@@ -8,6 +8,7 @@
     <?php else: ?>
         <main>
             <form action="<?php echo $basePath; ?>/admin/settings" method="POST">
+                <?php echo Csrf::field(); ?>
                 <div class="settings-section">
                     <h5>Branding and Customization</h5>
                     <div class="row">

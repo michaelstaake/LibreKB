@@ -63,7 +63,9 @@
                                     echo '<li><a class="dropdown-item" href="'.$basePath.'/admin"><i class="bi bi-gear"></i> Admin</a></li>';
                                 }
                                 echo '<li><hr class="dropdown-divider"></li>';
-                                echo '<li><a class="dropdown-item" href="'.$basePath.'/logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>';
+                                echo '<li><form method="POST" action="' . htmlspecialchars($basePath) . '/logout" class="m-0">';
+                                echo Csrf::field();
+                                echo '<button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button></form></li>';
                                 echo '</ul>';
                                 echo '</li>';
                             }

@@ -255,6 +255,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                 <?php endif; ?>
                 
                 <form action="<?php echo $basePath; ?>/install" method="POST" <?php echo (!$isFullyCompatible) ? 'style="display: none;"' : ''; ?>>
+                    <?php echo Csrf::field(); ?>
                     <h3 class="section-title">
                         <i class="bi bi-person-plus me-2"></i>Create Admin User
                     </h3>

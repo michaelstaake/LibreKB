@@ -27,6 +27,13 @@ header h1 {
     font-size: 1.6em;
 }
 
+button.dropdown-item {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+}
+
 .kb-logo {
     max-height: 32px;
     width: auto;

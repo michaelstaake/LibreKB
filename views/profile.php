@@ -12,6 +12,7 @@
                         <p class="text-muted">Welcome back, <?php echo htmlspecialchars($user['name'] ?? $user['email']); ?>!</p>
                         <p class="text-muted"><?php echo ucfirst($user['group']); ?></p>
                         <form action="<?php echo $basePath; ?>/profile" method="POST">
+                            <?php echo Csrf::field(); ?>
                             <?php if (in_array($user['group'], ['admin', 'manager'])): ?>
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>

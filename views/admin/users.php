@@ -43,9 +43,10 @@
                                 <td><?php echo date('Y-m-d H:i', strtotime($userItem['created'])); ?></td>
                                 <td>
                                     <a href="<?php echo $basePath; ?>/admin/users/<?php echo $userItem['id']; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <a href="<?php echo $basePath; ?>/admin/users/<?php echo $userItem['id']; ?>/delete" 
-                                       class="btn btn-sm btn-outline-danger" 
-                                       onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                                    <form method="POST" action="<?php echo $basePath; ?>/admin/users/<?php echo (int)$userItem['id']; ?>/delete" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                        <?php echo Csrf::field(); ?>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

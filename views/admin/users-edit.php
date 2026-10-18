@@ -11,6 +11,7 @@
                 <hr>
             </header>
             <form action="<?php echo $basePath; ?>/admin/users/<?php echo $editUser['id']; ?>" method="POST">
+                <?php echo Csrf::field(); ?>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">

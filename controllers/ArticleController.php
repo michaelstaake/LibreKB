@@ -29,6 +29,7 @@ class ArticleController extends Controller
         if (!$article) {
             return $this->show404();
         }
+        $article['content'] = HtmlSanitizer::clean($article['content'] ?? '');
         
         // Get site settings
         $siteName = $this->settingModel->getValue('site_name') ?: 'Knowledge Base';
@@ -133,7 +134,7 @@ class ArticleController extends Controller
 
         $title = $this->rawInput('title');
         $slug = $this->generateSlug($title);
-        $content = $this->rawInput('content');
+        $content = HtmlSanitizer::clean($this->rawInput('content'));
         $category = $this->input('category');
         $status = $this->input('status');
         $orderInput = $this->input('order');
@@ -182,6 +183,7 @@ class ArticleController extends Controller
             $this->setError('Article not found.');
             return $this->redirect('/admin');
         }
+        $article['content'] = HtmlSanitizer::clean($article['content'] ?? '');
         
         if ($this->isPost()) {
             return $this->update($id);
@@ -212,7 +214,7 @@ class ArticleController extends Controller
 
         $title = $this->rawInput('title');
         $slug = $this->generateSlug($title, $id);
-        $content = $this->rawInput('content');
+        $content = HtmlSanitizer::clean($this->rawInput('content'));
         $category = $this->input('category');
         $status = $this->input('status');
         $order = $this->input('order');

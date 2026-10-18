@@ -19,7 +19,7 @@
                 
                 <div class="card-body pt-3">
                     <div class="article-content">
-                        <?php echo $article['content']; ?>
+                        <?php echo HtmlSanitizer::clean($article['content']); ?>
                     </div>
 
                     <?php if (!empty($attachments)): ?>
