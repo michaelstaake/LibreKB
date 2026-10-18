@@ -59,22 +59,25 @@ if ($basePath && strpos($requestUri, $basePath) === 0) {
 }
 
 $isInstallPage = (strpos($routePath, '/install') === 0);
+$isUpgradePage = (strpos($routePath, '/upgrade') === 0);
 $isTestPage = (strpos($routePath, '/test-') === 0);
 
-// Check database tables exist (unless we're on install page or test pages)
-if (!$isInstallPage && !$isTestPage) {
+// Check database tables exist (unless we're on install, upgrade, or test pages)
+if (!$isInstallPage && !$isUpgradePage && !$isTestPage) {
     try {
         $database = new Database();
         $missingTables = $database->checkRequiredTables();
         
         if (!empty($missingTables)) {
+            $needsUpgrade = $database->needsUpgrade();
             // Show database error page
             include VIEWS_PATH . '/database-error.php';
             exit;
         }
     } catch (Exception $e) {
         // If we can't even connect to database, show error page
-        $missingTables = ['users', 'settings', 'articles', 'categories'];
+        $missingTables = ['users', 'settings', 'articles', 'categories', 'log', 'attachments'];
+        $needsUpgrade = false;
         include VIEWS_PATH . '/database-error.php';
         exit;
     }

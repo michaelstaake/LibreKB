@@ -6,7 +6,7 @@
             </div>
             <hr>
         </header>
-        <form action="<?php echo $basePath; ?>/admin/articles/<?php echo $article['id']; ?>" method="POST">
+        <form action="<?php echo $basePath; ?>/admin/articles/<?php echo $article['id']; ?>" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -19,6 +19,38 @@
                         <label for="content" class="form-label">Content</label>
                         <textarea class="form-control" id="content" name="content" rows="15" required><?php echo htmlspecialchars($article['content']); ?></textarea>
                     </div>
+
+                    <?php if (!empty($attachments)): ?>
+                        <div class="mb-3">
+                            <label class="form-label">Current attachments</label>
+                            <ul class="list-group">
+                                <?php foreach ($attachments as $attachment): ?>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <i class="bi bi-paperclip me-2"></i>
+                                            <?php echo htmlspecialchars($attachment['original_name']); ?>
+                                            <small class="text-muted">(<?php echo FileStorage::formatSize($attachment['size']); ?>)</small>
+                                        </span>
+                                        <span class="d-flex gap-2">
+                                            <a href="<?php echo $basePath; ?>/attachment/<?php echo (int)$attachment['id']; ?>" class="btn btn-outline-secondary btn-sm">Download</a>
+                                            <a href="<?php echo $basePath; ?>/admin/articles/<?php echo (int)$article['id']; ?>/attachments/<?php echo (int)$attachment['id']; ?>/delete"
+                                               class="btn btn-outline-danger btn-sm"
+                                               onclick="return confirm('Remove this attachment?')">Remove</a>
+                                        </span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-3">
+                        <label for="attachments" class="form-label">Add attachments</label>
+                        <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
+                        <div class="form-text">
+                            Up to <?php echo (int)FileStorage::MAX_FILES; ?> files, <?php echo FileStorage::formatSize(FileStorage::MAX_BYTES); ?> each.
+                            Allowed: <?php echo htmlspecialchars(implode(', ', FileStorage::allowedExtensions())); ?>.
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col-md-4">
@@ -26,22 +58,10 @@
                         <label for="category" class="form-label">Category</label>
                         <select class="form-select" id="category" name="category" required>
                             <option value="">Select Category</option>
-                            <?php foreach ($categories as $category): ?>
-                                <?php if (empty($category['parent'])): // Top-level categories ?>
-                                    <option value="<?php echo $category['id']; ?>" 
-                                            <?php echo $category['id'] == $article['category'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($category['name']); ?>
-                                    </option>
-                                    <?php foreach ($categories as $subCategory): ?>
-                                        <?php if ($subCategory['parent'] == $category['id']): ?>
-                                            <option value="<?php echo $subCategory['id']; ?>"
-                                                    <?php echo $subCategory['id'] == $article['category'] ? 'selected' : ''; ?>>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;└ <?php echo htmlspecialchars($subCategory['name']); ?>
-                                            </option>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+                            <?php
+                                $selectedId = $article['category'];
+                                include VIEWS_PATH . '/admin/partials/category-options.php';
+                            ?>
                         </select>
                     </div>
                     

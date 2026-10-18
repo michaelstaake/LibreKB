@@ -77,6 +77,8 @@ require_once('models/Search.php');
 require_once('models/Email.php');
 require_once('models/Article.php');
 require_once('models/Category.php');
+require_once('models/Attachment.php');
+require_once('models/FileStorage.php');
 require_once('models/Setting.php');
 require_once('models/User.php');
 require_once('models/Log.php');

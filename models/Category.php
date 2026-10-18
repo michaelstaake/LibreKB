@@ -80,16 +80,88 @@ class Category extends Model
         return $this->fetchAll($sql);
     }
     
+    /**
+     * Parent choices for the category form, in tree order.
+     * The category being edited and every category under it are omitted so a
+     * category cannot be placed inside itself.
+     */
     public function getParentOptions($excludeId = null)
     {
-        $sql = "SELECT id, name FROM {$this->table} WHERE parent IS NULL";
+        $excludeIds = [];
         if ($excludeId) {
-            $sql .= " AND id != :excludeId";
+            foreach ($this->getAllSubcategoryIds($excludeId) as $id) {
+                $excludeIds[(int)$id] = true;
+            }
         }
-        $sql .= " ORDER BY name ASC";
-        
-        $params = $excludeId ? ['excludeId' => $excludeId] : [];
-        return $this->fetchAll($sql, $params);
+
+        $options = [];
+        $used = [];
+        $this->appendTreeOptions($this->all(), null, 0, $excludeIds, $options, $used);
+        return $options;
+    }
+
+    /**
+     * Every category in tree order, including nested categories, for article assignment.
+     */
+    public function getIndentedOptions()
+    {
+        $options = [];
+        $used = [];
+        $this->appendTreeOptions($this->all(), null, 0, [], $options, $used);
+        return $options;
+    }
+
+    /**
+     * Ancestors from the top of the tree down to, but not including, this category.
+     */
+    public function getAncestors($categoryId)
+    {
+        $ancestors = [];
+        $seen = [];
+        $current = $this->find($categoryId);
+        $guard = 0;
+
+        while ($current && !empty($current['parent']) && $guard < 100) {
+            $guard++;
+            $parentId = (int)$current['parent'];
+            if (isset($seen[$parentId])) {
+                break;
+            }
+            $seen[$parentId] = true;
+
+            $parent = $this->find($parentId);
+            if (!$parent) {
+                break;
+            }
+
+            array_unshift($ancestors, $parent);
+            $current = $parent;
+        }
+
+        return $ancestors;
+    }
+
+    /**
+     * A parent is valid when it exists and is not this category or one of its descendants.
+     */
+    public function canBeParent($categoryId, $parentId)
+    {
+        $categoryId = (int)$categoryId;
+        $parentId = (int)$parentId;
+
+        if ($parentId <= 0 || !$this->find($parentId)) {
+            return false;
+        }
+
+        if ($categoryId > 0) {
+            foreach ($this->getAllSubcategoryIds($categoryId) as $id) {
+                if ((int)$id === $parentId) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
     
     public function getAllWithArticles()
@@ -115,15 +187,28 @@ class Category extends Model
     /**
      * Get all subcategory IDs recursively for a given category
      */
-    public function getAllSubcategoryIds($categoryId)
+    public function getAllSubcategoryIds($categoryId, &$visited = null)
     {
+        if ($visited === null) {
+            $visited = [];
+        }
+
+        $categoryId = (int)$categoryId;
+        if ($categoryId <= 0 || isset($visited[$categoryId])) {
+            return [];
+        }
+        $visited[$categoryId] = true;
+
         $subcategoryIds = [$categoryId];
         $directSubcategories = $this->getWithParent($categoryId);
-        
+
         foreach ($directSubcategories as $subcategory) {
-            $subcategoryIds = array_merge($subcategoryIds, $this->getAllSubcategoryIds($subcategory['id']));
+            $subcategoryIds = array_merge(
+                $subcategoryIds,
+                $this->getAllSubcategoryIds($subcategory['id'], $visited)
+            );
         }
-        
+
         return $subcategoryIds;
     }
     
@@ -144,19 +229,92 @@ class Category extends Model
     /**
      * Check if a category and its entire parent hierarchy is enabled
      */
-    public function isCategoryHierarchyEnabled($categoryId)
+    public function isCategoryHierarchyEnabled($categoryId, &$visited = null)
     {
+        if ($visited === null) {
+            $visited = [];
+        }
+
+        $categoryId = (int)$categoryId;
+        if ($categoryId <= 0 || isset($visited[$categoryId])) {
+            return false;
+        }
+        $visited[$categoryId] = true;
+
         $category = $this->find($categoryId);
         if (!$category || $category['status'] !== 'enabled') {
             return false;
         }
-        
+
         // Check parent hierarchy recursively
         if ($category['parent']) {
-            return $this->isCategoryHierarchyEnabled($category['parent']);
+            return $this->isCategoryHierarchyEnabled($category['parent'], $visited);
         }
-        
+
         return true;
+    }
+
+    /**
+     * Flatten categories into a depth-first list. Orphans (parent missing) are
+     * appended so they can still be selected.
+     */
+    private function appendTreeOptions($categories, $parentId, $depth, $excludeIds, &$options, &$used)
+    {
+        $children = [];
+        foreach ($categories as $category) {
+            $categoryParent = $category['parent'];
+            $isChild = $parentId === null
+                ? ($categoryParent === null || $categoryParent === '')
+                : ((string)$categoryParent === (string)$parentId);
+
+            if ($isChild) {
+                $children[] = $category;
+            }
+        }
+
+        usort($children, function ($a, $b) {
+            $order = ($a['order'] + 0) - ($b['order'] + 0);
+            if ($order !== 0) {
+                return $order;
+            }
+            return strcasecmp($a['name'], $b['name']);
+        });
+
+        foreach ($children as $child) {
+            $childId = (int)$child['id'];
+            if (isset($used[$childId])) {
+                continue;
+            }
+            $used[$childId] = true;
+
+            if (!isset($excludeIds[$childId])) {
+                $options[] = [
+                    'id' => $child['id'],
+                    'name' => $child['name'],
+                    'depth' => $depth,
+                    'parent' => $child['parent']
+                ];
+                $this->appendTreeOptions($categories, $childId, $depth + 1, $excludeIds, $options, $used);
+            }
+        }
+
+        // After the real tree is walked from the top, pick up categories whose parent is missing.
+        if ($parentId === null) {
+            foreach ($categories as $category) {
+                $categoryId = (int)$category['id'];
+                if (isset($used[$categoryId]) || isset($excludeIds[$categoryId])) {
+                    continue;
+                }
+                $used[$categoryId] = true;
+                $options[] = [
+                    'id' => $category['id'],
+                    'name' => $category['name'],
+                    'depth' => 0,
+                    'parent' => $category['parent']
+                ];
+                $this->appendTreeOptions($categories, $categoryId, 1, $excludeIds, $options, $used);
+            }
+        }
     }
     
     /**

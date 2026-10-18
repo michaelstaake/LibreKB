@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite module
 RUN a2enmod rewrite
 
+# Attachment uploads are limited to 10 MB each in the application.
+RUN echo "upload_max_filesize=12M\npost_max_size=128M" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Set working directory
 WORKDIR /var/www/html
 

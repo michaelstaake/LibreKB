@@ -21,7 +21,7 @@ class Search extends Model
         }
         
         // Search in articles with category information, excluding disabled categories
-        $articleSql = "SELECT a.id, a.title, a.slug, 'article' as type, c.name as category_name, c.slug as category_slug 
+        $articleSql = "SELECT a.id, a.title, a.slug, 'article' as type, a.category as category_id, c.name as category_name, c.slug as category_slug 
                        FROM articles a 
                        LEFT JOIN categories c ON a.category = c.id 
                        WHERE (a.title LIKE ? OR a.content LIKE ?) AND a.status = 'enabled'" . $excludeClause;

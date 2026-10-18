@@ -41,25 +41,21 @@ class CategoryController extends Controller
         // Get subcategories
         $subCategories = $this->categoryModel->getEnabledWithParent($category['id']);
         
-        // Add article counts to subcategories (including their subcategories)
+        // Add article and child counts to subcategories (including deeper levels)
         foreach ($subCategories as &$subCategory) {
             $subCategory['article_count'] = $this->categoryModel->countEnabledArticlesRecursive($subCategory['id']);
+            $subCategory['subcategory_count'] = count($this->categoryModel->getEnabledWithParent($subCategory['id']));
         }
+        unset($subCategory);
         
         // Get articles
         $articles = $this->articleModel->getEnabledByCategoryId($category['id']);
-        
-        // Get parent category if exists
-        $parentCategory = null;
-        if ($category['parent']) {
-            $parentCategory = $this->categoryModel->find($category['parent']);
-        }
-        
+
         $data = [
             'pageTitle' => $category['name'],
             'siteName' => $siteName,
             'category' => $category,
-            'parentCategory' => $parentCategory,
+            'ancestors' => $this->categoryModel->getAncestors($category['id']),
             'subCategories' => $subCategories,
             'articles' => $articles,
             'message' => $this->getMessage(),
@@ -142,9 +138,14 @@ class CategoryController extends Controller
         $slug = $this->generateSlug($name);
         $description = $this->rawInput('description');
         $icon = $this->input('icon');
-        $parent = $this->input('parent') ?: null;
         $status = $this->input('status');
         $order = $this->input('order', 1);
+
+        list($parent, $parentError) = $this->normalizeParent($this->rawInput('parent'));
+        if ($parentError) {
+            $this->setError($parentError);
+            return $this->redirect('/admin/categories/create');
+        }
         
         $categoryData = [
             'name' => $name,
@@ -204,9 +205,14 @@ class CategoryController extends Controller
         $slug = $this->generateSlug($name, $id);
         $description = $this->rawInput('description');
         $icon = $this->input('icon');
-        $parent = $this->input('parent') ?: null;
         $status = $this->input('status');
         $order = $this->input('order');
+
+        list($parent, $parentError) = $this->normalizeParent($this->rawInput('parent'), $id);
+        if ($parentError) {
+            $this->setError($parentError);
+            return $this->redirect('/admin/categories/' . $id);
+        }
         
         $updateData = [
             'name' => $name,
@@ -234,17 +240,17 @@ class CategoryController extends Controller
     
     public function delete($id)
     {
-        // Check if category has articles
+        // Keep child categories and articles in place. The admin moves or
+        // deletes that content first so a parent delete cannot orphan it.
         $articleCount = $this->articleModel->countByCategoryId($id);
         if ($articleCount > 0) {
-            $this->setError('Cannot delete category that contains articles.');
+            $this->setError('Cannot delete a category that still contains articles. Move or delete those articles first.');
             return $this->redirect('/admin');
         }
         
-        // Check if category has subcategories
         $subcategoryCount = $this->categoryModel->countWithParent($id);
         if ($subcategoryCount > 0) {
-            $this->setError('Cannot delete category that contains subcategories.');
+            $this->setError('Cannot delete a category that still contains subcategories. Move or delete those subcategories first.');
             return $this->redirect('/admin');
         }
         
@@ -261,6 +267,38 @@ class CategoryController extends Controller
         }
     }
     
+    /**
+     * Empty parent means top level. Otherwise the parent must exist and must
+     * not introduce a cycle.
+     */
+    private function normalizeParent($parent, $categoryId = null)
+    {
+        if (is_array($parent)) {
+            return [null, 'Please choose a valid parent category.'];
+        }
+
+        if ($parent === null || $parent === '') {
+            return [null, null];
+        }
+
+        if (!ctype_digit((string)$parent)) {
+            return [null, 'Please choose a valid parent category.'];
+        }
+
+        $parentId = (int)$parent;
+        if (!$this->categoryModel->canBeParent($categoryId ?: 0, $parentId)) {
+            if ($categoryId && (int)$categoryId === $parentId) {
+                return [null, 'A category cannot be its own parent.'];
+            }
+            if ($categoryId && $this->categoryModel->find($parentId)) {
+                return [null, 'A category cannot be placed inside itself or one of its subcategories.'];
+            }
+            return [null, 'The selected parent category does not exist.'];
+        }
+
+        return [$parentId, null];
+    }
+
     private function generateSlug($name, $excludeId = null)
     {
         // First, convert HTML entities back to characters

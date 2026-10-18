@@ -37,13 +37,13 @@
                         <label for="parent" class="form-label">Parent Category</label>
                         <select class="form-select" id="parent" name="parent">
                             <option value="">Top Level Category</option>
-                            <?php foreach ($parentCategories as $parentCategory): ?>
-                                <option value="<?php echo $parentCategory['id']; ?>"
-                                        <?php echo $parentCategory['id'] == $category['parent'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($parentCategory['name']); ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php
+                                $categories = $parentCategories;
+                                $selectedId = $category['parent'];
+                                include VIEWS_PATH . '/admin/partials/category-options.php';
+                            ?>
                         </select>
+                        <div class="form-text">Categories can be nested to any depth. This list hides the category itself and anything nested under it, so the tree cannot loop.</div>
                     </div>
                     
                     <div class="mb-3">

@@ -46,10 +46,15 @@
                                                 <?php echo htmlspecialchars($category['description']); ?>
                                             </p>
                                         <?php endif; ?>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center flex-wrap gap-1">
                                             <span class="badge bg-dark">
                                                 <?php echo $category['article_count']; ?> article<?php echo $category['article_count'] !== 1 ? 's' : ''; ?>
                                             </span>
+                                            <?php if (!empty($category['subcategory_count'])): ?>
+                                                <span class="badge bg-secondary">
+                                                    <?php echo $category['subcategory_count']; ?> subcategor<?php echo $category['subcategory_count'] !== 1 ? 'ies' : 'y'; ?>
+                                                </span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>

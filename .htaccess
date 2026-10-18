@@ -8,6 +8,9 @@ RewriteEngine On
 # RewriteCond %{HTTPS} !=on
 # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+# Uploaded files are served by the application, never directly.
+RewriteRule ^storage/ - [F,L]
+
 # Handle static files
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

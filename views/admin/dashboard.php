@@ -150,11 +150,12 @@
                             echo '<i class="bi bi-folder me-2 text-warning"></i>';
                         }
                         
-                        echo '<h' . ($level + 5) . ' class="mb-0 me-3">';
+                        $headingLevel = min(6, $level + 5);
+                        echo '<h' . $headingLevel . ' class="mb-0 me-3">';
                         echo '<a href="' . $baseUrl . '/admin/categories/' . $category['id'] . '" class="text-decoration-none">';
                         echo htmlspecialchars($category['name']);
                         echo '</a>';
-                        echo '</h' . ($level + 5) . '>';
+                        echo '</h' . $headingLevel . '>';
                         
                         // Show warning icon if parent category is disabled
                         if (isParentDisabled($category, $categories)) {
@@ -182,7 +183,7 @@
                             echo '</a>';
                             echo '<a href="' . $baseUrl . '/admin/categories/' . $category['id'] . '/delete" ';
                             echo 'class="btn btn-outline-danger btn-sm" title="Delete Category" ';
-                            echo 'onclick="return confirm(\'Are you sure?\')"><i class="bi bi-trash"></i></a>';
+                            echo 'onclick="return confirm(\'Delete this category? It can only be deleted when it has no articles and no subcategories.\')"><i class="bi bi-trash"></i></a>';
                             echo '</div>';
                         }
                         echo '</div>';

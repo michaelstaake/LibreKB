@@ -52,6 +52,7 @@ class SearchController extends Controller
         
         $siteName = $this->settingModel->getValue('site_name') ?: 'Knowledge Base';
         $results = $this->searchModel->search($query);
+        $results = $this->addCategoryPaths($results);
         
         $data = [
             'pageTitle' => 'Search Results',
@@ -65,6 +66,42 @@ class SearchController extends Controller
         return $this->layout('main', 'search-results', $data);
     }
     
+    private function addCategoryPaths($results)
+    {
+        $categoryModel = new Category();
+
+        foreach ($results as &$result) {
+            if ($result['type'] === 'article' && !empty($result['category_id'])) {
+                $result['category_name'] = $this->categoryPathLabel($categoryModel, $result['category_id'], true);
+            } elseif ($result['type'] === 'category') {
+                $parentPath = $this->categoryPathLabel($categoryModel, $result['id'], false);
+                if ($parentPath !== '') {
+                    $result['category_name'] = $parentPath;
+                }
+            }
+        }
+        unset($result);
+
+        return $results;
+    }
+
+    private function categoryPathLabel($categoryModel, $categoryId, $includeSelf)
+    {
+        $names = [];
+        foreach ($categoryModel->getAncestors($categoryId) as $ancestor) {
+            $names[] = $ancestor['name'];
+        }
+
+        if ($includeSelf) {
+            $category = $categoryModel->find($categoryId);
+            if ($category) {
+                $names[] = $category['name'];
+            }
+        }
+
+        return implode(' / ', $names);
+    }
+
     private function showMaintenance()
     {
         $siteName = $this->settingModel->getValue('site_name') ?: 'Knowledge Base';

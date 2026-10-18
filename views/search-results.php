@@ -58,7 +58,11 @@
                                                 </h6>
                                                 <div class="d-flex align-items-center">
                                                     <span class="badge bg-dark me-2">Category</span>
-                                                    <small class="text-muted">Browse articles in this category</small>
+                                                    <?php if (!empty($result['category_name'])): ?>
+                                                        <small class="text-muted">in <?php echo htmlspecialchars($result['category_name']); ?></small>
+                                                    <?php else: ?>
+                                                        <small class="text-muted">Browse articles in this category</small>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                             <div class="ms-auto">

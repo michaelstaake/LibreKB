@@ -106,7 +106,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     $isMbstringAvailable = extension_loaded('mbstring');
                     
                     // Check all PHP extensions
-                    $requiredExtensions = ['curl', 'mbstring'];
+                    $requiredExtensions = ['curl', 'mbstring', 'fileinfo'];
                     $missingExtensions = [];
                     $extensionStatus = [];
                     
@@ -212,7 +212,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                             </div>
                         </div>
                         <div class="compatibility-requirement">
-                            Required: curl, mbstring
+                            Required: curl, mbstring, fileinfo
                         </div>
                     </div>
 

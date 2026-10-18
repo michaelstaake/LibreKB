@@ -33,7 +33,9 @@ class HomeController extends Controller
         // Add article counts to categories (including subcategories)
         foreach ($categories as &$category) {
             $category['article_count'] = $this->categoryModel->countEnabledArticlesRecursive($category['id']);
+            $category['subcategory_count'] = count($this->categoryModel->getEnabledWithParent($category['id']));
         }
+        unset($category);
         
         $data = [
             'pageTitle' => 'Categories',

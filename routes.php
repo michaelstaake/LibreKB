@@ -24,6 +24,7 @@ $router->get('/search', 'SearchController@index');
 $router->post('/search', 'SearchController@search');
 $router->get('/category/{slug}', 'CategoryController@show');
 $router->get('/article/{slug}', 'ArticleController@show');
+$router->get('/attachment/{id}', 'AttachmentController@download');
 
 // Admin routes
 $router->group('/admin', function($router) {
@@ -51,6 +52,7 @@ $router->group('/admin', function($router) {
             $router->get('/articles/{id}', 'ArticleController@adminShow');
             $router->post('/articles/{id}', 'ArticleController@update');
             $router->get('/articles/{id}/delete', 'ArticleController@delete');
+            $router->get('/articles/{id}/attachments/{attachmentId}/delete', 'ArticleController@deleteAttachment');
         });
         
         // Admin-only routes
@@ -77,3 +79,5 @@ $router->group('/admin', function($router) {
 // Special routes for installation and update
 $router->get('/install', 'InstallController@index');
 $router->post('/install', 'InstallController@install');
+$router->get('/upgrade', 'UpgradeController@index');
+$router->post('/upgrade', 'UpgradeController@run');

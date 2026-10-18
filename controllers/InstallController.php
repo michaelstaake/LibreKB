@@ -167,7 +167,9 @@ class InstallController extends Controller
             `performed_action` VARCHAR(255) NOT NULL,
             `on_what` VARCHAR(255) NOT NULL,
             `when` VARCHAR(255) NOT NULL
-        );";
+        );
+        
+        " . Database::attachmentsTableSql(false) . ";";
         
         $conn->exec($createTablesQuery);
     }

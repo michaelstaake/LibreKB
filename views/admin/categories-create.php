@@ -35,12 +35,13 @@
                         <label for="parent" class="form-label">Parent Category</label>
                         <select class="form-select" id="parent" name="parent">
                             <option value="">Top Level Category</option>
-                            <?php foreach ($parentCategories as $parentCategory): ?>
-                                <option value="<?php echo $parentCategory['id']; ?>">
-                                    <?php echo htmlspecialchars($parentCategory['name']); ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php
+                                $categories = $parentCategories;
+                                $selectedId = null;
+                                include VIEWS_PATH . '/admin/partials/category-options.php';
+                            ?>
                         </select>
+                        <div class="form-text">Categories can be nested to any depth. A category cannot be placed inside itself.</div>
                     </div>
                     
                     <div class="mb-3">

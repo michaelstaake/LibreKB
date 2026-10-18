@@ -11,38 +11,102 @@ class Database extends Config {
         } catch (PDOException $e) {
             // For installer, we want to catch and handle errors gracefully
             // Check if we're in installer context
-            if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/install') !== false) {
-                throw $e; // Re-throw for installer to handle
+            $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+            if (strpos($requestUri, '/install') !== false || strpos($requestUri, '/upgrade') !== false) {
+                throw $e; // Re-throw for installer and upgrade to handle
             }
             die("Connection failed: " . $e->getMessage());
         }
     }
     
+    public function coreTables() {
+        return ['users', 'settings', 'articles', 'categories', 'log'];
+    }
+
+    /**
+     * Tables added after 2.0.1. Existing installs gain these through /upgrade
+     * without changes to the tables they already have.
+     */
+    public function upgradeTables() {
+        return ['attachments'];
+    }
+
+    public function requiredTables() {
+        return array_merge($this->coreTables(), $this->upgradeTables());
+    }
+
     public function checkRequiredTables() {
-        $requiredTables = ['users', 'settings', 'articles', 'categories', 'log'];
+        return $this->missingTables($this->requiredTables());
+    }
+
+    public function checkCoreTables() {
+        return $this->missingTables($this->coreTables());
+    }
+
+    public function hasRequiredTables() {
+        return empty($this->checkRequiredTables());
+    }
+
+    /**
+     * True when a 2.x database is present and only newer tables are missing.
+     */
+    public function needsUpgrade() {
+        $missing = $this->checkRequiredTables();
+        if (empty($missing)) {
+            return false;
+        }
+
+        $coreMissing = array_diff($missing, $this->upgradeTables());
+        return empty($coreMissing);
+    }
+
+    /**
+     * CREATE TABLE statement for article attachments.
+     * Shared by the installer and the 2.1.0 upgrade so the definitions cannot drift.
+     */
+    public static function attachmentsTableSql($ifNotExists = false) {
+        $create = $ifNotExists ? 'CREATE TABLE IF NOT EXISTS' : 'CREATE TABLE';
+        return $create . " attachments (
+            `id` INT(6) AUTO_INCREMENT PRIMARY KEY,
+            `article_id` INT(6) NOT NULL,
+            `original_name` VARCHAR(255) NOT NULL,
+            `stored_name` VARCHAR(255) NOT NULL,
+            `extension` VARCHAR(20) NOT NULL,
+            `mime_type` VARCHAR(255) NOT NULL,
+            `size` INT(11) NOT NULL,
+            `created` VARCHAR(255) NOT NULL,
+            KEY `article_id` (`article_id`)
+        )";
+    }
+
+    /**
+     * Add the 2.1.0 attachments table. Does not alter or delete existing rows.
+     */
+    public function createAttachmentsTable() {
+        $pdo = $this->connect();
+        $pdo->exec(self::attachmentsTableSql(true));
+        return true;
+    }
+
+    private function missingTables($tables) {
         $missingTables = [];
-        
+
         try {
             $pdo = $this->connect();
-            
-            foreach ($requiredTables as $table) {
+
+            foreach ($tables as $table) {
                 $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
                 $stmt->execute([$table]);
-                
+
                 if ($stmt->rowCount() === 0) {
                     $missingTables[] = $table;
                 }
             }
-            
+
             return $missingTables;
         } catch (PDOException $e) {
-            // If we can't even check tables, assume all are missing
-            return $requiredTables;
+            return $tables;
         }
-    }
-    
-    public function hasRequiredTables() {
-        return empty($this->checkRequiredTables());
     }
 }
 

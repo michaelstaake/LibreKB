@@ -1,8 +1,10 @@
 <div class="container">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/">Knowledge Base</a></li>
-        <?php if ($parentCategory): ?>
-            <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($parentCategory['slug']); ?>"><?php echo htmlspecialchars($parentCategory['name']); ?></a></li>
+        <?php if (!empty($ancestors)): ?>
+            <?php foreach ($ancestors as $ancestor): ?>
+                <li class="breadcrumb-item"><a href="<?php echo $basePath; ?>/category/<?php echo htmlspecialchars($ancestor['slug']); ?>"><?php echo htmlspecialchars($ancestor['name']); ?></a></li>
+            <?php endforeach; ?>
         <?php endif; ?>
         <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($category['name']); ?></li>
     </ol>
@@ -45,10 +47,15 @@
                                                         <?php echo htmlspecialchars($subCategory['description']); ?>
                                                     </p>
                                                 <?php endif; ?>
-                                                <div class="d-flex align-items-center">
+                                                <div class="d-flex align-items-center flex-wrap gap-1">
                                                     <span class="badge bg-dark">
                                                         <?php echo $subCategory['article_count']; ?> article<?php echo $subCategory['article_count'] !== 1 ? 's' : ''; ?>
                                                     </span>
+                                                    <?php if (!empty($subCategory['subcategory_count'])): ?>
+                                                        <span class="badge bg-secondary">
+                                                            <?php echo $subCategory['subcategory_count']; ?> subcategor<?php echo $subCategory['subcategory_count'] !== 1 ? 'ies' : 'y'; ?>
+                                                        </span>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                             <div class="ms-auto">

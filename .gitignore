@@ -1,2 +1,7 @@
 #ignore config file
 config.php
+
+# uploaded files stay on the server; keep the protected directory itself
+storage/uploads/attachments/*
+!storage/uploads/attachments/.htaccess
+!storage/uploads/attachments/.gitkeep

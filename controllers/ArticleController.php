@@ -44,18 +44,15 @@ class ArticleController extends Controller
             return $this->show404();
         }
         
-        // Get parent category if exists
-        $parentCategory = null;
-        if ($category && $category['parent']) {
-            $parentCategory = $this->categoryModel->find($category['parent']);
-        }
-        
+        $attachmentModel = new Attachment();
+
         $data = [
             'pageTitle' => $article['title'],
             'siteName' => $siteName,
             'article' => $article,
             'category' => $category,
-            'parentCategory' => $parentCategory,
+            'ancestors' => $this->categoryModel->getAncestors($category['id']),
+            'attachments' => $attachmentModel->getByArticleId($article['id']),
             'message' => $this->getMessage(),
             'error' => $this->getError()
         ];
@@ -112,7 +109,7 @@ class ArticleController extends Controller
             return $this->store();
         }
 
-        $categories = $this->categoryModel->all();
+        $categories = $this->categoryModel->getIndentedOptions();
         
         // Get the selected category from URL parameter
         $selectedCategoryId = $this->input('category');
@@ -129,6 +126,11 @@ class ArticleController extends Controller
         return $this->layout('admin', 'admin/articles-create', $data);
     }    public function store()
     {
+        if ($this->uploadWasDropped()) {
+            $this->setError('The upload is larger than the server allows. Increase post_max_size and upload_max_filesize, then try again.');
+            return $this->redirect('/admin/articles/create');
+        }
+
         $title = $this->rawInput('title');
         $slug = $this->generateSlug($title);
         $content = $this->rawInput('content');
@@ -152,10 +154,17 @@ class ArticleController extends Controller
             'updated' => date('Y-m-d H:i:s')
         ];
         
-        if ($this->articleModel->create($articleData)) {
+        $articleId = $this->articleModel->create($articleData);
+        if ($articleId) {
             // Log article creation
             $user = $this->getUser();
             Log::logAction($user['id'], $user['email'], 'created', 'article');
+
+            $uploadErrors = $this->saveAttachments($articleId, $user);
+            if (!empty($uploadErrors)) {
+                $this->setError('Article saved, but some attachments were not added: ' . implode(' ', $uploadErrors));
+                return $this->redirect('/admin/articles/' . $articleId);
+            }
             
             $this->setMessage('Article created successfully.');
             return $this->redirect('/admin');
@@ -178,13 +187,15 @@ class ArticleController extends Controller
             return $this->update($id);
         }
         
-        $categories = $this->categoryModel->all();
+        $categories = $this->categoryModel->getIndentedOptions();
+        $attachmentModel = new Attachment();
         
         $data = [
             'pageTitle' => 'Edit Article',
             'pageCategory' => 'Articles',
             'article' => $article,
             'categories' => $categories,
+            'attachments' => $attachmentModel->getByArticleId($article['id']),
             'message' => $this->getMessage(),
             'error' => $this->getError()
         ];
@@ -194,6 +205,11 @@ class ArticleController extends Controller
     
     public function update($id)
     {
+        if ($this->uploadWasDropped()) {
+            $this->setError('The upload is larger than the server allows. Increase post_max_size and upload_max_filesize, then try again.');
+            return $this->redirect('/admin/articles/' . $id);
+        }
+
         $title = $this->rawInput('title');
         $slug = $this->generateSlug($title, $id);
         $content = $this->rawInput('content');
@@ -215,6 +231,12 @@ class ArticleController extends Controller
             // Log article update
             $user = $this->getUser();
             Log::logAction($user['id'], $user['email'], 'updated', 'article');
+
+            $uploadErrors = $this->saveAttachments($id, $user);
+            if (!empty($uploadErrors)) {
+                $this->setError('Article saved, but some attachments were not added: ' . implode(' ', $uploadErrors));
+                return $this->redirect('/admin/articles/' . $id);
+            }
             
             $this->setMessage('Article updated successfully.');
             return $this->redirect('/admin');
@@ -224,9 +246,43 @@ class ArticleController extends Controller
         }
     }
     
+    public function deleteAttachment($id, $attachmentId)
+    {
+        $article = $this->articleModel->find($id);
+        if (!$article) {
+            $this->setError('Article not found.');
+            return $this->redirect('/admin');
+        }
+
+        $attachmentModel = new Attachment();
+        $attachment = $attachmentModel->findForArticle($attachmentId, $id);
+        if (!$attachment) {
+            $this->setError('Attachment not found.');
+            return $this->redirect('/admin/articles/' . $id);
+        }
+
+        $storage = new FileStorage();
+        $storage->delete($attachment['stored_name'], 'attachments');
+        $attachmentModel->delete($attachment['id']);
+
+        $user = $this->getUser();
+        Log::logAction($user['id'], $user['email'], 'deleted', 'attachment');
+
+        $this->setMessage('Attachment removed.');
+        return $this->redirect('/admin/articles/' . $id);
+    }
+
     public function delete($id)
     {
+        $attachmentModel = new Attachment();
+        $attachments = $attachmentModel->getByArticleId($id);
+
         if ($this->articleModel->delete($id)) {
+            $storage = new FileStorage();
+            foreach ($attachments as $attachment) {
+                $storage->delete($attachment['stored_name'], 'attachments');
+                $attachmentModel->delete($attachment['id']);
+            }
             // Log article deletion
             $user = $this->getUser();
             Log::logAction($user['id'], $user['email'], 'deleted', 'article');
@@ -239,6 +295,58 @@ class ArticleController extends Controller
         }
     }
     
+    /**
+     * PHP discards the body when it exceeds post_max_size, leaving both
+     * $_POST and $_FILES empty while Content-Length is still set.
+     */
+    private function uploadWasDropped()
+    {
+        $length = isset($_SERVER['CONTENT_LENGTH']) ? (int)$_SERVER['CONTENT_LENGTH'] : 0;
+        return $length > 0 && empty($_POST) && empty($_FILES);
+    }
+
+    private function saveAttachments($articleId, $user)
+    {
+        $files = FileStorage::normalizeUploadedFiles('attachments');
+        if (empty($files)) {
+            return [];
+        }
+
+        if (count($files) > FileStorage::MAX_FILES) {
+            return ['You can upload up to ' . FileStorage::MAX_FILES . ' files at a time.'];
+        }
+
+        $storage = new FileStorage();
+        $attachmentModel = new Attachment();
+        $errors = [];
+        $saved = 0;
+
+        foreach ($files as $file) {
+            try {
+                $stored = $storage->store($file, 'attachments');
+                $attachmentModel->create([
+                    'article_id' => $articleId,
+                    'original_name' => $stored['original_name'],
+                    'stored_name' => $stored['stored_name'],
+                    'extension' => $stored['extension'],
+                    'mime_type' => $stored['mime_type'],
+                    'size' => $stored['size'],
+                    'created' => date('Y-m-d H:i:s')
+                ]);
+                $saved++;
+            } catch (Exception $e) {
+                $label = isset($file['name']) ? basename(str_replace('\\', '/', $file['name'])) : 'A file';
+                $errors[] = $label . ': ' . $e->getMessage();
+            }
+        }
+
+        if ($saved > 0) {
+            Log::logAction($user['id'], $user['email'], 'uploaded', 'attachment');
+        }
+
+        return $errors;
+    }
+
     private function generateSlug($title, $excludeId = null)
     {
         // First, convert HTML entities back to characters

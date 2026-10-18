@@ -15,7 +15,7 @@
                 <a href="<?php echo $basePath; ?>/admin/categories/create" class="btn btn-primary">Create Category</a>
             </div>
         <?php else: ?>
-            <form action="<?php echo $basePath; ?>/admin/articles/create" method="POST">
+            <form action="<?php echo $basePath; ?>/admin/articles/create" method="POST" enctype="multipart/form-data">
                 <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">
@@ -27,6 +27,15 @@
                         <label for="content" class="form-label">Content</label>
                         <textarea class="form-control" id="content" name="content" rows="15" required></textarea>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="attachments" class="form-label">Attachments</label>
+                        <input type="file" class="form-control" id="attachments" name="attachments[]" multiple>
+                        <div class="form-text">
+                            Optional. Up to <?php echo (int)FileStorage::MAX_FILES; ?> files, <?php echo FileStorage::formatSize(FileStorage::MAX_BYTES); ?> each.
+                            Allowed: <?php echo htmlspecialchars(implode(', ', FileStorage::allowedExtensions())); ?>.
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="col-md-4">
@@ -34,20 +43,10 @@
                         <label for="category" class="form-label">Category</label>
                         <select class="form-select" id="category" name="category" required>
                             <option value="">Select Category</option>
-                            <?php foreach ($categories as $category): ?>
-                                <?php if (empty($category['parent'])): // Top-level categories ?>
-                                    <option value="<?php echo $category['id']; ?>" <?php echo (isset($selectedCategoryId) && $selectedCategoryId == $category['id']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($category['name']); ?>
-                                    </option>
-                                    <?php foreach ($categories as $subCategory): ?>
-                                        <?php if ($subCategory['parent'] == $category['id']): ?>
-                                            <option value="<?php echo $subCategory['id']; ?>" <?php echo (isset($selectedCategoryId) && $selectedCategoryId == $subCategory['id']) ? 'selected' : ''; ?>>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;└ <?php echo htmlspecialchars($subCategory['name']); ?>
-                                            </option>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+                            <?php
+                                $selectedId = $selectedCategoryId ?? null;
+                                include VIEWS_PATH . '/admin/partials/category-options.php';
+                            ?>
                         </select>
                     </div>
                     

@@ -35,8 +35,8 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     <div class="error-icon">
                         <i class="bi bi-database-x"></i>
                     </div>
-                    <h1 class="error-title">Database Setup Required</h1>
-                    <p class="error-subtitle">LibreKB needs to be installed before you can continue.</p>
+                    <h1 class="error-title"><?php echo !empty($needsUpgrade) ? 'Database Upgrade Required' : 'Database Setup Required'; ?></h1>
+                    <p class="error-subtitle"><?php echo !empty($needsUpgrade) ? 'LibreKB 2.1.0 needs a small database update before you can continue.' : 'LibreKB needs to be installed before you can continue.'; ?></p>
                 </div>
                 
                 <div class="error-details">
@@ -49,7 +49,10 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                         <?php 
                         // Ensure $missingTables is defined and is an array
                         if (!isset($missingTables) || !is_array($missingTables)) {
-                            $missingTables = ['users', 'settings', 'articles', 'categories', 'log'];
+                            $missingTables = ['users', 'settings', 'articles', 'categories', 'log', 'attachments'];
+                        }
+                        if (!isset($needsUpgrade)) {
+                            $needsUpgrade = false;
                         }
                         foreach ($missingTables as $table): 
                         ?>
@@ -64,12 +67,23 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                         Quick Solution
                     </h5>
                     <p class="solution-text">
-                        Run the LibreKB installer to automatically create all required database tables and set up your knowledge base.
+                        <?php if (!empty($needsUpgrade)): ?>
+                            Open the upgrade page to add the new attachments table. Existing categories, articles, users, and settings are kept.
+                        <?php else: ?>
+                            Run the LibreKB installer to automatically create all required database tables and set up your knowledge base.
+                        <?php endif; ?>
                     </p>
-                    <a href="<?php echo $basePath; ?>/install" class="btn btn-success">
-                        <i class="bi bi-play-circle me-2"></i>
-                        Run Installer
-                    </a>
+                    <?php if (!empty($needsUpgrade)): ?>
+                        <a href="<?php echo $basePath; ?>/upgrade" class="btn btn-success">
+                            <i class="bi bi-arrow-up-circle me-2"></i>
+                            Upgrade Database
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo $basePath; ?>/install" class="btn btn-success">
+                            <i class="bi bi-play-circle me-2"></i>
+                            Run Installer
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
