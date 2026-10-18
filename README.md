@@ -2,7 +2,7 @@
 
 LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 
-Check out the official website at [LibreKB.com](https://librekb.com/) for more information.
+The project home is the [GitHub repository](https://github.com/michaelstaake/LibreKB).
 
 ### Features
 
@@ -19,9 +19,7 @@ Check out the official website at [LibreKB.com](https://librekb.com/) for more i
 
 ### Need Help?
 
-Docs: [docs.LibreKB.com](https://docs.librekb.com/)
-
-Forum: [GitHub Discussions for LibreKB](https://github.com/michaelstaake/LibreKB/discussions)
+Ask questions and share ideas in [GitHub Discussions](https://github.com/michaelstaake/LibreKB/discussions).
 
 ### Update Checks
 
