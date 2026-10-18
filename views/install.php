@@ -60,7 +60,6 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                 
                 <div class="info-text">
                     Before you begin, please make sure you have configured your database information in <code>config.php</code>.
-                    For more information, visit <a href="https://librekb.com/" target="_blank" class="external-link">librekb.com</a>.
                 </div>
                 
                 <h3 class="section-title">

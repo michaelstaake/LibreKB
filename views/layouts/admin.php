@@ -88,7 +88,7 @@
             <div class="container footer-container">
                 <p>
                     <a href="<?php echo $basePath; ?>/" target="_blank">Go to Front End</a> &middot; 
-                    Powered by <a href="https://librekb.com/" target="_blank">LibreKB</a> 
+                    Powered by LibreKB 
                     <?php
                         $current = new Version();
                         echo $current->version;
