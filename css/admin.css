@@ -307,3 +307,50 @@ button.dropdown-item {
 .bg-opacity-10 {
     background-color: rgba(var(--bs-warning-rgb), 0.1) !important;
 }
+
+/* Knowledge base structure: collapsible categories */
+
+.kb-toggle {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: #6c757d;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.kb-toggle:hover,
+.kb-toggle:focus-visible {
+    background: rgba(33, 37, 41, 0.06);
+    color: #212529;
+}
+
+.kb-spacer {
+    width: 1.5rem;
+    margin-right: 0.25rem;
+    flex: 0 0 auto;
+}
+
+.js .kb-node.is-collapsed > .kb-children {
+    display: none;
+}
+
+.kb-row .btn-group {
+    flex-shrink: 0;
+}
+
+.min-w-0 {
+    min-width: 0;
+}
+
+mark.kb-hit {
+    background-color: #ffe69c;
+    padding: 0 0.12em;
+    border-radius: 0.15rem;
+}

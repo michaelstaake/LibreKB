@@ -13,6 +13,7 @@ The project home is the [GitHub repository](https://github.com/michaelstaake/Lib
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
 - Nest categories to any depth.
+- Collapse and filter categories and articles on the admin dashboard.
 - Attach files to articles for readers to download.
 - Password resets via email.
 - Responsive design based on Bootstrap.
@@ -46,6 +47,10 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 ```
 
 `page` starts at 1. `per_page` defaults to 20 and cannot be higher than 50. Search matches article titles and content only.
+
+### Upgrading to 2.3.0
+
+Copy the new files over a 2.2.0 install and keep `config.php`. There is no database change. The admin dashboard list of categories and articles starts collapsed. Open a category with its chevron, or use the filter to jump to a matching category or article. Open branches are remembered in the browser.
 
 ### Upgrading to 2.2.0
 
