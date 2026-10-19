@@ -65,7 +65,7 @@ if ($basePath === '') {
                     </div>
                 <?php elseif (!empty($upToDate)): ?>
                     <div class="info-text">
-                        The database already has the 2.1.0 attachments table. Nothing else needs to change.
+                        This database is already up to date for LibreKB <?php echo htmlspecialchars($current->version); ?>. Nothing else needs to change.
                     </div>
                     <div class="d-grid">
                         <a href="<?php echo $basePath; ?>/admin" class="btn btn-primary">
@@ -74,8 +74,13 @@ if ($basePath === '') {
                     </div>
                 <?php else: ?>
                     <div class="info-text">
-                        LibreKB 2.1.0 adds an attachments table so articles can offer file downloads.
-                        Categories, articles, users, settings, and logs stay as they are. Nothing is deleted or rewritten.
+                        <?php if (!empty($needsAttachments)): ?>
+                            This upgrade adds an attachments table so articles can offer file downloads.
+                        <?php endif; ?>
+                        <?php if (!empty($missingSettings)): ?>
+                            This upgrade adds the read-only API settings. The API stays disabled until an administrator enables it.
+                        <?php endif; ?>
+                        Categories, articles, users, and logs stay as they are. Nothing is deleted or rewritten.
                     </div>
                     <form action="<?php echo $basePath; ?>/upgrade" method="POST">
                         <?php echo Csrf::field(); ?>

@@ -49,6 +49,69 @@ class Article extends Model
         $sql = "SELECT id, title, slug FROM {$this->table} WHERE (title LIKE :query OR content LIKE :query) AND status = 'enabled'";
         return $this->fetchAll($sql, ['query' => $searchTerm]);
     }
+
+    /**
+     * Enabled articles whose category is still public.
+     * $disabledCategoryIds comes from Category::getAllDisabledCategoryIds().
+     * Limit and offset are cast to integers and bounded here.
+     */
+    public function searchPublic($query, array $disabledCategoryIds, $limit, $offset)
+    {
+        $limit = (int)$limit;
+        $offset = (int)$offset;
+        if ($limit < 1 || $limit > 50 || $offset < 0) {
+            return [];
+        }
+
+        list($where, $params) = $this->publicSearchWhere($query, $disabledCategoryIds);
+        $sql = "SELECT a.id, a.title, a.slug, a.category
+                FROM {$this->table} a
+                INNER JOIN categories c ON a.category = c.id
+                WHERE {$where}
+                ORDER BY a.title ASC
+                LIMIT {$limit} OFFSET {$offset}";
+
+        return $this->fetchAll($sql, $params);
+    }
+
+    public function countPublicSearch($query, array $disabledCategoryIds)
+    {
+        list($where, $params) = $this->publicSearchWhere($query, $disabledCategoryIds);
+        $sql = "SELECT COUNT(*) FROM {$this->table} a
+                INNER JOIN categories c ON a.category = c.id
+                WHERE {$where}";
+        $stmt = $this->query($sql, $params);
+        return (int)$stmt->fetchColumn();
+    }
+
+    private function publicSearchWhere($query, array $disabledCategoryIds)
+    {
+        $searchTerm = '%' . $this->escapeLike((string)$query) . '%';
+        $params = [$searchTerm, $searchTerm];
+        $exclude = '';
+
+        $ids = [];
+        foreach ($disabledCategoryIds as $id) {
+            $id = (int)$id;
+            if ($id > 0) {
+                $ids[] = $id;
+            }
+        }
+
+        if (!empty($ids)) {
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $exclude = " AND a.category NOT IN ({$placeholders})";
+            $params = array_merge($params, $ids);
+        }
+
+        $where = "(a.title LIKE ? ESCAPE '\\\\' OR a.content LIKE ? ESCAPE '\\\\') AND a.status = 'enabled'" . $exclude;
+        return [$where, $params];
+    }
+
+    private function escapeLike($value)
+    {
+        return str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value);
+    }
     
     public function getAllWithCategoryName()
     {

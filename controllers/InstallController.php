@@ -184,6 +184,10 @@ class InstallController extends Controller
             ['name' => 'site_logo', 'value' => ''],
             ['name' => 'kb_visibility', 'value' => 'public']
         ];
+
+        foreach (Database::apiSettingDefaults() as $name => $value) {
+            $settingsData[] = ['name' => $name, 'value' => $value];
+        }
         
         $insertSettingsQuery = "INSERT INTO settings (name, value) VALUES (:name, :value)";
         $stmt = $conn->prepare($insertSettingsQuery);

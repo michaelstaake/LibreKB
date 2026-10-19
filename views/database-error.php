@@ -36,7 +36,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                         <i class="bi bi-database-x"></i>
                     </div>
                     <h1 class="error-title"><?php echo !empty($needsUpgrade) ? 'Database Upgrade Required' : 'Database Setup Required'; ?></h1>
-                    <p class="error-subtitle"><?php echo !empty($needsUpgrade) ? 'LibreKB 2.1.0 needs a small database update before you can continue.' : 'LibreKB needs to be installed before you can continue.'; ?></p>
+                    <p class="error-subtitle"><?php echo !empty($needsUpgrade) ? 'LibreKB 2.2.0 needs a small database update before you can continue.' : 'LibreKB needs to be installed before you can continue.'; ?></p>
                 </div>
                 
                 <div class="error-details">
@@ -68,7 +68,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     </h5>
                     <p class="solution-text">
                         <?php if (!empty($needsUpgrade)): ?>
-                            Open the upgrade page to add the new attachments table. Existing categories, articles, users, and settings are kept.
+                            Open the upgrade page to add anything this version needs, including the attachments table and the read-only API settings. Existing categories, articles, users, and logs are kept.
                         <?php else: ?>
                             Run the LibreKB installer to automatically create all required database tables and set up your knowledge base.
                         <?php endif; ?>

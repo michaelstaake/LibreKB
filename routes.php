@@ -18,6 +18,20 @@ $router->post('/password/new', 'PasswordController@updatePassword');
 $router->get('/profile', 'ProfileController@show');
 $router->post('/profile', 'ProfileController@update');
 
+// Read-only JSON API. Specific paths are registered before {id} paths.
+$router->get('/api/v1/articles/search', 'ApiController@searchArticles');
+$router->options('/api/v1/articles/search', 'ApiController@preflight');
+$router->get('/api/v1/articles/slug/{slug}', 'ApiController@articleBySlug');
+$router->options('/api/v1/articles/slug/{slug}', 'ApiController@preflight');
+$router->get('/api/v1/articles/{id}', 'ApiController@articleById');
+$router->options('/api/v1/articles/{id}', 'ApiController@preflight');
+$router->get('/api/v1/categories', 'ApiController@categories');
+$router->options('/api/v1/categories', 'ApiController@preflight');
+$router->get('/api/v1/categories/slug/{slug}', 'ApiController@categoryBySlug');
+$router->options('/api/v1/categories/slug/{slug}', 'ApiController@preflight');
+$router->get('/api/v1/categories/{id}', 'ApiController@categoryById');
+$router->options('/api/v1/categories/{id}', 'ApiController@preflight');
+
 // Public routes (with privacy check middleware)
 $router->get('/', 'HomeController@index');
 $router->get('/search', 'SearchController@index');

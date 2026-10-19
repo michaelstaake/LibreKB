@@ -15,6 +15,12 @@ class Database extends Config {
             if (strpos($requestUri, '/install') !== false || strpos($requestUri, '/upgrade') !== false) {
                 throw $e; // Re-throw for installer and upgrade to handle
             }
+            $path = parse_url($requestUri, PHP_URL_PATH) ?? '';
+            if (preg_match('#/api(/|$)#', $path)) {
+                http_response_code(500);
+                header('Content-Type: application/json; charset=utf-8');
+                die('{"error":"The request could not be completed."}');
+            }
             die("Connection failed: " . $e->getMessage());
         }
     }
@@ -48,16 +54,66 @@ class Database extends Config {
     }
 
     /**
-     * True when a 2.x database is present and only newer tables are missing.
+     * True when a 2.x database is present and a later upgrade has not been applied.
+     * That is the attachments table (2.1.0) or the read-only API settings (2.2.0).
      */
     public function needsUpgrade() {
-        $missing = $this->checkRequiredTables();
-        if (empty($missing)) {
+        if (!empty($this->checkCoreTables())) {
             return false;
         }
 
-        $coreMissing = array_diff($missing, $this->upgradeTables());
-        return empty($coreMissing);
+        $missing = $this->checkRequiredTables();
+        if (!empty($missing)) {
+            $coreMissing = array_diff($missing, $this->upgradeTables());
+            return empty($coreMissing);
+        }
+
+        return !empty($this->missingApiSettings());
+    }
+
+    /**
+     * Settings added in 2.2.0. The API stays off until an administrator enables it.
+     */
+    public static function apiSettingDefaults() {
+        return [
+            'api_enabled' => 'disabled',
+            'api_key' => '',
+            'api_cors_origin' => '*'
+        ];
+    }
+
+    public function missingApiSettings() {
+        $missing = [];
+
+        try {
+            $pdo = $this->connect();
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM settings WHERE name = ?");
+
+            foreach (self::apiSettingDefaults() as $name => $value) {
+                $stmt->execute([$name]);
+                if ((int)$stmt->fetchColumn() === 0) {
+                    $missing[] = $name;
+                }
+            }
+
+            return $missing;
+        } catch (PDOException $e) {
+            return array_keys(self::apiSettingDefaults());
+        }
+    }
+
+    /**
+     * Insert any missing API settings. Existing values are left as they are.
+     */
+    public function ensureApiSettings() {
+        $pdo = $this->connect();
+        $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
+
+        foreach (self::apiSettingDefaults() as $name => $value) {
+            $stmt->execute([$name, $value]);
+        }
+
+        return true;
     }
 
     /**

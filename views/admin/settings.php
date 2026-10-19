@@ -71,6 +71,51 @@
                     </div>
                 </div>
                 <div class="settings-section">
+                    <h5>Read-only API</h5>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="api_enabled" class="form-label">API</label>
+                                <?php $apiEnabled = $this->getSetting('api_enabled', 'disabled'); ?>
+                                <select class="form-select" id="api_enabled" name="api_enabled">
+                                    <option value="disabled" <?php echo ($apiEnabled !== 'enabled') ? 'selected' : ''; ?>>Disabled</option>
+                                    <option value="enabled" <?php echo ($apiEnabled === 'enabled') ? 'selected' : ''; ?>>Enabled</option>
+                                </select>
+                                <div class="form-text">Disabled by default. When enabled, third-party apps can read articles and categories that the public site already shows. Nothing here exposes users, settings, or logs.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="api_key" class="form-label">API Key</label>
+                                <input type="text" class="form-control" id="api_key" name="api_key" maxlength="128" autocomplete="off" spellcheck="false" value="<?php echo htmlspecialchars($this->getSetting('api_key', ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                <div class="form-text">Optional. Leave this blank for no key. If a key is set, clients must send it in the X-API-Key header or the api_key query parameter. With no key, the API is available only while the knowledge base is public. A private knowledge base always requires a key. The key may be 16 to 128 letters, numbers, periods, underscores, tildes, or hyphens.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-outline-secondary" name="generate_api_key" value="1" onclick="return confirm('Replace the current API key? Clients using the old key will stop working.');">Generate new key</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="api_cors_origin" class="form-label">API CORS Origin</label>
+                                <?php
+                                    $apiCors = $this->getSetting('api_cors_origin', '*');
+                                    if ($apiCors === '') {
+                                        $apiCors = '*';
+                                    }
+                                ?>
+                                <input type="text" class="form-control" id="api_cors_origin" name="api_cors_origin" maxlength="255" value="<?php echo htmlspecialchars($apiCors, ENT_QUOTES, 'UTF-8'); ?>">
+                                <div class="form-text">Sent as Access-Control-Allow-Origin. Use * to allow any origin, or one origin such as https://app.example.com.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
                     <button type="submit" class="btn btn-dark">Save</button>
                 </div>           
             </form>

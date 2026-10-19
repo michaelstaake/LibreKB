@@ -13,8 +13,14 @@ class Setting extends Model
     
     public function setValue($name, $value)
     {
-        $sql = "UPDATE {$this->table} SET value = :value WHERE name = :name";
-        return $this->execute($sql, ['value' => $value, 'name' => $name]);
+        $existing = $this->findBy('name', $name);
+        if ($existing) {
+            $sql = "UPDATE {$this->table} SET value = :value WHERE name = :name";
+            return $this->execute($sql, ['value' => $value, 'name' => $name]);
+        }
+
+        $this->create(['name' => $name, 'value' => $value]);
+        return 1;
     }
     
     public function getMultiple($names)

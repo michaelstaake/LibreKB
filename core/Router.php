@@ -35,6 +35,11 @@ class Router
     {
         $this->addRoute('POST', $path, $handler);
     }
+
+    public function options($path, $handler)
+    {
+        $this->addRoute('OPTIONS', $path, $handler);
+    }
     
     public function group($prefix, $callback)
     {
@@ -85,29 +90,70 @@ class Router
         // Handle legacy URLs and query parameters
         $uri = $this->handleLegacyUrls($uri);
         
-        foreach ($this->routes as $route) {
-            if ($route['method'] === $method && $this->matchRoute($route['path'], $uri, $params)) {
-                if ($method === 'POST' && !$this->csrfExempt($uri) && !$this->oversizedArticleBody($route['handler'])) {
-                    if (!Csrf::validate()) {
-                        $this->rejectCsrf();
-                        return;
-                    }
-                }
+        $matchedPath = false;
 
-                // Check middleware
-                foreach ($route['middleware'] as $middleware) {
-                    if (!$this->runMiddleware($middleware)) {
-                        return;
-                    }
-                }
-                
-                // Execute the handler
-                return $this->executeHandler($route['handler'], $params);
+        foreach ($this->routes as $route) {
+            if (!$this->matchRoute($route['path'], $uri, $params)) {
+                continue;
             }
+
+            if ($route['method'] !== $method) {
+                $matchedPath = true;
+                continue;
+            }
+
+            if ($method === 'POST' && !$this->csrfExempt($uri) && !$this->oversizedArticleBody($route['handler'])) {
+                if (!Csrf::validate()) {
+                    $this->rejectCsrf();
+                    return;
+                }
+            }
+
+            // Check middleware
+            foreach ($route['middleware'] as $middleware) {
+                if (!$this->runMiddleware($middleware)) {
+                    return;
+                }
+            }
+
+            // Execute the handler
+            return $this->executeHandler($route['handler'], $params);
         }
-        
+
+        if ($this->isApiUri($uri)) {
+            $status = $matchedPath ? 405 : 404;
+            $message = $matchedPath ? 'Method not allowed.' : 'Not found.';
+            $this->rejectApi($status, $message);
+            return;
+        }
+
         // No route found - 404
         $this->handle404();
+    }
+
+    private function isApiUri($uri)
+    {
+        return $uri === '/api' || strpos($uri, '/api/') === 0;
+    }
+
+    /**
+     * API paths always answer with JSON, including unknown routes and
+     * methods other than GET and OPTIONS.
+     */
+    private function rejectApi($status, $message)
+    {
+        if (class_exists('ApiController')) {
+            $controller = new ApiController();
+            $controller->reject($status, $message);
+        }
+
+        http_response_code($status);
+        header('Content-Type: application/json; charset=utf-8');
+        if ($status === 405) {
+            header('Allow: GET, OPTIONS');
+        }
+        echo json_encode(['error' => $message]);
+        exit;
     }
     
     private function handleLegacyUrls($uri)
