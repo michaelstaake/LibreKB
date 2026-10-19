@@ -129,7 +129,7 @@ class InstallController extends Controller
         
         CREATE TABLE settings (
             `name` VARCHAR(255) PRIMARY KEY,
-            `value` VARCHAR(255)
+            `value` TEXT
         );
         
         CREATE TABLE articles (
@@ -195,6 +195,9 @@ class InstallController extends Controller
         foreach ($settingsData as $data) {
             $stmt->execute($data);
         }
+
+        $insertCustomCss = "INSERT IGNORE INTO settings (name, value) VALUES ('custom_css', '')";
+        $conn->exec($insertCustomCss);
     }
     
     private function createAdminUser($conn, $email, $password)

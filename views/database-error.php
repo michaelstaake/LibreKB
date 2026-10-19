@@ -68,7 +68,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                     </h5>
                     <p class="solution-text">
                         <?php if (!empty($needsUpgrade)): ?>
-                            Open the upgrade page to add anything this version needs, including the attachments table and the read-only API settings. Existing categories, articles, users, and logs are kept.
+                            Open the upgrade page to add anything this version needs, including the attachments table, the read-only API settings, a TEXT settings value column, and an empty custom CSS setting. Existing categories, articles, users, and logs are kept.
                         <?php else: ?>
                             Run the LibreKB installer to automatically create all required database tables and set up your knowledge base.
                         <?php endif; ?>

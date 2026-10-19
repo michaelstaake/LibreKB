@@ -80,6 +80,12 @@ if ($basePath === '') {
                         <?php if (!empty($missingSettings)): ?>
                             This upgrade adds the read-only API settings. The API stays disabled until an administrator enables it.
                         <?php endif; ?>
+                        <?php if (!empty($needsSettingsText)): ?>
+                            This upgrade changes the settings value column to TEXT so a custom CSS sheet can be stored.
+                        <?php endif; ?>
+                        <?php if (!empty($missingCustomCss)): ?>
+                            This upgrade adds an empty custom CSS setting. It is not applied until an administrator saves CSS under Appearance.
+                        <?php endif; ?>
                         Categories, articles, users, and logs stay as they are. Nothing is deleted or rewritten.
                     </div>
                     <form action="<?php echo $basePath; ?>/upgrade" method="POST">

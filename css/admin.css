@@ -141,6 +141,10 @@ footer a, footer a:visited, footer a:active, footer a:focus {
     color: rgba(255, 255, 255, 0.8);
 }
 
+#custom_css {
+    min-height: 18rem;
+}
+
 .tox-promotion {
     display: none;
 }

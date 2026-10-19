@@ -11,6 +11,7 @@ The project home is the [GitHub repository](https://github.com/michaelstaake/Lib
 - Installs in minutes.
 - Easy to customize branding to match your project or business.
 - Site settings are grouped into General, Appearance, Editor, API, and Maintenance.
+- Optional custom CSS for the public site, from Appearance settings.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
 - Nest categories to any depth.
@@ -51,9 +52,15 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 
 ### Upgrading to 2.3.0
 
-Copy the new files over a 2.2.0 install and keep `config.php`. There is no database change. The admin dashboard list of categories and articles starts collapsed. Open a category with its chevron, or use the filter to jump to a matching category or article. Open branches are remembered in the browser.
+Copy the new files over a 2.2.0 install and keep `config.php`. Then open `/upgrade` and confirm. That changes the settings value column from VARCHAR(255) to TEXT and adds an empty `custom_css` setting. Existing categories, articles, users, and logs are not rewritten. The API stays disabled until you enable it in Settings.
+
+The admin dashboard list of categories and articles starts collapsed. Open a category with its chevron, or use the filter to jump to a matching category or article. Open branches are remembered in the browser.
 
 Site Settings is split into General, Appearance, Editor, API, and Maintenance. Each section has its own address under `/admin/settings/` and its own Save button. `/admin/settings` opens General. Saving one section leaves the others unchanged.
+
+Custom CSS is an optional text box on Appearance. It is printed after the built-in styles on the public site only. Admin pages do not use it. The sheet is limited to 20,000 characters and cannot contain a less-than character, a null byte, `@import`, `expression(`, `javascript:`, `vbscript:`, `-moz-binding`, or `behavior:`.
+
+A new install from `/install` already includes the TEXT column and the custom CSS setting.
 
 ### Upgrading to 2.2.0
 

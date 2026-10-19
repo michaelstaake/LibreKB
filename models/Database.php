@@ -55,7 +55,8 @@ class Database extends Config {
 
     /**
      * True when a 2.x database is present and a later upgrade has not been applied.
-     * That is the attachments table (2.1.0) or the read-only API settings (2.2.0).
+     * That is the attachments table (2.1.0), the read-only API settings (2.2.0),
+     * or the TEXT settings value column and custom CSS setting (2.3.0).
      */
     public function needsUpgrade() {
         if (!empty($this->checkCoreTables())) {
@@ -68,7 +69,52 @@ class Database extends Config {
             return empty($coreMissing);
         }
 
-        return !empty($this->missingApiSettings());
+        if (!$this->settingsValueIsText()) {
+            return true;
+        }
+
+        return !empty($this->missingApiSettings()) || $this->missingCustomCssSetting();
+    }
+
+    /**
+     * True when settings.value can hold the custom CSS sheet.
+     */
+    public function settingsValueIsText() {
+        try {
+            $pdo = $this->connect();
+            $stmt = $pdo->query("SHOW COLUMNS FROM settings LIKE 'value'");
+            $column = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$column || !isset($column['Type'])) {
+                return false;
+            }
+            return strtolower((string)$column['Type']) === 'text';
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function ensureSettingsValueIsText() {
+        $pdo = $this->connect();
+        $pdo->exec("ALTER TABLE settings MODIFY value TEXT");
+        return true;
+    }
+
+    public function missingCustomCssSetting() {
+        try {
+            $pdo = $this->connect();
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM settings WHERE name = ?");
+            $stmt->execute(['custom_css']);
+            return (int)$stmt->fetchColumn() === 0;
+        } catch (PDOException $e) {
+            return true;
+        }
+    }
+
+    public function ensureCustomCssSetting() {
+        $pdo = $this->connect();
+        $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
+        $stmt->execute(['custom_css', '']);
+        return true;
     }
 
     /**

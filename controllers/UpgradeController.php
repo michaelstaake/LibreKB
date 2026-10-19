@@ -12,6 +12,8 @@ class UpgradeController extends Controller
         $coreMissing = $database->checkCoreTables();
         $needsAttachments = empty($coreMissing) && in_array('attachments', $database->checkRequiredTables(), true);
         $missingSettings = empty($coreMissing) ? $database->missingApiSettings() : [];
+        $needsSettingsText = empty($coreMissing) && !$database->settingsValueIsText();
+        $missingCustomCss = empty($coreMissing) && $database->missingCustomCssSetting();
 
         $data = [
             'pageTitle' => 'LibreKB Upgrade',
@@ -20,6 +22,8 @@ class UpgradeController extends Controller
             'coreMissing' => $coreMissing,
             'needsAttachments' => $needsAttachments,
             'missingSettings' => $missingSettings,
+            'needsSettingsText' => $needsSettingsText,
+            'missingCustomCss' => $missingCustomCss,
             'needsUpgrade' => empty($coreMissing) ? $database->needsUpgrade() : false,
             'upToDate' => empty($coreMissing) && !$database->needsUpgrade()
         ];
@@ -44,8 +48,10 @@ class UpgradeController extends Controller
 
         try {
             $database->createAttachmentsTable();
+            $database->ensureSettingsValueIsText();
             $database->ensureApiSettings();
-            $this->setMessage('Upgrade complete. The attachments table is present and the read-only API settings were added. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings.');
+            $database->ensureCustomCssSetting();
+            $this->setMessage('Upgrade complete. The settings value column is TEXT, custom CSS is available, and the read-only API settings are present. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings.');
             return $this->redirect('/upgrade');
         } catch (Exception $e) {
             $this->setError('Upgrade failed: ' . $e->getMessage());

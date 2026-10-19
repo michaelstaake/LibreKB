@@ -201,9 +201,16 @@ class AdminController extends Controller
 
     private function updateAppearanceSettings($user)
     {
+        $customCss = (string)$this->rawInput('custom_css');
+        $cssError = CustomCss::rejectionMessage($customCss);
+        if ($cssError !== '') {
+            return $this->settingsError('appearance', 'custom_css', $cssError);
+        }
+
         $this->settingModel->setMultiple([
             'site_color' => $this->input('site_color'),
-            'site_logo' => $this->input('site_logo')
+            'site_logo' => $this->input('site_logo'),
+            'custom_css' => $customCss
         ]);
 
         return $this->settingsSaved($user, 'appearance', 'Settings saved successfully.');
@@ -290,7 +297,10 @@ class AdminController extends Controller
 
         $color = trim((string)$this->settingModel->getValue('site_color'));
         $logo = trim((string)$this->settingModel->getValue('site_logo'));
-        if ($color !== '') {
+        $customCss = (string)$this->settingModel->getValue('custom_css');
+        if (CustomCss::printable($customCss) !== '') {
+            $appearance = 'Custom CSS on';
+        } elseif ($color !== '') {
             $appearance = $color;
         } elseif ($logo !== '') {
             $appearance = 'Logo set';
