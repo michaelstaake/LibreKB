@@ -56,7 +56,7 @@ class Database extends Config {
     /**
      * True when a 2.x database is present and a later upgrade has not been applied.
      * That is the attachments table (2.1.0), the read-only API settings (2.2.0),
-     * or the TEXT settings value column and custom CSS setting (2.3.0).
+     * or the TEXT settings value column, custom CSS, and editor toolbar (2.3.0).
      */
     public function needsUpgrade() {
         if (!empty($this->checkCoreTables())) {
@@ -73,7 +73,7 @@ class Database extends Config {
             return true;
         }
 
-        return !empty($this->missingApiSettings()) || $this->missingCustomCssSetting();
+        return !empty($this->missingApiSettings()) || $this->missingCustomCssSetting() || $this->missingEditorToolbarSetting();
     }
 
     /**
@@ -114,6 +114,24 @@ class Database extends Config {
         $pdo = $this->connect();
         $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
         $stmt->execute(['custom_css', '']);
+        return true;
+    }
+
+    public function missingEditorToolbarSetting() {
+        try {
+            $pdo = $this->connect();
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM settings WHERE name = ?");
+            $stmt->execute(['editor_toolbar']);
+            return (int)$stmt->fetchColumn() === 0;
+        } catch (PDOException $e) {
+            return true;
+        }
+    }
+
+    public function ensureEditorToolbarSetting() {
+        $pdo = $this->connect();
+        $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
+        $stmt->execute(['editor_toolbar', '']);
         return true;
     }
 

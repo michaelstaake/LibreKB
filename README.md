@@ -12,6 +12,7 @@ The project home is the [GitHub repository](https://github.com/michaelstaake/Lib
 - Easy to customize branding to match your project or business.
 - Site settings are grouped into General, Appearance, Editor, API, and Maintenance.
 - Optional custom CSS for the public site, from Appearance settings.
+- Choose which buttons appear on the article editor toolbar.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
 - Nest categories to any depth.
@@ -60,7 +61,9 @@ Site Settings is split into General, Appearance, Editor, API, and Maintenance. E
 
 Custom CSS is an optional text box on Appearance. It is printed after the built-in styles on the public site only. Admin pages do not use it. The sheet is limited to 20,000 characters and cannot contain a less-than character, a null byte, `@import`, `expression(`, `javascript:`, `vbscript:`, `-moz-binding`, or `behavior:`.
 
-A new install from `/install` already includes the TEXT column and the custom CSS setting.
+The Editor section chooses the article toolbar. Leave it empty, or save the original selection, to keep the built-in buttons: undo, redo, bold, italic, underline, paragraph style, font size, lists, link, table, source code, find and replace, and word count. Extra buttons are font color, highlight, alignment, strikethrough, subscript, superscript, block quote, a horizontal line, and an image by web address. Image upload and captions are not available. A TinyMCE plugin is loaded only when a button that needs it is turned on.
+
+A new install from `/install` already includes the TEXT column, the custom CSS setting, and the editor toolbar setting.
 
 ### Upgrading to 2.2.0
 

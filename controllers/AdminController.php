@@ -180,8 +180,11 @@ class AdminController extends Controller
         if ($section === 'maintenance') {
             return $this->updateMaintenanceSettings($user);
         }
+        if ($section === 'editor') {
+            return $this->updateEditorSettings($user);
+        }
 
-        return $this->redirect('/admin/settings/editor');
+        return $this->show404();
     }
 
     private function updateGeneralSettings($user)
@@ -269,6 +272,18 @@ class AdminController extends Controller
         return $this->settingsSaved($user, 'maintenance', 'Settings saved successfully.');
     }
 
+    private function updateEditorSettings($user)
+    {
+        $posted = $_POST['toolbar'] ?? [];
+        $buttons = EditorToolbar::sanitize($posted);
+        if (empty($buttons)) {
+            return $this->settingsError('editor', 'toolbar', 'Choose at least one toolbar button.');
+        }
+
+        $this->settingModel->setValue('editor_toolbar', EditorToolbar::storedValue($buttons));
+        return $this->settingsSaved($user, 'editor', 'Settings saved successfully.');
+    }
+
     private function settingsSaved($user, $section, $message)
     {
         // The API key itself is not written to the log.
@@ -322,7 +337,7 @@ class AdminController extends Controller
             ],
             'editor' => [
                 'label' => 'Editor',
-                'status' => 'Built-in toolbar'
+                'status' => EditorToolbar::navigationStatus((string)$this->settingModel->getValue('editor_toolbar'))
             ],
             'api' => [
                 'label' => 'API',

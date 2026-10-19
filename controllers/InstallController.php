@@ -198,6 +198,8 @@ class InstallController extends Controller
 
         $insertCustomCss = "INSERT IGNORE INTO settings (name, value) VALUES ('custom_css', '')";
         $conn->exec($insertCustomCss);
+        $insertEditorToolbar = "INSERT IGNORE INTO settings (name, value) VALUES ('editor_toolbar', '')";
+        $conn->exec($insertEditorToolbar);
     }
     
     private function createAdminUser($conn, $email, $password)

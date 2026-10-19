@@ -86,6 +86,9 @@ if ($basePath === '') {
                         <?php if (!empty($missingCustomCss)): ?>
                             This upgrade adds an empty custom CSS setting. It is not applied until an administrator saves CSS under Appearance.
                         <?php endif; ?>
+                        <?php if (!empty($missingEditorToolbar)): ?>
+                            This upgrade adds an empty editor toolbar setting. An empty value keeps the built-in toolbar.
+                        <?php endif; ?>
                         Categories, articles, users, and logs stay as they are. Nothing is deleted or rewritten.
                     </div>
                     <form action="<?php echo $basePath; ?>/upgrade" method="POST">

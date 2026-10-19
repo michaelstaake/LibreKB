@@ -145,6 +145,102 @@ footer a, footer a:visited, footer a:active, footer a:focus {
     min-height: 18rem;
 }
 
+.tb-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+}
+
+.tb-preview .tb-btn {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: #222f3e;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 14px;
+}
+
+.tb-preview .tb-btn.tb-wide {
+    padding: 0 8px;
+}
+
+.tb-preview .tb-sep {
+    width: 1px;
+    height: 18px;
+    background: #ccc;
+    margin: 0 4px;
+}
+
+.tb-color {
+    font-weight: 700;
+    line-height: 1;
+    border-bottom: 3px solid #0B6E4F;
+}
+
+.tb-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.tb-grip {
+    border: 0;
+    background: transparent;
+    color: #6c757d;
+    padding: 0;
+    line-height: 1;
+    cursor: grab;
+    flex: 0 0 auto;
+}
+
+.tb-row .form-check {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
+.tb-row .form-check-label {
+    min-width: 0;
+}
+
+.tb-move {
+    display: flex;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+}
+
+.tb-move .btn {
+    padding: 0.1rem 0.35rem;
+    line-height: 1;
+}
+
+.tb-group {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6c757d;
+    background: #f8f9fa;
+}
+
+.tb-dragging {
+    opacity: 0.55;
+}
+
 .tox-promotion {
     display: none;
 }

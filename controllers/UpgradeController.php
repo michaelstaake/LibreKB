@@ -14,6 +14,7 @@ class UpgradeController extends Controller
         $missingSettings = empty($coreMissing) ? $database->missingApiSettings() : [];
         $needsSettingsText = empty($coreMissing) && !$database->settingsValueIsText();
         $missingCustomCss = empty($coreMissing) && $database->missingCustomCssSetting();
+        $missingEditorToolbar = empty($coreMissing) && $database->missingEditorToolbarSetting();
 
         $data = [
             'pageTitle' => 'LibreKB Upgrade',
@@ -24,6 +25,7 @@ class UpgradeController extends Controller
             'missingSettings' => $missingSettings,
             'needsSettingsText' => $needsSettingsText,
             'missingCustomCss' => $missingCustomCss,
+            'missingEditorToolbar' => $missingEditorToolbar,
             'needsUpgrade' => empty($coreMissing) ? $database->needsUpgrade() : false,
             'upToDate' => empty($coreMissing) && !$database->needsUpgrade()
         ];
@@ -51,7 +53,8 @@ class UpgradeController extends Controller
             $database->ensureSettingsValueIsText();
             $database->ensureApiSettings();
             $database->ensureCustomCssSetting();
-            $this->setMessage('Upgrade complete. The settings value column is TEXT, custom CSS is available, and the read-only API settings are present. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings.');
+            $database->ensureEditorToolbarSetting();
+            $this->setMessage('Upgrade complete. The settings value column is TEXT. Custom CSS and the editor toolbar settings are present, and the read-only API settings are present. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings. An empty editor toolbar keeps the built-in buttons.');
             return $this->redirect('/upgrade');
         } catch (Exception $e) {
             $this->setError('Upgrade failed: ' . $e->getMessage());
