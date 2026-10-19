@@ -306,7 +306,10 @@ class Router
             if (class_exists($controllerName)) {
                 $controller = new $controllerName();
                 if (method_exists($controller, $method)) {
-                    return call_user_func_array([$controller, $method], $params);
+                    // Pass values in route order. An associative array would be
+                    // treated as named arguments, which breaks handlers that do
+                    // not declare those names (for example an OPTIONS preflight).
+                    return call_user_func_array([$controller, $method], array_values($params));
                 }
             }
         }

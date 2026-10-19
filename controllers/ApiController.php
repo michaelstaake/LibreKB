@@ -171,8 +171,11 @@ class ApiController extends Controller
     private function providedKey()
     {
         $header = $_SERVER['HTTP_X_API_KEY'] ?? '';
-        if (is_string($header) && trim($header) !== '') {
-            return trim($header);
+        if (is_string($header)) {
+            $header = trim($header);
+            if ($header !== '') {
+                return strlen($header) > 128 ? '' : $header;
+            }
         }
 
         $query = $_GET['api_key'] ?? '';
@@ -180,7 +183,12 @@ class ApiController extends Controller
             return '';
         }
 
-        return trim($query);
+        $query = trim($query);
+        if ($query === '' || strlen($query) > 128) {
+            return '';
+        }
+
+        return $query;
     }
 
     /**
