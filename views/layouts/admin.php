@@ -71,7 +71,7 @@
         <?php
             $maintenanceMode = $this->getSetting('maintenance_mode');
             if ($maintenanceMode === 'enabled') {
-                echo '<div class="container"><div class="alert alert-warning" role="alert">Maintenance mode is enabled, and the front end of your knowledge base has been disabled. Go to <a href="' . $basePath . '/admin/settings">Settings</a> to manage this.</div></div>';
+                echo '<div class="container"><div class="alert alert-warning" role="alert">Maintenance mode is enabled, and the front end of your knowledge base has been disabled. Go to <a href="' . $basePath . '/admin/settings/maintenance">Settings</a> to manage this.</div></div>';
             }
         ?>
         

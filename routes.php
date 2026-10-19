@@ -71,8 +71,9 @@ $router->group('/admin', function($router) {
         
         // Admin-only routes
         $router->middleware(['role:admin'], function($router) {
-            $router->get('/settings', 'AdminController@settings');
-            $router->post('/settings', 'AdminController@updateSettings');
+            $router->get('/settings', 'AdminController@settingsIndex');
+            $router->get('/settings/{section}', 'AdminController@settings');
+            $router->post('/settings/{section}', 'AdminController@updateSettings');
             
             // Activity logs
             $router->get('/logs', 'AdminController@logs');

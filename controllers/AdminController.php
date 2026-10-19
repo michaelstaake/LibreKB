@@ -124,30 +124,96 @@ class AdminController extends Controller
         return $this->layout('admin', 'admin/dashboard', $data);
     }
     
-    public function settings()
+    public function settingsIndex()
     {
-        $user = $this->getUser();
-        
-        if ($this->isPost()) {
-            return $this->updateSettings();
+        return $this->redirect('/admin/settings/general');
+    }
+
+    public function settings($section)
+    {
+        if (!$this->isSettingsSection($section)) {
+            return $this->show404();
         }
-        
+
+        $user = $this->getUser();
+        $invalid = $_SESSION['settings_invalid'] ?? null;
+        unset($_SESSION['settings_invalid']);
+        $invalidField = '';
+        if (is_array($invalid) && ($invalid['section'] ?? '') === $section) {
+            $invalidField = (string)($invalid['field'] ?? '');
+        }
+
         $data = [
             'pageTitle' => 'Settings',
             'pageCategory' => 'Settings',
             'user' => $user,
+            'section' => $section,
+            'sections' => $this->settingsNavigation(),
+            'invalidField' => $invalidField,
             'message' => $this->getMessage(),
             'error' => $this->getError()
         ];
-        
+
         return $this->layout('admin', 'admin/settings', $data);
     }
-    
-    public function updateSettings()
+
+    public function updateSettings($section)
+    {
+        if (!$this->isSettingsSection($section)) {
+            return $this->show404();
+        }
+
+        $user = $this->getUser();
+        if (!$user || $user['group'] !== 'admin') {
+            return $this->show403();
+        }
+
+        if ($section === 'general') {
+            return $this->updateGeneralSettings($user);
+        }
+        if ($section === 'appearance') {
+            return $this->updateAppearanceSettings($user);
+        }
+        if ($section === 'api') {
+            return $this->updateApiSettings($user);
+        }
+        if ($section === 'maintenance') {
+            return $this->updateMaintenanceSettings($user);
+        }
+
+        return $this->redirect('/admin/settings/editor');
+    }
+
+    private function updateGeneralSettings($user)
+    {
+        $visibility = $this->rawInput('kb_visibility');
+        if ($visibility !== 'public' && $visibility !== 'private') {
+            return $this->settingsError('general', 'kb_visibility', 'Choose a valid knowledge base visibility.');
+        }
+
+        $this->settingModel->setMultiple([
+            'site_name' => $this->input('site_name'),
+            'kb_visibility' => $visibility
+        ]);
+
+        return $this->settingsSaved($user, 'general', 'Settings saved successfully.');
+    }
+
+    private function updateAppearanceSettings($user)
+    {
+        $this->settingModel->setMultiple([
+            'site_color' => $this->input('site_color'),
+            'site_logo' => $this->input('site_logo')
+        ]);
+
+        return $this->settingsSaved($user, 'appearance', 'Settings saved successfully.');
+    }
+
+    private function updateApiSettings($user)
     {
         $apiEnabled = $this->rawInput('api_enabled');
         if ($apiEnabled !== 'enabled' && $apiEnabled !== 'disabled') {
-            return $this->redirectWithError('/admin/settings', 'Choose whether the API is enabled or disabled.');
+            return $this->settingsError('api', 'api_enabled', 'Choose whether the API is enabled or disabled.');
         }
 
         $cors = trim((string)$this->rawInput('api_cors_origin'));
@@ -155,17 +221,7 @@ class AdminController extends Controller
             $cors = '*';
         }
         if (strlen($cors) > 255 || !$this->isAllowedCorsOrigin($cors)) {
-            return $this->redirectWithError('/admin/settings', 'CORS origin must be * or a single http or https origin, such as https://app.example.com.');
-        }
-
-        $visibility = $this->rawInput('kb_visibility');
-        if ($visibility !== 'public' && $visibility !== 'private') {
-            return $this->redirectWithError('/admin/settings', 'Choose a valid knowledge base visibility.');
-        }
-
-        $maintenance = $this->rawInput('maintenance_mode');
-        if ($maintenance !== 'enabled' && $maintenance !== 'disabled') {
-            return $this->redirectWithError('/admin/settings', 'Choose whether maintenance mode is enabled or disabled.');
+            return $this->settingsError('api', 'api_cors_origin', 'CORS origin must be * or a single http or https origin, such as https://app.example.com.');
         }
 
         $generateKey = isset($_POST['generate_api_key']) && (string)$_POST['generate_api_key'] === '1';
@@ -174,33 +230,99 @@ class AdminController extends Controller
         } else {
             $apiKey = trim((string)$this->rawInput('api_key'));
             if ($apiKey !== '' && !preg_match('/\A[A-Za-z0-9._~-]{16,128}\z/', $apiKey)) {
-                return $this->redirectWithError('/admin/settings', 'The API key must be 16 to 128 characters and may contain only letters, numbers, periods, underscores, tildes, and hyphens. Leave it blank when no key is required.');
+                return $this->settingsError('api', 'api_key', 'The API key must be 16 to 128 characters and may contain only letters, numbers, periods, underscores, tildes, and hyphens. Leave it blank when no key is required.');
             }
         }
 
-        $settings = [
-            'site_name' => $this->input('site_name'),
-            'site_color' => $this->input('site_color'),
-            'site_logo' => $this->input('site_logo'),
-            'kb_visibility' => $visibility,
-            'maintenance_mode' => $maintenance,
-            'maintenance_message' => $this->input('maintenance_message'),
+        $this->settingModel->setMultiple([
             'api_enabled' => $apiEnabled,
             'api_key' => $apiKey,
             'api_cors_origin' => $cors
-        ];
-        
-        $this->settingModel->setMultiple($settings);
-        
-        // Log settings update. The API key itself is not written to the log.
-        $user = $this->getUser();
-        Log::logAction($user['id'], $user['email'], 'updated', 'settings');
+        ]);
 
         $message = $generateKey
             ? 'Settings saved. A new API key was generated. Copy it from the field below.'
             : 'Settings saved successfully.';
-        
-        return $this->redirectWithMessage('/admin/settings', $message);
+
+        return $this->settingsSaved($user, 'api', $message);
+    }
+
+    private function updateMaintenanceSettings($user)
+    {
+        $maintenance = $this->rawInput('maintenance_mode');
+        if ($maintenance !== 'enabled' && $maintenance !== 'disabled') {
+            return $this->settingsError('maintenance', 'maintenance_mode', 'Choose whether maintenance mode is enabled or disabled.');
+        }
+
+        $this->settingModel->setMultiple([
+            'maintenance_mode' => $maintenance,
+            'maintenance_message' => $this->input('maintenance_message')
+        ]);
+
+        return $this->settingsSaved($user, 'maintenance', 'Settings saved successfully.');
+    }
+
+    private function settingsSaved($user, $section, $message)
+    {
+        // The API key itself is not written to the log.
+        Log::logAction($user['id'], $user['email'], 'updated', 'settings');
+        return $this->redirectWithMessage('/admin/settings/' . $section, $message);
+    }
+
+    private function settingsError($section, $field, $message)
+    {
+        $_SESSION['settings_invalid'] = [
+            'section' => $section,
+            'field' => $field
+        ];
+        return $this->redirectWithError('/admin/settings/' . $section, $message);
+    }
+
+    private function isSettingsSection($section)
+    {
+        return in_array($section, ['general', 'appearance', 'editor', 'api', 'maintenance'], true);
+    }
+
+    private function settingsNavigation()
+    {
+        $siteName = $this->getSetting('site_name', 'Knowledge Base');
+        $visibility = $this->getSetting('kb_visibility', 'public') === 'private' ? 'Private' : 'Public';
+
+        $color = trim((string)$this->settingModel->getValue('site_color'));
+        $logo = trim((string)$this->settingModel->getValue('site_logo'));
+        if ($color !== '') {
+            $appearance = $color;
+        } elseif ($logo !== '') {
+            $appearance = 'Logo set';
+        } else {
+            $appearance = 'Default color';
+        }
+
+        $apiEnabled = $this->getSetting('api_enabled', 'disabled') === 'enabled';
+        $maintenanceOn = $this->getSetting('maintenance_mode') === 'enabled';
+
+        return [
+            'general' => [
+                'label' => 'General',
+                'status' => $siteName . ' · ' . $visibility
+            ],
+            'appearance' => [
+                'label' => 'Appearance',
+                'status' => $appearance
+            ],
+            'editor' => [
+                'label' => 'Editor',
+                'status' => 'Built-in toolbar'
+            ],
+            'api' => [
+                'label' => 'API',
+                'status' => $apiEnabled ? 'Enabled' : 'Disabled'
+            ],
+            'maintenance' => [
+                'label' => 'Maintenance',
+                'status' => $maintenanceOn ? 'On' : 'Off'
+            ]
+        ];
     }
 
     private function isAllowedCorsOrigin($origin)

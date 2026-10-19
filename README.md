@@ -10,6 +10,7 @@ The project home is the [GitHub repository](https://github.com/michaelstaake/Lib
 - Runs on pretty much any server, hosting account, or using Docker.
 - Installs in minutes.
 - Easy to customize branding to match your project or business.
+- Site settings are grouped into General, Appearance, Editor, API, and Maintenance.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
 - Nest categories to any depth.
@@ -51,6 +52,8 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 ### Upgrading to 2.3.0
 
 Copy the new files over a 2.2.0 install and keep `config.php`. There is no database change. The admin dashboard list of categories and articles starts collapsed. Open a category with its chevron, or use the filter to jump to a matching category or article. Open branches are remembered in the browser.
+
+Site Settings is split into General, Appearance, Editor, API, and Maintenance. Each section has its own address under `/admin/settings/` and its own Save button. `/admin/settings` opens General. Saving one section leaves the others unchanged.
 
 ### Upgrading to 2.2.0
 

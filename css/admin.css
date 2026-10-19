@@ -125,6 +125,22 @@ footer a, footer a:visited, footer a:active, footer a:focus {
     margin-top: 30px;
 }
 
+.settings-nav .list-group-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+}
+
+.settings-nav .list-group-item small {
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.settings-nav .list-group-item.active small {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 .tox-promotion {
     display: none;
 }
