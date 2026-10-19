@@ -341,12 +341,141 @@ button.dropdown-item {
     display: none;
 }
 
-.kb-row .btn-group {
-    flex-shrink: 0;
+.kb-row,
+.kb-article {
+    container-type: inline-size;
+}
+
+.kb-row .btn-group,
+.kb-article .btn-group {
+    flex: 0 0 auto;
+}
+
+.kb-actions.btn-group > .btn,
+.kb-actions.btn-group > form {
+    flex: 0 0 auto;
+}
+
+.kb-row-main,
+.kb-article-main,
+.kb-name,
+.kb-article-title,
+.kb-filter .form-control {
+    min-width: 0;
+}
+
+.kb-row-main > .kb-toggle,
+.kb-row-main > .kb-spacer,
+.kb-row-main > .bi,
+.kb-article-main > .bi {
+    flex: 0 0 auto;
 }
 
 .min-w-0 {
     min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+    .kb-structure-header {
+        align-items: flex-start;
+    }
+
+    .kb-structure-header > h5 {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .kb-structure-tools {
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .kb-filter {
+        flex-wrap: nowrap;
+        max-width: 100%;
+    }
+
+    .kb-row,
+    .kb-article {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        column-gap: 0.5rem;
+        row-gap: 0.35rem;
+        max-width: 100%;
+    }
+
+    .kb-row-main,
+    .kb-article-main {
+        flex: 1 1 auto;
+        min-width: min(100%, 16rem);
+        max-width: 100%;
+    }
+
+    .kb-row-main,
+    .kb-article-main {
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 0;
+        row-gap: 0.15rem;
+    }
+
+    .kb-name,
+    .kb-article-title {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-right: 0 !important;
+    }
+
+    .kb-label,
+    .kb-article-title {
+        overflow-wrap: break-word;
+    }
+
+    .kb-count {
+        flex: 0 0 100%;
+        box-sizing: border-box;
+        white-space: normal !important;
+        padding-left: 3.25rem;
+        line-height: 1.3;
+    }
+
+    .kb-actions {
+        flex: 0 0 auto;
+        margin-left: auto;
+        align-self: center;
+    }
+
+    .kb-articles,
+    .kb-subs {
+        padding-left: 0.75rem !important;
+    }
+}
+
+/* Nested rows on a tablet are narrower than the card. Drop the count
+   under the name before it collides with the action buttons. Wide rows
+   keep the single-line layout. */
+@container (max-width: 40rem) {
+    .kb-row-main {
+        flex-wrap: wrap;
+        align-items: center;
+        row-gap: 0.15rem;
+    }
+
+    .kb-name {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-right: 0 !important;
+    }
+
+    .kb-count {
+        flex: 0 0 100%;
+        box-sizing: border-box;
+        white-space: normal !important;
+        padding-left: 3.25rem;
+        line-height: 1.3;
+    }
 }
 
 mark.kb-hit {

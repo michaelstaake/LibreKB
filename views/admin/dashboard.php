@@ -89,10 +89,10 @@
             </div>
         <?php else: ?>
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="card-header kb-structure-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Knowledge Base Structure</h5>
                     <?php if ($user['group'] === 'admin' || $user['group'] === 'manager'): ?>
-                    <div class="d-flex flex-wrap gap-2">
+                    <div class="kb-structure-tools d-flex flex-wrap gap-2">
                         <button type="button" class="btn btn-outline-secondary btn-sm" id="expand-all">Expand all</button>
                         <button type="button" class="btn btn-outline-secondary btn-sm" id="collapse-all">Collapse all</button>
                         <a href="<?php echo $basePath; ?>/admin/categories/create" class="btn btn-primary btn-sm">
@@ -105,7 +105,7 @@
                     <script>document.documentElement.classList.add('js');</script>
                     <div class="mb-3">
                         <label class="visually-hidden" for="kb-filter">Filter categories and articles</label>
-                        <div class="input-group">
+                        <div class="input-group kb-filter">
                             <span class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
                             <input type="search" class="form-control" id="kb-filter" placeholder="Filter categories and articles" aria-label="Filter categories and articles" autocomplete="off">
                             <button type="button" class="btn btn-outline-secondary" id="kb-filter-clear" hidden>Clear</button>
@@ -152,7 +152,7 @@
                     
                     function renderDashboardArticleRow($article, $categories, $user, $baseUrl, $uncategorized = false) {
                         echo '<div class="kb-article d-flex justify-content-between align-items-center py-1 border-bottom" data-title="' . htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8') . '">';
-                        echo '<div class="d-flex align-items-center">';
+                        echo '<div class="kb-article-main d-flex align-items-center min-w-0">';
                         echo '<i class="bi bi-file-earmark-text me-2 text-info"></i>';
                         echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '" class="text-decoration-none kb-article-title" data-label="' . htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8') . '">';
                         echo htmlspecialchars($article['title']);
@@ -181,7 +181,7 @@
                         echo '</div>';
 
                         if ($user['group'] === 'admin' || $user['group'] === 'manager') {
-                            echo '<div class="btn-group btn-group-sm" role="group">';
+                            echo '<div class="btn-group btn-group-sm kb-actions" role="group">';
                             $editTitle = $uncategorized ? ' title="Edit Article"' : '';
                             echo '<a href="' . $baseUrl . '/admin/articles/' . $article['id'] . '" class="btn btn-outline-primary btn-sm"' . $editTitle . '>';
                             echo '<i class="bi bi-pencil"></i>';
@@ -227,7 +227,7 @@
 
                         echo '<div class="kb-node mb-3 ps-3 ' . $levelClass . ' ' . $bgClass . ($hasChildren ? ' is-collapsed' : '') . '" id="kb-node-' . $categoryId . '" data-id="' . $categoryId . '" data-name="' . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '">';
                         echo '<div class="kb-row d-flex justify-content-between align-items-center py-2">';
-                        echo '<div class="d-flex align-items-center min-w-0">';
+                        echo '<div class="kb-row-main d-flex align-items-center min-w-0">';
 
                         if ($hasChildren) {
                             echo '<button type="button" class="kb-toggle" id="kb-toggle-' . $categoryId . '" aria-expanded="false" aria-controls="' . $childrenId . '" aria-label="Expand ' . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '">';
@@ -244,7 +244,7 @@
                         }
 
                         $headingLevel = min(6, $level + 5);
-                        echo '<h' . $headingLevel . ' class="mb-0 me-3">';
+                        echo '<h' . $headingLevel . ' class="kb-name mb-0 me-3">';
                         echo '<a href="' . $baseUrl . '/admin/categories/' . $categoryId . '" class="text-decoration-none kb-label" data-label="' . htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8') . '">';
                         echo htmlspecialchars($category['name']);
                         echo '</a>';
@@ -258,11 +258,11 @@
                             echo '<span class="badge bg-danger me-2">Disabled</span>';
                         }
 
-                        echo '<small class="text-muted text-nowrap">' . htmlspecialchars($countText) . '</small>';
+                        echo '<small class="kb-count text-muted text-nowrap">' . htmlspecialchars($countText) . '</small>';
                         echo '</div>';
 
                         if ($user['group'] === 'admin' || $user['group'] === 'manager') {
-                            echo '<div class="btn-group btn-group-sm" role="group">';
+                            echo '<div class="btn-group btn-group-sm kb-actions" role="group">';
                             echo '<a href="' . $baseUrl . '/admin/articles/create?category=' . $categoryId . '" class="btn btn-success btn-sm" title="Create Article in ' . htmlspecialchars($category['name']) . '">';
                             echo '<i class="bi bi-file-earmark-plus"></i>';
                             echo '</a>';
@@ -312,13 +312,13 @@
                         $uncategorizedCount = count($uncategorizedArticles);
                         echo '<div class="kb-node mb-3 ps-3 border-start border-warning border-3 bg-warning bg-opacity-10 is-collapsed" id="kb-node-uncategorized" data-id="uncategorized" data-name="Uncategorized Articles">';
                         echo '<div class="kb-row d-flex justify-content-between align-items-center py-2">';
-                        echo '<div class="d-flex align-items-center">';
+                        echo '<div class="kb-row-main d-flex align-items-center min-w-0">';
                         echo '<button type="button" class="kb-toggle" id="kb-toggle-uncategorized" aria-expanded="false" aria-controls="kb-children-uncategorized" aria-label="Expand Uncategorized Articles">';
                         echo '<i class="bi bi-chevron-right" aria-hidden="true"></i>';
                         echo '</button>';
                         echo '<i class="bi bi-exclamation-triangle me-2 text-warning"></i>';
-                        echo '<h5 class="mb-0 me-3"><span class="kb-label" data-label="Uncategorized Articles">Uncategorized Articles</span></h5>';
-                        echo '<small class="text-muted text-nowrap">(' . $uncategorizedCount . ' articles)</small>';
+                        echo '<h5 class="kb-name mb-0 me-3"><span class="kb-label" data-label="Uncategorized Articles">Uncategorized Articles</span></h5>';
+                        echo '<small class="kb-count text-muted text-nowrap">(' . $uncategorizedCount . ' articles)</small>';
                         echo '</div>';
                         echo '</div>';
                         echo '<div class="kb-children" id="kb-children-uncategorized">';
