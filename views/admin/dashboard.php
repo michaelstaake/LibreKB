@@ -122,9 +122,18 @@
                         return is_null($cat['parent']);
                     });
                     
-                    // Sort top level categories by order
+                    // Same order number keeps the query sequence: name or title, then id.
+                    function compareKbOrder($a, $b) {
+                        $left = $a['order'] + 0;
+                        $right = $b['order'] + 0;
+                        if ($left == $right) {
+                            return 0;
+                        }
+                        return ($left < $right) ? -1 : 1;
+                    }
+
                     usort($topLevelCategories, function($a, $b) {
-                        return ($a['order'] + 0) - ($b['order'] + 0);
+                        return compareKbOrder($a, $b);
                     });
                     
                     // Helper function to check if parent category is disabled
@@ -206,14 +215,14 @@
                             return $article['category'] == $category['id'];
                         }));
                         usort($categoryArticles, function($a, $b) {
-                            return ($a['order'] + 0) - ($b['order'] + 0);
+                            return compareKbOrder($a, $b);
                         });
 
                         $subcategories = array_values(array_filter($categories, function($cat) use ($category) {
                             return $cat['parent'] == $category['id'];
                         }));
                         usort($subcategories, function($a, $b) {
-                            return ($a['order'] + 0) - ($b['order'] + 0);
+                            return compareKbOrder($a, $b);
                         });
 
                         $hasChildren = !empty($categoryArticles) || !empty($subcategories);
@@ -307,6 +316,9 @@
                     $uncategorizedArticles = array_values(array_filter($articles, function($article) {
                         return is_null($article['category']) || $article['category'] === '';
                     }));
+                    usort($uncategorizedArticles, function($a, $b) {
+                        return compareKbOrder($a, $b);
+                    });
 
                     if (!empty($uncategorizedArticles)) {
                         $uncategorizedCount = count($uncategorizedArticles);

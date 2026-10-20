@@ -23,13 +23,13 @@ class Article extends Model
     
     public function getByCategoryId($categoryId)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE category = :categoryId ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE category = :categoryId ORDER BY `order`+0 ASC, title ASC, id ASC";
         return $this->fetchAll($sql, ['categoryId' => $categoryId]);
     }
     
     public function getEnabledByCategoryId($categoryId)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE category = :categoryId AND status = 'enabled' ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE category = :categoryId AND status = 'enabled' ORDER BY `order`+0 ASC, title ASC, id ASC";
         return $this->fetchAll($sql, ['categoryId' => $categoryId]);
     }
     
@@ -118,7 +118,7 @@ class Article extends Model
         $sql = "SELECT a.*, c.name as category_name 
                 FROM {$this->table} a 
                 LEFT JOIN categories c ON a.category = c.id 
-                ORDER BY a.created DESC";
+                ORDER BY a.`order`+0 ASC, a.title ASC, a.id ASC";
         return $this->fetchAll($sql);
     }
     

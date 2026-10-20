@@ -17,19 +17,19 @@ class Category extends Model
     
     public function getAllEnabled()
     {
-        $sql = "SELECT * FROM {$this->table} WHERE status = 'enabled' ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE status = 'enabled' ORDER BY `order`+0 ASC, name ASC, id ASC";
         return $this->fetchAll($sql);
     }
     
     public function getTopLevel()
     {
-        $sql = "SELECT * FROM {$this->table} WHERE parent IS NULL ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE parent IS NULL ORDER BY `order`+0 ASC, name ASC, id ASC";
         return $this->fetchAll($sql);
     }
     
     public function getEnabledTopLevel()
     {
-        $sql = "SELECT * FROM {$this->table} WHERE status = 'enabled' AND parent IS NULL ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE status = 'enabled' AND parent IS NULL ORDER BY `order`+0 ASC, name ASC, id ASC";
         $categories = $this->fetchAll($sql);
         
         // Filter out categories where hierarchy is not fully enabled
@@ -45,13 +45,13 @@ class Category extends Model
     
     public function getWithParent($parentId)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE parent = :parentId ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE parent = :parentId ORDER BY `order`+0 ASC, name ASC, id ASC";
         return $this->fetchAll($sql, ['parentId' => $parentId]);
     }
     
     public function getEnabledWithParent($parentId)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE parent = :parentId AND status = 'enabled' ORDER BY `order`+0 ASC";
+        $sql = "SELECT * FROM {$this->table} WHERE parent = :parentId AND status = 'enabled' ORDER BY `order`+0 ASC, name ASC, id ASC";
         $categories = $this->fetchAll($sql, ['parentId' => $parentId]);
         
         // Filter out categories where hierarchy is not fully enabled
@@ -76,7 +76,7 @@ class Category extends Model
                 FROM {$this->table} c 
                 LEFT JOIN articles a ON c.id = a.category 
                 GROUP BY c.id 
-                ORDER BY c.`order`+0 ASC";
+                ORDER BY c.`order`+0 ASC, c.name ASC, c.id ASC";
         return $this->fetchAll($sql);
     }
     
@@ -96,7 +96,7 @@ class Category extends Model
 
         $options = [];
         $used = [];
-        $this->appendTreeOptions($this->all(), null, 0, $excludeIds, $options, $used);
+        $this->appendTreeOptions($this->allInListOrder(), null, 0, $excludeIds, $options, $used);
         return $options;
     }
 
@@ -107,7 +107,7 @@ class Category extends Model
     {
         $options = [];
         $used = [];
-        $this->appendTreeOptions($this->all(), null, 0, [], $options, $used);
+        $this->appendTreeOptions($this->allInListOrder(), null, 0, [], $options, $used);
         return $options;
     }
 
@@ -170,7 +170,7 @@ class Category extends Model
                 FROM {$this->table} c 
                 LEFT JOIN articles a ON c.id = a.category 
                 GROUP BY c.id 
-                ORDER BY c.parent IS NULL DESC, c.`order`+0 ASC";
+                ORDER BY c.parent IS NULL DESC, c.`order`+0 ASC, c.name ASC, c.id ASC";
         return $this->fetchAll($sql);
     }
     
@@ -255,6 +255,16 @@ class Category extends Model
     }
 
     /**
+     * Every category in list order: order number, then name, then id.
+     * Name uses the column collation, which is case-insensitive.
+     */
+    private function allInListOrder()
+    {
+        $sql = "SELECT * FROM {$this->table} ORDER BY `order`+0 ASC, name ASC, id ASC";
+        return $this->fetchAll($sql);
+    }
+
+    /**
      * Flatten categories into a depth-first list. Orphans (parent missing) are
      * appended so they can still be selected.
      */
@@ -273,11 +283,13 @@ class Category extends Model
         }
 
         usort($children, function ($a, $b) {
-            $order = ($a['order'] + 0) - ($b['order'] + 0);
-            if ($order !== 0) {
-                return $order;
+            $left = $a['order'] + 0;
+            $right = $b['order'] + 0;
+            if ($left == $right) {
+                // allInListOrder() already applied the column collation, then id.
+                return 0;
             }
-            return strcasecmp($a['name'], $b['name']);
+            return ($left < $right) ? -1 : 1;
         });
 
         foreach ($children as $child) {
