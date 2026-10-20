@@ -49,6 +49,15 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 
 `page` starts at 1. `per_page` defaults to 20 and cannot be higher than 50. Search matches article titles and content only.
 
+### Getting Started
+
+1. Use PHP 8.4 or newer, MySQL or MariaDB, and a web server that honors `.htaccess` (Apache, LiteSpeed, OpenLiteSpeed, or Lighttpd). Enable the PHP extensions `pdo_mysql`, `curl`, `mbstring`, and `fileinfo`.
+2. Put the files on the server with the document root set to the folder that contains `index.php`. Requests that are not real files must be rewritten to `index.php`, which the included `.htaccess` does. In a subfolder, uncomment `RewriteBase` in `.htaccess` and set it to that path.
+3. Copy `config.example.php` to `config.php`. Set the database host, name, user, and password, and set `systemURL` to the public address, including a subfolder if you use one (`https://example.com/kb/`).
+4. Create an empty database. The database user must be allowed to create tables. PHP must be able to write `storage/uploads` and `storage/cache`.
+5. Open `/install`, enter the admin email and password, and run the installer. It creates the tables and that admin user.
+6. Log in at `/login`. Once that user exists, `/install` no longer runs. If `install.php` or `update.php` is in the folder, delete it.
+
 ### Upgrading
 
 Overwrite the files with the new release and keep your `config.php`. Then visit `/upgrade`.
