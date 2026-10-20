@@ -51,6 +51,12 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 
 `page` starts at 1. `per_page` defaults to 20 and cannot be higher than 50. Search matches article titles and content only.
 
+### Upgrading to 2.3.1
+
+Copy the new files over a 2.3.0 install and keep `config.php`. Open `/upgrade` to confirm. A 2.3.0 database is already up to date, so nothing is added or rewritten.
+
+Categories and articles are still ordered by their order number. When those numbers match, the name (or the article title) decides the order, and then the id. The comparison uses the database collation, so it is case-insensitive and keeps accented letters with their base letter. `Item 10` stays before `Item 2`. Search results are unchanged.
+
 ### Upgrading to 2.3.0
 
 Copy the new files over a 2.2.0 install and keep `config.php`. Then open `/upgrade` and confirm. That changes the settings value column from VARCHAR(255) to TEXT and adds an empty `custom_css` setting. Existing categories, articles, users, and logs are not rewritten. The API stays disabled until you enable it in Settings.
