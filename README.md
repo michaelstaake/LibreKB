@@ -2,8 +2,6 @@
 
 LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 
-The project home is the [GitHub repository](https://github.com/michaelstaake/LibreKB).
-
 ### Features
 
 - 100% free and open source.
@@ -24,7 +22,7 @@ The project home is the [GitHub repository](https://github.com/michaelstaake/Lib
 
 ### Need Help?
 
-Ask questions and share ideas in [GitHub Discussions](https://github.com/michaelstaake/LibreKB/discussions).
+Report problems and request features in [GitHub Issues](https://github.com/michaelstaake/LibreKB/issues).
 
 ### Update Checks
 
@@ -51,42 +49,7 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 
 `page` starts at 1. `per_page` defaults to 20 and cannot be higher than 50. Search matches article titles and content only.
 
-### Upgrading to 2.3.1
+### Upgrading
 
-Copy the new files over a 2.3.0 install and keep `config.php`. Open `/upgrade` to confirm. A 2.3.0 database is already up to date, so nothing is added or rewritten.
+Overwrite the files with the new release and keep your `config.php`. Then visit `/upgrade`.
 
-Categories and articles are still ordered by their order number. When those numbers match, the name (or the article title) decides the order, and then the id. The comparison uses the database collation, so it is case-insensitive and keeps accented letters with their base letter. `Item 10` stays before `Item 2`. Search results are unchanged.
-
-### Upgrading to 2.3.0
-
-Copy the new files over a 2.2.0 install and keep `config.php`. Then open `/upgrade` and confirm. That changes the settings value column from VARCHAR(255) to TEXT and adds an empty `custom_css` setting. Existing categories, articles, users, and logs are not rewritten. The API stays disabled until you enable it in Settings.
-
-The admin dashboard list of categories and articles starts collapsed. Open a category with its chevron, or use the filter to jump to a matching category or article. Open branches are remembered in the browser.
-
-Site Settings is split into General, Appearance, Editor, API, and Maintenance. Each section has its own address under `/admin/settings/` and its own Save button. `/admin/settings` opens General. Saving one section leaves the others unchanged.
-
-Custom CSS is an optional text box on Appearance. It is printed after the built-in styles on the public site only. Admin pages do not use it. The sheet is limited to 20,000 characters and cannot contain a less-than character, a null byte, `@import`, `expression(`, `javascript:`, `vbscript:`, `-moz-binding`, or `behavior:`.
-
-The Editor section chooses the article toolbar. Leave it empty, or save the original selection, to keep the built-in buttons: undo, redo, bold, italic, underline, paragraph style, font size, lists, link, table, source code, find and replace, and word count. Extra buttons are font color, highlight, alignment, strikethrough, subscript, superscript, block quote, a horizontal line, and an image by web address. Image upload and captions are not available. A TinyMCE plugin is loaded only when a button that needs it is turned on.
-
-A new install from `/install` already includes the TEXT column, the custom CSS setting, and the editor toolbar setting.
-
-### Upgrading to 2.2.0
-
-Copy the new files over an existing install and keep `config.php`. Then open `/upgrade` and confirm. That adds the API settings (`api_enabled`, `api_key`, `api_cors_origin`) and, when upgrading from 2.0.1, the attachments table. Existing categories, articles, users, and logs are not rewritten. The API stays disabled until you enable it in Settings.
-
-A new install from `/install` already includes these settings.
-
-### Upgrading to 2.1.0
-
-Copy the new files over an existing 2.0.1 install and keep `config.php`. Then open `/upgrade` and confirm. That adds the `attachments` table and does not change categories, articles, users, settings, or logs.
-
-A new install from `/install` already includes the table.
-
-Uploaded files are stored in `storage/uploads/attachments/` under a random name. Apache is blocked from serving that directory directly (see `.htaccess`). On nginx, deny access to `/storage/` and let LibreKB send downloads itself. PHP `upload_max_filesize` should be at least 12M and `post_max_size` large enough for the files you attach (the Docker image sets this).
-
-Deleting a category is refused while it still has articles or subcategories. Move or delete that content first so nothing is orphaned.
-
-Article HTML is cleaned on save and again when a page is rendered, including articles saved by older versions. Formatting from the editor is kept (headings, lists, links, tables, images, code). Scripts and `javascript:` links are removed. This uses [HTML Purifier](http://htmlpurifier.org/) 4.19.1 in `vendor/htmlpurifier/`. The first page view writes a definition cache under `storage/cache/htmlpurifier/`, which PHP must be able to create. If that directory is not writable, cleaning still runs, just without the cache.
-
-Logout, and deleting a category, article, attachment, or user, are POST forms with a per-session token. A bookmarked GET to those old URLs no longer works. Session cookies are HttpOnly and SameSite=Lax, and Secure when the site is served over HTTPS (including `X-Forwarded-Proto: https` behind a proxy). HTML responses send `X-Frame-Options: DENY`.
