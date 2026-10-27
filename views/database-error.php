@@ -36,7 +36,7 @@ if (class_exists('Config') && method_exists('Config', 'get')) {
                         <i class="bi bi-database-x"></i>
                     </div>
                     <h1 class="error-title"><?php echo !empty($needsUpgrade) ? 'Database Upgrade Required' : 'Database Setup Required'; ?></h1>
-                    <p class="error-subtitle"><?php echo !empty($needsUpgrade) ? 'LibreKB 2.3.1 needs a small database update before you can continue.' : 'LibreKB needs to be installed before you can continue.'; ?></p>
+                    <p class="error-subtitle"><?php echo !empty($needsUpgrade) ? 'LibreKB 2.3.2 needs a small database update before you can continue.' : 'LibreKB needs to be installed before you can continue.'; ?></p>
                 </div>
                 
                 <div class="error-details">
