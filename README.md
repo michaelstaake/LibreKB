@@ -10,6 +10,7 @@ LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 - Easy to customize branding to match your project or business.
 - Site settings are grouped into General, Appearance, Editor, API, and Maintenance.
 - Optional custom CSS for the public site, from Appearance settings.
+- Optional Google Fonts stylesheet for the public site, from Appearance settings.
 - Choose which buttons appear on the article editor toolbar.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.

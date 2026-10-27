@@ -200,6 +200,8 @@ class InstallController extends Controller
         $conn->exec($insertCustomCss);
         $insertEditorToolbar = "INSERT IGNORE INTO settings (name, value) VALUES ('editor_toolbar', '')";
         $conn->exec($insertEditorToolbar);
+        $insertGoogleFonts = "INSERT IGNORE INTO settings (name, value) VALUES ('google_fonts_css_url', '')";
+        $conn->exec($insertGoogleFonts);
     }
     
     private function createAdminUser($conn, $email, $password)

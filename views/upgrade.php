@@ -89,6 +89,9 @@ if ($basePath === '') {
                         <?php if (!empty($missingEditorToolbar)): ?>
                             This upgrade adds an empty editor toolbar setting. An empty value keeps the built-in toolbar.
                         <?php endif; ?>
+                        <?php if (!empty($missingGoogleFonts)): ?>
+                            This upgrade adds an empty Google Fonts CSS URL setting. A font is not loaded until an administrator pastes a fonts.googleapis.com CSS URL under Appearance.
+                        <?php endif; ?>
                         Categories, articles, users, and logs stay as they are. Nothing is deleted or rewritten.
                     </div>
                     <form action="<?php echo $basePath; ?>/upgrade" method="POST">

@@ -56,8 +56,8 @@ class Database extends Config {
     /**
      * True when a 2.x database is present and a later upgrade has not been applied.
      * That is the attachments table (2.1.0), the read-only API settings (2.2.0),
-     * or the TEXT settings value column, custom CSS, and editor toolbar (2.3.0).
-     * 2.3.1 does not add tables or settings, so a 2.3.0 database is already current.
+     * the TEXT settings value column, custom CSS, and editor toolbar (2.3.0),
+     * or the Google Fonts CSS URL setting (2.3.2).
      */
     public function needsUpgrade() {
         if (!empty($this->checkCoreTables())) {
@@ -74,7 +74,10 @@ class Database extends Config {
             return true;
         }
 
-        return !empty($this->missingApiSettings()) || $this->missingCustomCssSetting() || $this->missingEditorToolbarSetting();
+        return !empty($this->missingApiSettings())
+            || $this->missingCustomCssSetting()
+            || $this->missingEditorToolbarSetting()
+            || $this->missingGoogleFontsSetting();
     }
 
     /**
@@ -133,6 +136,27 @@ class Database extends Config {
         $pdo = $this->connect();
         $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
         $stmt->execute(['editor_toolbar', '']);
+        return true;
+    }
+
+    /**
+     * Empty until an administrator pastes a fonts.googleapis.com CSS URL.
+     */
+    public function missingGoogleFontsSetting() {
+        try {
+            $pdo = $this->connect();
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM settings WHERE name = ?");
+            $stmt->execute(['google_fonts_css_url']);
+            return (int)$stmt->fetchColumn() === 0;
+        } catch (PDOException $e) {
+            return true;
+        }
+    }
+
+    public function ensureGoogleFontsSetting() {
+        $pdo = $this->connect();
+        $stmt = $pdo->prepare("INSERT IGNORE INTO settings (name, value) VALUES (?, ?)");
+        $stmt->execute(['google_fonts_css_url', '']);
         return true;
     }
 

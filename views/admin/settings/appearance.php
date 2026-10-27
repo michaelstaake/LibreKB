@@ -1,5 +1,5 @@
 <h2 class="h4">Appearance</h2>
-<p class="text-muted">Header color, logo, and custom CSS for the public site. Site name and visibility are on General.</p>
+<p class="text-muted">Header color, logo, Google Fonts, and custom CSS for the public site. Site name and visibility are on General.</p>
 <form action="<?php echo $basePath; ?>/admin/settings/appearance" method="POST">
     <?php echo Csrf::field(); ?>
     <div class="row">
@@ -19,8 +19,17 @@
         </div>
     </div>
     <div class="mb-3">
+        <label for="google_fonts_css_url" class="form-label">Google Fonts CSS URL</label>
+        <?php $fontUrl = (new Setting())->getValue('google_fonts_css_url'); ?>
+        <input type="text" class="form-control<?php echo ($invalidField === 'google_fonts_css_url') ? ' is-invalid' : ''; ?>" id="google_fonts_css_url" name="google_fonts_css_url" value="<?php echo htmlspecialchars($fontUrl, ENT_QUOTES, 'UTF-8'); ?>" maxlength="2000" spellcheck="false" autocomplete="off">
+        <?php if ($invalidField === 'google_fonts_css_url' && !empty($error)): ?>
+            <div class="invalid-feedback"><?php echo htmlspecialchars($error); ?></div>
+        <?php endif; ?>
+        <div class="form-text">Paste the CSS URL from Google Fonts (fonts.googleapis.com/css2?...). Then set font-family in Custom CSS. Leave this blank to keep the built-in fonts.</div>
+    </div>
+    <div class="mb-3">
         <label for="custom_css" class="form-label">Custom CSS</label>
-        <p class="text-muted">Optional rules for the public knowledge base. They are added after the built-in styles and the site color. Admin pages are not affected.</p>
+        <p class="text-muted">Optional rules for the public knowledge base. They are added after the built-in styles, the site color, and the Google Fonts stylesheet. Admin pages are not affected. Set font-family here after pasting a Google Fonts CSS URL above.</p>
         <?php $customCss = (new Setting())->getValue('custom_css'); ?>
         <textarea class="form-control font-monospace<?php echo ($invalidField === 'custom_css') ? ' is-invalid' : ''; ?>" id="custom_css" name="custom_css" rows="16" maxlength="20000" spellcheck="false"><?php echo htmlspecialchars($customCss, ENT_QUOTES, 'UTF-8'); ?></textarea>
         <?php if ($invalidField === 'custom_css' && !empty($error)): ?>

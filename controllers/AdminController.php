@@ -204,6 +204,12 @@ class AdminController extends Controller
 
     private function updateAppearanceSettings($user)
     {
+        $fontUrl = trim((string)$this->rawInput('google_fonts_css_url'));
+        $fontError = GoogleFonts::rejectionMessage($fontUrl);
+        if ($fontError !== '') {
+            return $this->settingsError('appearance', 'google_fonts_css_url', $fontError);
+        }
+
         $customCss = (string)$this->rawInput('custom_css');
         $cssError = CustomCss::rejectionMessage($customCss);
         if ($cssError !== '') {
@@ -213,6 +219,7 @@ class AdminController extends Controller
         $this->settingModel->setMultiple([
             'site_color' => $this->input('site_color'),
             'site_logo' => $this->input('site_logo'),
+            'google_fonts_css_url' => $fontUrl,
             'custom_css' => $customCss
         ]);
 
@@ -313,8 +320,14 @@ class AdminController extends Controller
         $color = trim((string)$this->settingModel->getValue('site_color'));
         $logo = trim((string)$this->settingModel->getValue('site_logo'));
         $customCss = (string)$this->settingModel->getValue('custom_css');
-        if (CustomCss::printable($customCss) !== '') {
+        $hasFonts = GoogleFonts::printable((string)$this->settingModel->getValue('google_fonts_css_url')) !== '';
+        $hasCss = CustomCss::printable($customCss) !== '';
+        if ($hasFonts && $hasCss) {
+            $appearance = 'Google Fonts · Custom CSS';
+        } elseif ($hasCss) {
             $appearance = 'Custom CSS on';
+        } elseif ($hasFonts) {
+            $appearance = 'Google Fonts on';
         } elseif ($color !== '') {
             $appearance = $color;
         } elseif ($logo !== '') {

@@ -15,6 +15,7 @@ class UpgradeController extends Controller
         $needsSettingsText = empty($coreMissing) && !$database->settingsValueIsText();
         $missingCustomCss = empty($coreMissing) && $database->missingCustomCssSetting();
         $missingEditorToolbar = empty($coreMissing) && $database->missingEditorToolbarSetting();
+        $missingGoogleFonts = empty($coreMissing) && $database->missingGoogleFontsSetting();
 
         $data = [
             'pageTitle' => 'LibreKB Upgrade',
@@ -26,6 +27,7 @@ class UpgradeController extends Controller
             'needsSettingsText' => $needsSettingsText,
             'missingCustomCss' => $missingCustomCss,
             'missingEditorToolbar' => $missingEditorToolbar,
+            'missingGoogleFonts' => $missingGoogleFonts,
             'needsUpgrade' => empty($coreMissing) ? $database->needsUpgrade() : false,
             'upToDate' => empty($coreMissing) && !$database->needsUpgrade()
         ];
@@ -54,7 +56,8 @@ class UpgradeController extends Controller
             $database->ensureApiSettings();
             $database->ensureCustomCssSetting();
             $database->ensureEditorToolbarSetting();
-            $this->setMessage('Upgrade complete. The settings value column is TEXT. Custom CSS and the editor toolbar settings are present, and the read-only API settings are present. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings. An empty editor toolbar keeps the built-in buttons.');
+            $database->ensureGoogleFontsSetting();
+            $this->setMessage('Upgrade complete. The settings value column is TEXT. Custom CSS, the editor toolbar, and the Google Fonts CSS URL settings are present, and the read-only API settings are present. Existing categories, articles, users, and logs were left unchanged. The API stays disabled until you enable it in Settings. An empty editor toolbar keeps the built-in buttons. An empty Google Fonts CSS URL does not load a font.');
             return $this->redirect('/upgrade');
         } catch (Exception $e) {
             $this->setError('Upgrade failed: ' . $e->getMessage());

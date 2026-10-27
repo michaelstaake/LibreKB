@@ -16,6 +16,10 @@
             echo '.navbar .nav-link:hover, .navbar .nav-link:focus { color: rgba(255,255,255,0.8) !important; }';
             echo '.navbar .dropdown-toggle:after { border-top-color: white; }';
             echo '</style>';
+            $fontUrl = GoogleFonts::printable((new Setting())->getValue('google_fonts_css_url'));
+            if ($fontUrl !== '') {
+                echo '<link rel="stylesheet" href="' . htmlspecialchars($fontUrl, ENT_QUOTES, 'UTF-8') . '" type="text/css">';
+            }
             $customCss = CustomCss::printable((new Setting())->getValue('custom_css'));
             if ($customCss !== '') {
                 echo '<style>' . $customCss . '</style>';
