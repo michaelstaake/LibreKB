@@ -10,7 +10,6 @@ LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 - Easy to customize branding to match your project or business.
 - Site settings are grouped into General, Appearance, Editor, API, and Maintenance.
 - Optional custom CSS for the public site, from Appearance settings.
-- Optional Google Fonts stylesheet for the public site, from Appearance settings.
 - Choose which buttons appear on the article editor toolbar.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
@@ -62,6 +61,4 @@ curl -s "https://kb.example.com/api/v1/categories/slug/getting-started"
 ### Upgrading
 
 Overwrite the files with the new release and keep your `config.php`. Then visit `/upgrade`.
-
-2.3.2 adds an empty Google Fonts CSS URL setting. On an existing install, open `/upgrade`, then paste a `fonts.googleapis.com` CSS URL under Appearance and set `font-family` in Custom CSS. Leave the URL blank to keep the built-in fonts. Custom CSS still cannot contain `@import`.
 
