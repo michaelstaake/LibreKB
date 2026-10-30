@@ -17,6 +17,10 @@ tinymce.init({
     menubar: false,
     branding: false,
     promotion: false,
+    // Leave pasted URLs alone. The default rewrite is relative to this
+    // editor page (/admin/articles/...), which is one folder deeper than a
+    // public article, so a subdirectory base path such as /docs is lost.
+    convert_urls: false,
     content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; }',
     block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3; Header 4=h4; Header 5=h5; Header 6=h6; Preformatted=pre',
     fontsize_formats: '8pt 9pt 10pt 11pt 12pt 14pt 16pt 18pt 20pt 22pt 24pt 26pt 28pt 36pt 48pt 72pt',
