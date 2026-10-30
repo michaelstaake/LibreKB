@@ -4,7 +4,7 @@ class Version {
     public $channel;
 
     public function __construct() {
-        $this->version = '2.3.2';
+        $this->version = '2.3.3';
         $this->channel = 'release';
     }
 }

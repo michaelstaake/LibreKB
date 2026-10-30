@@ -58,6 +58,7 @@ class Database extends Config {
      * That is the attachments table (2.1.0), the read-only API settings (2.2.0),
      * the TEXT settings value column, custom CSS, and editor toolbar (2.3.0),
      * or the Google Fonts CSS URL setting (2.3.2).
+     * 2.3.3 does not add tables or settings.
      */
     public function needsUpgrade() {
         if (!empty($this->checkCoreTables())) {
