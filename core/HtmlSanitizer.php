@@ -3,9 +3,10 @@
 /**
  * Allowlist cleaner for article HTML.
  *
- * TinyMCE formatting is kept. Scripts, event handlers, and dangerous URLs
- * are removed on save and again whenever an article is rendered. Internal
- * article links are rewritten so a subdirectory install keeps its base path.
+ * TinyMCE formatting is kept, including the language-* class on a code
+ * sample. Scripts, event handlers, and dangerous URLs are removed on save
+ * and again whenever an article is rendered. Internal article links are
+ * rewritten so a subdirectory install keeps its base path.
  */
 class HtmlSanitizer
 {
@@ -65,8 +66,8 @@ class HtmlSanitizer
             'strike',
             'sub',
             'sup',
-            'code',
-            'pre',
+            'code[class]',
+            'pre[class]',
             'ul',
             'ol',
             'li',
@@ -109,6 +110,13 @@ class HtmlSanitizer
         ));
         $config->set('Attr.AllowedFrameTargets', array('_blank' => true));
         $config->set('HTML.TargetNoreferrer', true);
+        // Only the language classes TinyMCE codesample writes are kept.
+        // Any other class, on these elements or any other, is removed.
+        $codeSampleClasses = array();
+        foreach (EditorToolbar::codeSampleLanguages() as $language => $label) {
+            $codeSampleClasses['language-' . $language] = true;
+        }
+        $config->set('Attr.AllowedClasses', $codeSampleClasses);
 
         $schemes = array(
             'http' => true,
