@@ -59,6 +59,7 @@ class Database extends Config {
      * the TEXT settings value column, custom CSS, and editor toolbar (2.3.0),
      * or the Google Fonts CSS URL setting (2.3.2).
      * 2.3.3 does not add tables or settings.
+     * 2.3.4 does not add tables or settings.
      */
     public function needsUpgrade() {
         if (!empty($this->checkCoreTables())) {
