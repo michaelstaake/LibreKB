@@ -49,3 +49,26 @@
         </div>
     </div>
 </div>
+<?php if (!empty($codeSamples)): ?>
+<script src="<?php echo $basePath; ?>/vendor/prism/prism.min.js" data-manual></script>
+<script>
+(function () {
+    var article = document.querySelector('.article-content');
+    if (!article || !window.Prism || !Prism.highlightElement) {
+        return;
+    }
+    var blocks = article.querySelectorAll('pre[class*="language-"]');
+    var i;
+    for (i = 0; i < blocks.length; i++) {
+        var code = blocks[i].querySelector('code');
+        Prism.highlightElement(code || blocks[i]);
+    }
+    var inline = article.querySelectorAll('code[class*="language-"]');
+    for (i = 0; i < inline.length; i++) {
+        if (!inline[i].closest || !inline[i].closest('pre[class*="language-"]')) {
+            Prism.highlightElement(inline[i]);
+        }
+    }
+})();
+</script>
+<?php endif; ?>

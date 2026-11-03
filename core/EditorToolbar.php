@@ -149,6 +149,28 @@ class EditorToolbar
         return $options;
     }
 
+    /**
+     * True when cleaned article HTML contains a code sample the public
+     * page should highlight. The class is the one codesample stores.
+     */
+    public static function hasCodeSample($html)
+    {
+        $html = (string)$html;
+        if ($html === '' || stripos($html, 'language-') === false) {
+            return false;
+        }
+
+        $ids = array();
+        foreach (array_keys(self::codeSampleLanguages()) as $id) {
+            $ids[] = preg_quote($id, '/');
+        }
+
+        return preg_match(
+            '/\bclass\s*=\s*(["\'])[^"\']*\blanguage-(?:' . implode('|', $ids) . ')\b[^"\']*\1/i',
+            $html
+        ) === 1;
+    }
+
     public static function pluginsFor($buttons)
     {
         $catalog = self::catalog();

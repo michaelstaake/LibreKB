@@ -54,6 +54,7 @@ class ArticleController extends Controller
             'category' => $category,
             'ancestors' => $this->categoryModel->getAncestors($category['id']),
             'attachments' => $attachmentModel->getByArticleId($article['id']),
+            'codeSamples' => EditorToolbar::hasCodeSample($article['content']),
             'message' => $this->getMessage(),
             'error' => $this->getError()
         ];
