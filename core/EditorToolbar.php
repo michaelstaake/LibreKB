@@ -32,6 +32,7 @@ class EditorToolbar
             'link' => self::button('Link', 'Insert', 'insert', 'link', true, 'icon', 'link-45deg'),
             'image' => self::button('Image', 'Insert', 'insert', 'image', false, 'icon', 'image'),
             'table' => self::button('Table', 'Insert', 'insert', 'table', true, 'icon', 'table'),
+            'codesample' => self::button('Code sample', 'Insert', 'insert', 'codesample', false, 'icon', 'code-square'),
             'blockquote' => self::button('Block quote', 'Insert', 'insert', '', false, 'icon', 'quote'),
             'hr' => self::button('Horizontal line', 'Insert', 'insert', '', false, 'icon', 'hr'),
             'code' => self::button('Source code', 'Tools', 'code', 'code', true, 'icon', 'code-slash'),
@@ -111,6 +112,41 @@ class EditorToolbar
             return '';
         }
         return $string;
+    }
+
+    /**
+     * Languages offered by the Code sample button. The value is the suffix
+     * stored as class="language-{value}" on the pre element. TinyMCE 7.0.1
+     * bundles every language here except Bash. Bash is highlighted with the
+     * Prism build in vendor/prism, which the editor loads when this button is on.
+     */
+    public static function codeSampleLanguages()
+    {
+        return [
+            'markup' => 'HTML/XML',
+            'javascript' => 'JavaScript',
+            'css' => 'CSS',
+            'php' => 'PHP',
+            'ruby' => 'Ruby',
+            'python' => 'Python',
+            'java' => 'Java',
+            'c' => 'C',
+            'csharp' => 'C#',
+            'cpp' => 'C++',
+            'bash' => 'Bash'
+        ];
+    }
+
+    public static function codeSampleLanguageOptions()
+    {
+        $options = [];
+        foreach (self::codeSampleLanguages() as $value => $text) {
+            $options[] = [
+                'text' => $text,
+                'value' => $value
+            ];
+        }
+        return $options;
     }
 
     public static function pluginsFor($buttons)

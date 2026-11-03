@@ -13,6 +13,7 @@ LibreKB: Knowledge Base Web App - Free, Open Source, Self Hosted, PHP/MySQL.
 - Choose which buttons appear on the article editor toolbar.
 - Manage users with predefined user groups.
 - Easily edit articles with TinyMCE.
+- Insert syntax-highlighted code samples. Code sample is off until an administrator checks it under Settings, then Editor.
 - Nest categories to any depth.
 - Collapse and filter categories and articles on the admin dashboard.
 - Attach files to articles for readers to download.
