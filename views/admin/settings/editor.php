@@ -24,7 +24,6 @@ $editorOrder = 0;
                 <?php
                     $button = $editorCatalog[$id];
                     $checked = isset($editorEnabled[$id]);
-                    $added = $checked && !$button['default'];
                     if ($button['section'] !== $editorSection):
                         $editorSection = $button['section'];
                 ?>
@@ -37,7 +36,6 @@ $editorOrder = 0;
                             <input class="form-check-input" type="checkbox" id="toolbar-<?php echo htmlspecialchars($id); ?>" name="toolbar[]" value="<?php echo htmlspecialchars($id); ?>"<?php echo $checked ? ' checked' : ''; ?>>
                             <label class="form-check-label" for="toolbar-<?php echo htmlspecialchars($id); ?>">
                                 <?php echo htmlspecialchars($button['label']); ?>
-                                <span class="badge text-bg-light border ms-1 toolbar-added"<?php echo $added ? '' : ' hidden'; ?>>Added</span>
                             </label>
                         </div>
                         <span class="tb-move">
@@ -49,11 +47,9 @@ $editorOrder = 0;
                 <?php $editorOrder++; ?>
             <?php endforeach; ?>
         </div>
-        <div class="form-text">Font color, highlight, alignment, strikethrough, subscript, and superscript are kept when the article is saved. An image is kept when its address starts with http or https. The editor does not upload image files or add captions. Block quotes and horizontal lines are kept. Video and font-family buttons are not offered, because the article cleaner would remove them. Code sample is off until it is checked. It inserts a block for HTML/XML, JavaScript, CSS, PHP, Ruby, Python, Java, C, C#, C++, or Bash. The language is kept when the article is saved, and the public page highlights it.</div>
     </div>
     <div class="settings-section">
         <button type="submit" class="btn btn-dark">Save editor</button>
-        <div class="form-text mt-2">Only the editor toolbar is saved. Reset to default changes this form and is stored when you save.</div>
     </div>
 </form>
 <script src="<?php echo $basePath; ?>/js/editor-toolbar.js"></script>

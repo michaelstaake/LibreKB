@@ -35,22 +35,6 @@
         });
     }
 
-    function updateBadges() {
-        rows().forEach(function (row) {
-            var box = row.querySelector('input[type="checkbox"]');
-            var badge = row.querySelector('.toolbar-added');
-            if (!box || !badge) {
-                return;
-            }
-            var show = box.checked && row.getAttribute('data-default') !== '1';
-            if (show) {
-                badge.removeAttribute('hidden');
-            } else {
-                badge.setAttribute('hidden', 'hidden');
-            }
-        });
-    }
-
     function addedCount() {
         var count = 0;
         rows().forEach(function (row) {
@@ -144,7 +128,6 @@
 
     list.addEventListener('change', function (event) {
         if (event.target && event.target.matches('input[type="checkbox"]')) {
-            updateBadges();
             renderPreview();
         }
     });
@@ -213,12 +196,10 @@
                 });
             });
             updateArrows();
-            updateBadges();
             renderPreview();
         });
     }
 
     updateArrows();
-    updateBadges();
     renderPreview();
 })();
