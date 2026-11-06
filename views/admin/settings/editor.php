@@ -13,7 +13,7 @@ $editorOrder = 0;
             <h2 class="h4 mb-0">Editor</h2>
             <button type="button" class="btn btn-outline-secondary btn-sm" id="editor-toolbar-reset">Reset to default</button>
         </div>
-        <p class="text-muted">Customize the editor toolbar</p>
+        <p class="text-muted">Customize the editor toolbar.</p>
 
         <div class="mb-2 fw-semibold">Preview</div>
         <div class="tb-preview mb-2" id="editor-toolbar-preview" aria-hidden="true"></div>

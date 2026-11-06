@@ -1,5 +1,5 @@
 <h2 class="h4">Appearance</h2>
-<p class="text-muted">Header color, logo, Google Fonts, and custom CSS for the public site. Site name and visibility are on General.</p>
+<p class="text-muted">Customize the appearance of your website.</p>
 <form action="<?php echo $basePath; ?>/admin/settings/appearance" method="POST">
     <?php echo Csrf::field(); ?>
     <div class="row">
