@@ -38,7 +38,6 @@
         <div class="form-text">Leave this blank to keep the built-in look. The header color is already marked important, so a navbar rule has to include !important to replace it. Rules cannot contain a less-than character. <span id="custom-css-count"><?php echo (int)CustomCss::length($customCss); ?></span> of 20,000 characters.</div>
     </div>
     <button type="submit" class="btn btn-dark">Save appearance</button>
-    <div class="form-text mt-2">Only Appearance is saved. General, Editor, API, and Maintenance stay as they are.</div>
 </form>
 <script>
 (function () {

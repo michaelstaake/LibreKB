@@ -3,7 +3,6 @@
 <form action="<?php echo $basePath; ?>/admin/settings/api" method="POST" class="d-flex flex-column">
     <?php echo Csrf::field(); ?>
     <button type="submit" class="btn btn-dark order-last align-self-start">Save API settings</button>
-    <div class="form-text order-last mt-2">Only the API section is saved. Generating a key does not rewrite the other sections.</div>
     <div class="mb-3">
         <label for="api_enabled" class="form-label">API</label>
         <?php $apiEnabled = $this->getSetting('api_enabled', 'disabled'); ?>

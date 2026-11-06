@@ -20,5 +20,4 @@
         <div class="form-text">Public allows anyone to view the knowledge base. Private requires users to be logged in.</div>
     </div>
     <button type="submit" class="btn btn-dark">Save general</button>
-    <div class="form-text mt-2">Only General is saved. Appearance, Editor, API, and Maintenance stay as they are.</div>
 </form>

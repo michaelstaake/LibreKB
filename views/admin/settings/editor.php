@@ -13,11 +13,10 @@ $editorOrder = 0;
             <h2 class="h4 mb-0">Editor</h2>
             <button type="button" class="btn btn-outline-secondary btn-sm" id="editor-toolbar-reset">Reset to default</button>
         </div>
-        <p class="text-muted">The boxes that are checked are the toolbar authors see. Check a button to add it, uncheck one to remove it, and drag a row or use the arrows to change the order. Reset to default restores the original toolbar. Nothing is stored until you save.</p>
+        <p class="text-muted">Customize the editor toolbar</p>
 
         <div class="mb-2 fw-semibold">Preview</div>
         <div class="tb-preview mb-2" id="editor-toolbar-preview" aria-hidden="true"></div>
-        <div class="form-text mb-3" id="editor-toolbar-summary"></div>
 
         <div class="list-group mb-3" id="editor-toolbar-list">
             <?php foreach ($editorDisplay as $id): ?>

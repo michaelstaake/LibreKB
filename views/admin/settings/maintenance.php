@@ -18,5 +18,4 @@
         <textarea class="form-control" id="maintenance_message" name="maintenance_message" rows="3"><?php echo htmlspecialchars($this->getSetting('maintenance_message')); ?></textarea>
     </div>
     <button type="submit" class="btn btn-dark">Save maintenance</button>
-    <div class="form-text mt-2">Only Maintenance is saved. General, Appearance, Editor, and API stay as they are.</div>
 </form>

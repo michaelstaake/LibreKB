@@ -1,9 +1,8 @@
 (function () {
     var list = document.getElementById('editor-toolbar-list');
     var preview = document.getElementById('editor-toolbar-preview');
-    var summary = document.getElementById('editor-toolbar-summary');
     var reset = document.getElementById('editor-toolbar-reset');
-    if (!list || !preview || !summary) {
+    if (!list || !preview) {
         return;
     }
 
@@ -33,17 +32,6 @@
                 down.disabled = index === items.length - 1;
             }
         });
-    }
-
-    function addedCount() {
-        var count = 0;
-        rows().forEach(function (row) {
-            var box = row.querySelector('input[type="checkbox"]');
-            if (box && box.checked && row.getAttribute('data-default') !== '1') {
-                count += 1;
-            }
-        });
-        return count;
     }
 
     function renderPreview() {
@@ -85,17 +73,6 @@
             }
             preview.appendChild(button);
         });
-
-        var added = addedCount();
-        var sentence;
-        if (added === 0) {
-            sentence = 'No extra buttons are added.';
-        } else if (added === 1) {
-            sentence = '1 button is added to the default toolbar.';
-        } else {
-            sentence = added + ' buttons are added to the default toolbar.';
-        }
-        summary.textContent = sentence + ' Authors see this on Create Article and Edit Article.';
     }
 
     function move(row, delta) {
